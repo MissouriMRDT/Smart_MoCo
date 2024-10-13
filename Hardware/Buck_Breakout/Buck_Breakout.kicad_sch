@@ -1532,7 +1532,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "R2"
 			(at 154.94 45.7199 0)
 			(effects
 				(font
@@ -1658,10 +1658,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "371cf88c-53cd-486a-876d-db8363f910e8")
 		(property "Reference" "C2"
-			(at 143.51 31.7499 0)
+			(at 143.256 30.9879 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1669,14 +1668,13 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
-			(at 143.51 33.0199 0)
+		(property "Value" "100nF"
+			(at 143.256 32.766 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left)
-				(hide yes)
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
@@ -2160,7 +2158,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "R1"
 			(at 154.94 34.2899 0)
 			(effects
 				(font

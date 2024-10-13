@@ -2280,8 +2280,7 @@
 	)
 	(symbol
 		(lib_id "MRDT_Connectors:Molex_SL_02")
-		(at 31.75 39.37 0)
-		(mirror y)
+		(at 31.75 34.29 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2289,7 +2288,7 @@
 		(dnp no)
 		(uuid "f6f86fac-8f1b-413f-bf5c-d8a589b016d7")
 		(property "Reference" "Conn1"
-			(at 20.828 35.306 0)
+			(at 20.828 38.354 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -2297,7 +2296,7 @@
 			)
 		)
 		(property "Value" "Molex_SL_02"
-			(at 20.828 37.846 0)
+			(at 20.828 35.814 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -2305,7 +2304,7 @@
 			)
 		)
 		(property "Footprint" "MRDT_Connectors:MOLEX_SL_02_Vertical"
-			(at 31.75 41.91 0)
+			(at 31.75 31.75 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -2314,7 +2313,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 31.75 41.91 0)
+			(at 31.75 31.75 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -2323,7 +2322,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 31.75 39.37 0)
+			(at 31.75 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)

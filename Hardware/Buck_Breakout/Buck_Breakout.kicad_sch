@@ -842,6 +842,12 @@
 		(uuid "8deeca9b-3280-46d3-b422-78cbe787ff57")
 	)
 	(junction
+		(at 175.26 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c562e693-d064-4e98-ab3c-85eba041c0c7")
+	)
+	(junction
 		(at 139.7 26.67)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -955,7 +961,7 @@
 	)
 	(wire
 		(pts
-			(xy 163.83 26.67) (xy 166.37 26.67)
+			(xy 163.83 26.67) (xy 175.26 26.67)
 		)
 		(stroke
 			(width 0)
@@ -1095,6 +1101,16 @@
 	)
 	(wire
 		(pts
+			(xy 175.26 27.94) (xy 175.26 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d9440a0d-38cd-4463-9a43-e81e77d43359")
+	)
+	(wire
+		(pts
 			(xy 134.62 26.67) (xy 139.7 26.67)
 		)
 		(stroke
@@ -1102,6 +1118,16 @@
 			(type default)
 		)
 		(uuid "e0786d54-111f-4558-ba3f-6903b86b18e9")
+	)
+	(wire
+		(pts
+			(xy 175.26 36.83) (xy 175.26 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0b8b0a5-6e31-4629-b5e3-70a633f9480b")
 	)
 	(wire
 		(pts
@@ -1132,6 +1158,16 @@
 			(type default)
 		)
 		(uuid "ed1a3939-78f0-4259-aa3a-289a3ba73c09")
+	)
+	(wire
+		(pts
+			(xy 175.26 26.67) (xy 179.07 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ef635d6e-c10b-4810-aca0-b3a329c62152")
 	)
 	(wire
 		(pts
@@ -1247,7 +1283,7 @@
 	)
 	(global_label "OUTPUT"
 		(shape output)
-		(at 166.37 26.67 0)
+		(at 179.07 26.67 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -1257,7 +1293,7 @@
 		)
 		(uuid "a7a81ed3-ca77-44cd-afac-c55ef1459ea3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 176.5519 26.67 0)
+			(at 189.2519 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1372,6 +1408,76 @@
 			(project "Buck_Breakout"
 				(path "/94f3a2ba-6c26-4497-b452-3ee58af33c55"
 					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 175.26 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "02e26e91-ba6e-45cd-ba19-a21f0f92f945")
+		(property "Reference" "C4"
+			(at 179.07 30.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22uF"
+			(at 179.07 33.0199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
+			(at 176.2252 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 175.26 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 175.26 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f1d17a0b-63fa-4559-bbe0-ea8feca54ebf")
+		)
+		(pin "2"
+			(uuid "8d5becb6-1abd-449c-9e95-56aed4aadfae")
+		)
+		(instances
+			(project "Buck_Breakout"
+				(path "/94f3a2ba-6c26-4497-b452-3ee58af33c55"
+					(reference "C4")
 					(unit 1)
 				)
 			)
@@ -2205,6 +2311,72 @@
 			(project "Buck_Breakout"
 				(path "/94f3a2ba-6c26-4497-b452-3ee58af33c55"
 					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 175.26 36.83 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "eae49ab6-cc95-4c9a-8cf8-6686cbd626ad")
+		(property "Reference" "#PWR07"
+			(at 175.26 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 175.26 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 175.26 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 175.26 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 175.26 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1f9ee5af-29be-4fd0-bc31-633e7b87f013")
+		)
+		(instances
+			(project "Buck_Breakout"
+				(path "/94f3a2ba-6c26-4497-b452-3ee58af33c55"
+					(reference "#PWR07")
 					(unit 1)
 				)
 			)

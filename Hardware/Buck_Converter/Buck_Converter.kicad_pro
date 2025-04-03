@@ -485,7 +485,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "Buck_Converter.step",
       "svg": "",
       "vrml": ""
     },

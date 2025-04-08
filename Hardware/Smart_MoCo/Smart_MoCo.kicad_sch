@@ -5497,16 +5497,6 @@
 		)
 		(uuid "ff420fab-3f5b-4677-adc5-497a7ea12a18")
 	)
-	(text "Check LED Resistor Values"
-		(exclude_from_sim no)
-		(at 243.332 45.212 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "20c27650-a732-4f7d-9fdb-bed7e89fbd97")
-	)
 	(text "See MCU datasheet figure 25"
 		(exclude_from_sim no)
 		(at 83.566 45.466 0)
@@ -5629,6 +5619,7 @@
 	)
 	(label "OUTA"
 		(at 130.81 121.92 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5639,6 +5630,7 @@
 	)
 	(label "OUTB"
 		(at 130.81 127 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -6823,7 +6815,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220"
+		(property "Value" "1k"
 			(at 247.65 41.9099 0)
 			(effects
 				(font
@@ -7947,7 +7939,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220"
+		(property "Value" "1k"
 			(at 270.51 41.9099 0)
 			(effects
 				(font
@@ -9918,7 +9910,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220"
+		(property "Value" "1k"
 			(at 259.08 41.9099 0)
 			(effects
 				(font

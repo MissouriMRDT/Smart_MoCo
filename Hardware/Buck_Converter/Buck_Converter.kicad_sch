@@ -8,8 +8,9 @@
 		(title "Buck Converter")
 		(date "2025-04-01")
 		(rev "1")
-		(company "MRDT")
+		(company "Mars Rover Design Team")
 		(comment 1 "Brendan Westley")
+		(comment 2 "Malacki Ehlers")
 	)
 	(lib_symbols
 		(symbol "Connector_Generic:Conn_01x05"

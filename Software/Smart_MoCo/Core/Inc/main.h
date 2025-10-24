@@ -36,7 +36,15 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum ControlMode ControlMode;
+enum ControlMode {
+  CONTROL_MODE_STOP,
+  CONTROL_MODE_OPEN_LOOP,
+  CONTROL_MODE_POSITION,
+  CONTROL_MODE_VELOCITY,
+  CONTROL_MODE_CURRENT,
+  CONTROL_MODE_CALIBRATING
+};
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -81,8 +89,23 @@ void Error_Handler(void);
 #define IN_A_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define ENC_PWM_Pin GPIO_PIN_5
-#define ENC_PWM_GPIO_Port GPIOA
+#define MESSAGE_ID_POSITION 0x0
+#define MESSAGE_ID_POSITION_CALIBRATED 0x1
+#define MESSAGE_ID_TARGET 0x2
+#define MESSAGE_ID_SMOOTHING 0x3
+#define MESSAGE_ID_PID 0x4
+#define MESSAGE_ID_LIMIT 0x5
+#define MESSAGE_ID_SOFT_LIMIT 0x6
+#define MESSAGE_ID_CALIBRATE 0x7
+#define MESSAGE_ID_STOP 0xC
+#define MESSAGE_ID_ERROR 0xD
+#define MESSAGE_ID_ECHO_REQUEST 0xE
+#define MESSAGE_ID_ECHO_REPLY 0xF
+
+#define MESSAGE_SID_OPEN_LOOP 0x0
+#define MESSAGE_SID_POSITION 0x2
+#define MESSAGE_SID_VELOCITY 0x4
+#define MESSAGE_SID_CURRENT 0x6
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

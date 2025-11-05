@@ -6445,7 +6445,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MRDT_Drill_Holes:4_40_Hole"
+		(property "Footprint" "Local Libraries:Minimal_4_40_Hole"
 			(at 19.05 129.54 0)
 			(effects
 				(font
@@ -6580,7 +6580,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MRDT_Drill_Holes:4_40_Hole"
+		(property "Footprint" "Local Libraries:Minimal_4_40_Hole"
 			(at 19.05 134.62 0)
 			(effects
 				(font

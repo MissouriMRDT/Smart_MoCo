@@ -871,6 +871,15 @@
 					(hide yes)
 				)
 			)
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "LED diode"
 				(at 0 0 0)
 				(effects
@@ -1127,21 +1136,19 @@
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "R"
-				(at 0.762 0.508 0)
+				(at 0 0 90)
 				(effects
 					(font
-						(size 1.27 1.27)
+						(size 1.016 1.016)
 					)
-					(justify left)
 				)
 			)
 			(property "Value" "R_Small"
-				(at 0.762 -1.016 0)
+				(at 1.778 0 90)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(justify left)
 				)
 			)
 			(property "Footprint" ""
@@ -3820,6 +3827,107 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "power:PWR_FLAG"
+			(power)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#FLG"
+				(at 0 1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "PWR_FLAG"
+				(at 0 3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Special symbol for telling ERC where power comes from"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "flag power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "PWR_FLAG_0_0"
+				(pin power_out line
+					(at 0 0 90)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(text "See MCU datasheet figure 25"
 		(exclude_from_sim no)
@@ -3956,6 +4064,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4d99fce1-e704-482c-9d22-46da7595197d")
+	)
+	(junction
+		(at 194.31 86.36)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "57560267-606e-4cf5-9dfd-73cc06d1b9e2")
 	)
 	(junction
 		(at 90.17 134.62)
@@ -4343,7 +4457,7 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 96.52) (xy 30.48 95.25)
+			(xy 31.75 96.52) (xy 31.75 95.25)
 		)
 		(stroke
 			(width 0)
@@ -4433,7 +4547,7 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 104.14) (xy 30.48 105.41)
+			(xy 31.75 104.14) (xy 31.75 105.41)
 		)
 		(stroke
 			(width 0)
@@ -4450,6 +4564,16 @@
 			(type default)
 		)
 		(uuid "57f1e3e8-f964-4644-8268-9dbe5867ec98")
+	)
+	(wire
+		(pts
+			(xy 194.31 85.09) (xy 194.31 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5bc5826a-6878-4abf-bcd8-e7693635c59c")
 	)
 	(wire
 		(pts
@@ -4583,7 +4707,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 99.06) (xy 31.75 99.06)
+			(xy 30.48 99.06) (xy 33.02 99.06)
 		)
 		(stroke
 			(width 0)
@@ -4733,7 +4857,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 101.6) (xy 31.75 101.6)
+			(xy 30.48 101.6) (xy 33.02 101.6)
 		)
 		(stroke
 			(width 0)
@@ -4810,6 +4934,16 @@
 			(type default)
 		)
 		(uuid "aba699ab-7f32-4349-8ce5-ab41b41effe8")
+	)
+	(wire
+		(pts
+			(xy 194.31 86.36) (xy 196.85 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ac566e35-5636-4236-acff-4bd8bd653a0c")
 	)
 	(wire
 		(pts
@@ -5023,7 +5157,7 @@
 	)
 	(wire
 		(pts
-			(xy 185.42 86.36) (xy 196.85 86.36)
+			(xy 185.42 86.36) (xy 194.31 86.36)
 		)
 		(stroke
 			(width 0)
@@ -5053,7 +5187,7 @@
 	)
 	(wire
 		(pts
-			(xy 31.75 96.52) (xy 30.48 96.52)
+			(xy 33.02 96.52) (xy 31.75 96.52)
 		)
 		(stroke
 			(width 0)
@@ -5203,7 +5337,7 @@
 	)
 	(wire
 		(pts
-			(xy 31.75 104.14) (xy 30.48 104.14)
+			(xy 33.02 104.14) (xy 31.75 104.14)
 		)
 		(stroke
 			(width 0)
@@ -5633,7 +5767,7 @@
 	)
 	(global_label "SWCLK"
 		(shape output)
-		(at 29.21 99.06 180)
+		(at 30.48 99.06 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5643,7 +5777,7 @@
 		)
 		(uuid "74fd0814-1cff-4e24-9caf-10be44af69b3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 19.9958 99.06 0)
+			(at 21.2658 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5897,7 +6031,7 @@
 	)
 	(global_label "SWDIO"
 		(shape bidirectional)
-		(at 29.21 101.6 180)
+		(at 30.48 101.6 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5907,7 +6041,7 @@
 		)
 		(uuid "e6494808-9a22-43fd-90b1-2f5ffc9721c2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 19.2473 101.6 0)
+			(at 20.5173 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6014,7 +6148,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "008198b2-e176-47bd-aa42-34509aee02fc")
-		(property "Reference" "J4"
+		(property "Reference" "J6"
 			(at 149.86 121.9199 0)
 			(effects
 				(font
@@ -6070,7 +6204,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J4")
+					(reference "J6")
 					(unit 1)
 				)
 			)
@@ -6085,7 +6219,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "06e9edb3-086e-4eae-a818-7b7ec91033a4")
-		(property "Reference" "R5"
+		(property "Reference" "R6"
 			(at 237.49 83.82 0)
 			(effects
 				(font
@@ -6139,7 +6273,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R5")
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -6154,7 +6288,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "097d1fe7-1dcc-43ad-943e-ea99743ee0c5")
-		(property "Reference" "C10"
+		(property "Reference" "C3"
 			(at 225.806 83.0579 0)
 			(effects
 				(font
@@ -6208,7 +6342,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "C10")
+					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -6291,7 +6425,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2002f1fb-f303-4e3b-8dee-9a170eea1047")
-		(property "Reference" "R10"
+		(property "Reference" "R8"
 			(at 247.65 39.3699 0)
 			(effects
 				(font
@@ -6345,7 +6479,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R10")
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -6361,7 +6495,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "21e0b1c4-abb2-45bb-b87e-239ecf7ff8e6")
-		(property "Reference" "#PWR05"
+		(property "Reference" "#PWR03"
 			(at 31.75 74.93 0)
 			(effects
 				(font
@@ -6411,7 +6545,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR05")
+					(reference "#PWR03")
 					(unit 1)
 				)
 			)
@@ -6492,7 +6626,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "23f3abed-a67a-4c8d-8808-0462822a7571")
-		(property "Reference" "R8"
+		(property "Reference" "R4"
 			(at 102.87 138.4299 0)
 			(effects
 				(font
@@ -6546,7 +6680,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R8")
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -6625,7 +6759,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "2a4847eb-3a78-497e-aa7b-7aac329d343f")
-		(property "Reference" "#PWR07"
+		(property "Reference" "#PWR06"
 			(at 83.82 72.39 0)
 			(effects
 				(font
@@ -6675,7 +6809,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR07")
+					(reference "#PWR06")
 					(unit 1)
 				)
 			)
@@ -6692,7 +6826,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2b2e10bb-d485-4d73-9b47-c17a2be4451b")
-		(property "Reference" "C2"
+		(property "Reference" "C1"
 			(at 86.995 138.43 0)
 			(effects
 				(font
@@ -6746,7 +6880,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "C2")
+					(reference "C1")
 					(unit 1)
 				)
 			)
@@ -6762,7 +6896,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "318df9b8-ada5-47df-ac97-9efd56725348")
-		(property "Reference" "C7"
+		(property "Reference" "C2"
 			(at 189.23 89.2809 0)
 			(effects
 				(font
@@ -6816,7 +6950,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "C7")
+					(reference "C2")
 					(unit 1)
 				)
 			)
@@ -6995,7 +7129,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "44a012e0-5bce-4a9c-aff8-b6036674324d")
-		(property "Reference" "#PWR011"
+		(property "Reference" "#PWR09"
 			(at 111.76 88.9 0)
 			(effects
 				(font
@@ -7045,7 +7179,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR011")
+					(reference "#PWR09")
 					(unit 1)
 				)
 			)
@@ -7062,7 +7196,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "48050cb2-20a9-4531-9f83-d5bc4d2058c9")
-		(property "Reference" "#PWR010"
+		(property "Reference" "#PWR08"
 			(at 100.33 152.4 0)
 			(effects
 				(font
@@ -7112,7 +7246,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR010")
+					(reference "#PWR08")
 					(unit 1)
 				)
 			)
@@ -7128,7 +7262,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "50b80c4e-3414-455e-ba61-f5757c8d7f4b")
-		(property "Reference" "L2"
+		(property "Reference" "L1"
 			(at 228.6 73.66 90)
 			(effects
 				(font
@@ -7180,7 +7314,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "L2")
+					(reference "L1")
 					(unit 1)
 				)
 			)
@@ -7196,7 +7330,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "51dc2ff9-b484-457c-a21c-fa608b7a0c55")
-		(property "Reference" "R12"
+		(property "Reference" "R10"
 			(at 270.51 39.3699 0)
 			(effects
 				(font
@@ -7250,7 +7384,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R12")
+					(reference "R10")
 					(unit 1)
 				)
 			)
@@ -7266,7 +7400,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "533bbad4-978d-4318-be5f-6b1f00f33bda")
-		(property "Reference" "#PWR031"
+		(property "Reference" "#PWR019"
 			(at 234.95 107.95 0)
 			(effects
 				(font
@@ -7316,7 +7450,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR031")
+					(reference "#PWR019")
 					(unit 1)
 				)
 			)
@@ -7324,7 +7458,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 30.48 105.41 0)
+		(at 31.75 105.41 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7332,8 +7466,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "553ae17a-d0cc-4e02-a83c-d4631d9937cc")
-		(property "Reference" "#PWR02"
-			(at 30.48 111.76 0)
+		(property "Reference" "#PWR05"
+			(at 31.75 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7342,7 +7476,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 30.48 110.49 0)
+			(at 31.75 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7350,7 +7484,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 30.48 105.41 0)
+			(at 31.75 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7359,7 +7493,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 30.48 105.41 0)
+			(at 31.75 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7368,7 +7502,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 30.48 105.41 0)
+			(at 31.75 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7382,7 +7516,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR02")
+					(reference "#PWR05")
 					(unit 1)
 				)
 			)
@@ -7397,7 +7531,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "58322719-127e-4e37-a7d8-8930e18868a1")
-		(property "Reference" "R9"
+		(property "Reference" "R5"
 			(at 206.756 41.91 0)
 			(effects
 				(font
@@ -7451,7 +7585,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R9")
+					(reference "R5")
 					(unit 1)
 				)
 			)
@@ -7547,7 +7681,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 30.48 95.25 0)
+		(at 31.75 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7555,8 +7689,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6feeb410-b0fa-4f5b-8d05-36fcd86c8baa")
-		(property "Reference" "#PWR01"
-			(at 30.48 99.06 0)
+		(property "Reference" "#PWR04"
+			(at 31.75 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7565,7 +7699,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 30.48 90.17 0)
+			(at 31.75 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7573,7 +7707,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 30.48 95.25 0)
+			(at 31.75 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7582,7 +7716,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 30.48 95.25 0)
+			(at 31.75 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7591,7 +7725,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 30.48 95.25 0)
+			(at 31.75 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7605,7 +7739,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR01")
+					(reference "#PWR04")
 					(unit 1)
 				)
 			)
@@ -7666,6 +7800,15 @@
 				(hide yes)
 			)
 		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 256.54 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f22efc65-d409-4d71-ac36-cf030b2c0fec")
 		)
@@ -7691,7 +7834,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "72d9b4e0-9224-4f5e-ae79-ec4eb613fe11")
-		(property "Reference" "J5"
+		(property "Reference" "J2"
 			(at 40.64 49.5299 0)
 			(effects
 				(font
@@ -7751,7 +7894,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J5")
+					(reference "J2")
 					(unit 1)
 				)
 			)
@@ -7767,7 +7910,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7615c6c9-4aa6-4160-a8a6-286a0cd8880e")
-		(property "Reference" "J7"
+		(property "Reference" "J4"
 			(at 40.64 80.0099 0)
 			(effects
 				(font
@@ -7821,7 +7964,73 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J7")
+					(reference "J4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 194.31 85.09 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "81b75524-ad02-46b9-882a-b2901077fc3e")
+		(property "Reference" "#FLG01"
+			(at 194.31 83.185 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 194.31 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 194.31 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 194.31 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 194.31 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c02039d8-bea6-46c9-bb80-309fd7fb0879")
+		)
+		(instances
+			(project ""
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "#FLG01")
 					(unit 1)
 				)
 			)
@@ -7837,7 +8046,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "88004da8-1d17-4190-8030-ecf3d0cca6f5")
-		(property "Reference" "#PWR012"
+		(property "Reference" "#PWR011"
 			(at 116.84 110.49 0)
 			(effects
 				(font
@@ -7887,7 +8096,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR012")
+					(reference "#PWR011")
 					(unit 1)
 				)
 			)
@@ -7903,7 +8112,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8c9b1faa-3698-4622-ad48-0d796560a980")
-		(property "Reference" "#PWR027"
+		(property "Reference" "#PWR017"
 			(at 207.01 104.14 0)
 			(effects
 				(font
@@ -7953,7 +8162,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR027")
+					(reference "#PWR017")
 					(unit 1)
 				)
 			)
@@ -7968,7 +8177,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "9c9d3989-3381-4e65-ad95-df987ad19e8e")
-		(property "Reference" "#PWR06"
+		(property "Reference" "#PWR07"
 			(at 92.71 127 0)
 			(effects
 				(font
@@ -8018,7 +8227,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR06")
+					(reference "#PWR07")
 					(unit 1)
 				)
 			)
@@ -8078,6 +8287,15 @@
 				(hide yes)
 			)
 		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 267.97 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "d2660bbb-97a5-484f-b178-7ce4225d7f36")
 		)
@@ -8104,7 +8322,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a21a785a-f203-4158-b533-da5e117e0df4")
-		(property "Reference" "#PWR013"
+		(property "Reference" "#PWR012"
 			(at 116.84 148.59 0)
 			(effects
 				(font
@@ -8154,7 +8372,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR013")
+					(reference "#PWR012")
 					(unit 1)
 				)
 			)
@@ -8170,7 +8388,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a869340d-a0be-4a73-bacb-1c7fed6008e1")
-		(property "Reference" "#PWR033"
+		(property "Reference" "#PWR018"
 			(at 234.95 81.28 0)
 			(effects
 				(font
@@ -8220,7 +8438,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR033")
+					(reference "#PWR018")
 					(unit 1)
 				)
 			)
@@ -8236,7 +8454,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "aa297cdf-2935-470c-9202-2ce2a901b56d")
-		(property "Reference" "#PWR028"
+		(property "Reference" "#PWR020"
 			(at 245.11 60.96 0)
 			(effects
 				(font
@@ -8286,7 +8504,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR028")
+					(reference "#PWR020")
 					(unit 1)
 				)
 			)
@@ -8302,7 +8520,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b1b5a923-f9d2-4145-b3b1-97f0236a2282")
-		(property "Reference" "#PWR04"
+		(property "Reference" "#PWR02"
 			(at 31.75 62.23 0)
 			(effects
 				(font
@@ -8352,7 +8570,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR04")
+					(reference "#PWR02")
 					(unit 1)
 				)
 			)
@@ -8368,7 +8586,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bab697f5-6154-4040-b8e9-46cfcbc95ada")
-		(property "Reference" "#PWR029"
+		(property "Reference" "#PWR021"
 			(at 256.54 60.96 0)
 			(effects
 				(font
@@ -8418,7 +8636,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR029")
+					(reference "#PWR021")
 					(unit 1)
 				)
 			)
@@ -8434,7 +8652,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bb2f5d8d-479c-4562-b344-3292c0aac289")
-		(property "Reference" "J6"
+		(property "Reference" "J3"
 			(at 40.64 72.3899 0)
 			(effects
 				(font
@@ -8488,7 +8706,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J6")
+					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -8584,7 +8802,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c09ba5e0-6028-48bf-a41f-dbf57f7a9109")
-		(property "Reference" "R11"
+		(property "Reference" "R9"
 			(at 259.08 39.3699 0)
 			(effects
 				(font
@@ -8638,7 +8856,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R11")
+					(reference "R9")
 					(unit 1)
 				)
 			)
@@ -8654,7 +8872,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c8ac9115-1d57-4d0c-9ce8-602902a4a98a")
-		(property "Reference" "#PWR014"
+		(property "Reference" "#PWR010"
 			(at 114.3 39.37 0)
 			(effects
 				(font
@@ -8704,7 +8922,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR014")
+					(reference "#PWR010")
 					(unit 1)
 				)
 			)
@@ -8712,7 +8930,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x04")
-		(at 36.83 99.06 0)
+		(at 38.1 99.06 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8720,8 +8938,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c99502ae-ba88-4eba-b54b-730dfa2ee7ec")
-		(property "Reference" "J1"
-			(at 39.37 99.0599 0)
+		(property "Reference" "J5"
+			(at 40.64 99.0599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8730,7 +8948,7 @@
 			)
 		)
 		(property "Value" "Conn_01x04"
-			(at 39.37 101.5999 0)
+			(at 40.64 101.5999 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8739,7 +8957,7 @@
 			)
 		)
 		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical"
-			(at 36.83 99.06 0)
+			(at 38.1 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8748,7 +8966,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 36.83 99.06 0)
+			(at 38.1 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8757,7 +8975,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 36.83 99.06 0)
+			(at 38.1 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8780,7 +8998,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J1")
+					(reference "J5")
 					(unit 1)
 				)
 			)
@@ -8795,7 +9013,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ca38a3db-df65-4044-9890-bb27a2a48a9c")
-		(property "Reference" "J2"
+		(property "Reference" "J7"
 			(at 170.18 96.52 0)
 			(effects
 				(font
@@ -8849,7 +9067,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J2")
+					(reference "J7")
 					(unit 1)
 				)
 			)
@@ -8933,7 +9151,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "cab5cd21-3912-4125-81e6-996cd7d35f76")
-		(property "Reference" "#PWR021"
+		(property "Reference" "#PWR016"
 			(at 191.77 59.69 0)
 			(effects
 				(font
@@ -8983,7 +9201,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR021")
+					(reference "#PWR016")
 					(unit 1)
 				)
 			)
@@ -8999,7 +9217,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ce42e8ce-d456-4e59-8c54-bd4f2bee1a18")
-		(property "Reference" "#PWR016"
+		(property "Reference" "#PWR013"
 			(at 185.42 88.9 0)
 			(effects
 				(font
@@ -9049,7 +9267,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR016")
+					(reference "#PWR013")
 					(unit 1)
 				)
 			)
@@ -9065,7 +9283,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "cf16b60b-1924-40fd-977e-1a3b61e4f3c8")
-		(property "Reference" "#PWR03"
+		(property "Reference" "#PWR01"
 			(at 31.75 49.53 0)
 			(effects
 				(font
@@ -9115,7 +9333,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR03")
+					(reference "#PWR01")
 					(unit 1)
 				)
 			)
@@ -9132,7 +9350,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d240993e-cc3b-414b-acbd-6416d97f8e1c")
-		(property "Reference" "R4"
+		(property "Reference" "R1"
 			(at 95.25 138.43 90)
 			(effects
 				(font
@@ -9184,7 +9402,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R4")
+					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -9200,7 +9418,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d8c20d29-acc6-4907-9f55-4c47fa491388")
-		(property "Reference" "#PWR030"
+		(property "Reference" "#PWR022"
 			(at 267.97 60.96 0)
 			(effects
 				(font
@@ -9250,7 +9468,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR030")
+					(reference "#PWR022")
 					(unit 1)
 				)
 			)
@@ -9391,7 +9609,7 @@
 		(dnp no)
 		(uuid "dfc7d352-1483-401a-9575-e1fbef425cd7")
 		(property "Reference" "D1"
-			(at 271.78 49.8474 90)
+			(at 249.174 50.038 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9400,7 +9618,7 @@
 			)
 		)
 		(property "Value" "Red"
-			(at 271.78 52.3874 90)
+			(at 249.174 52.578 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9435,6 +9653,15 @@
 				(hide yes)
 			)
 		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 245.11 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "43c2b1b1-7445-4f70-903c-53ad0e89b2cd")
 		)
@@ -9460,7 +9687,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e227a87a-0035-49e8-b45f-acdce1e83edb")
-		(property "Reference" "#PWR022"
+		(property "Reference" "#PWR014"
 			(at 185.42 104.14 0)
 			(effects
 				(font
@@ -9510,7 +9737,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR022")
+					(reference "#PWR014")
 					(unit 1)
 				)
 			)
@@ -9526,7 +9753,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ea9edf5b-a71b-4ec7-ac1d-23db5c18e32e")
-		(property "Reference" "J3"
+		(property "Reference" "J1"
 			(at 40.64 25.3999 0)
 			(effects
 				(font
@@ -9580,7 +9807,7 @@
 		(instances
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J3")
+					(reference "J1")
 					(unit 1)
 				)
 			)
@@ -9596,7 +9823,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ef007171-2687-42ba-b576-07120755bc4d")
-		(property "Reference" "#PWR020"
+		(property "Reference" "#PWR015"
 			(at 191.77 35.56 0)
 			(effects
 				(font
@@ -9646,7 +9873,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "#PWR020")
+					(reference "#PWR015")
 					(unit 1)
 				)
 			)
@@ -9661,7 +9888,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ef994bf6-064f-4e3d-ad45-55fc39d80064")
-		(property "Reference" "R6"
+		(property "Reference" "R7"
 			(at 237.49 95.25 0)
 			(effects
 				(font
@@ -9715,7 +9942,7 @@
 		(instances
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "R6")
+					(reference "R7")
 					(unit 1)
 				)
 			)

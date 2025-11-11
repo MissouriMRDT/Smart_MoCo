@@ -3939,6 +3939,16 @@
 		)
 		(uuid "438cfb07-cf18-484e-a780-17bafb53b90a")
 	)
+	(text "Close to Pin 5"
+		(exclude_from_sim no)
+		(at 131.064 25.146 0)
+		(effects
+			(font
+				(size 0.762 0.762)
+			)
+		)
+		(uuid "46292617-74c8-44c6-a6ea-d7eccb453b32")
+	)
 	(text "See driver datasheet figure 4\n1k resistors in series with input pins may be\nremoved and VBAT and VCC are shorted as\nreverse battery protection is not implemented"
 		(exclude_from_sim no)
 		(at 99.822 102.362 0)
@@ -3948,6 +3958,16 @@
 			)
 		)
 		(uuid "4d4585a8-1f94-4117-8db6-75fdcbd3d0ea")
+	)
+	(text "Close to Pin 16"
+		(exclude_from_sim no)
+		(at 88.9 24.892 0)
+		(effects
+			(font
+				(size 0.762 0.762)
+			)
+		)
+		(uuid "51bd2dc5-812f-45f6-b91e-fed3a3e140dd")
 	)
 	(text "PB8-BOOT0 tied low to disable\nsystem bootloader; see AN2606"
 		(exclude_from_sim no)
@@ -4036,10 +4056,28 @@
 		(uuid "1442eb26-8c11-437a-b1cd-3431f628ca31")
 	)
 	(junction
-		(at 114.3 36.83)
+		(at 137.16 36.83)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "28bee628-0cb7-46d1-b0cb-df2909a63a2b")
+		(uuid "155f102f-b8f4-4040-95b5-f77ee772dc3b")
+	)
+	(junction
+		(at 88.9 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "170cf829-e8ab-4f76-8347-cf32c2a59b23")
+	)
+	(junction
+		(at 114.3 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2cca8353-5745-4485-8bff-46f096c61029")
+	)
+	(junction
+		(at 76.2 36.83)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "30321064-f3a2-47dc-9b7f-907d4eedb307")
 	)
 	(junction
 		(at 234.95 91.44)
@@ -4078,6 +4116,18 @@
 		(uuid "59af0db9-a03d-4acd-adc6-a0a22f131066")
 	)
 	(junction
+		(at 124.46 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "623c8401-0553-4416-8371-2dfce2e0c0f6")
+	)
+	(junction
+		(at 101.6 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "68196d44-1100-4aae-898a-6eb977f95f2a")
+	)
+	(junction
 		(at 100.33 134.62)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4102,6 +4152,12 @@
 		(uuid "84171883-7fe7-4b43-8d5f-f22e472f142c")
 	)
 	(junction
+		(at 88.9 36.83)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8524e1c8-971b-4a6e-85c4-03dc6b11b44a")
+	)
+	(junction
 		(at 116.84 107.95)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4112,6 +4168,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a698d40e-cb92-442f-ab94-6e28cfea34dd")
+	)
+	(junction
+		(at 114.3 36.83)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b8454f4d-4679-43db-9b4a-86a0ea05a5db")
 	)
 	(junction
 		(at 116.84 140.97)
@@ -4147,6 +4209,16 @@
 	)
 	(wire
 		(pts
+			(xy 76.2 26.67) (xy 88.9 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "00239c36-147e-4376-aa19-96e7a97c970a")
+	)
+	(wire
+		(pts
 			(xy 31.75 46.99) (xy 33.02 46.99)
 		)
 		(stroke
@@ -4164,6 +4236,16 @@
 			(type default)
 		)
 		(uuid "018b9707-77ad-4c83-920e-520476f8ce05")
+	)
+	(wire
+		(pts
+			(xy 76.2 36.83) (xy 88.9 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0356a71a-2484-4513-8f3c-1421fa305162")
 	)
 	(wire
 		(pts
@@ -4247,6 +4329,16 @@
 	)
 	(wire
 		(pts
+			(xy 114.3 26.67) (xy 114.3 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10c26b25-0ccd-41ec-b5f9-f74eb60e6299")
+	)
+	(wire
+		(pts
 			(xy 100.33 143.51) (xy 100.33 144.78)
 		)
 		(stroke
@@ -4267,7 +4359,27 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 35.56) (xy 114.3 36.83)
+			(xy 137.16 35.56) (xy 137.16 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16b76da0-f708-4ec3-a682-649de6f14539")
+	)
+	(wire
+		(pts
+			(xy 137.16 26.67) (xy 137.16 27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "17de110c-4cb4-47f1-8015-a40431cbe46b")
+	)
+	(wire
+		(pts
+			(xy 114.3 22.86) (xy 114.3 26.67)
 		)
 		(stroke
 			(width 0)
@@ -4287,13 +4399,13 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 36.83) (xy 114.3 36.83)
+			(xy 124.46 35.56) (xy 124.46 36.83)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "268ff78a-25c1-420a-a4fe-b8e16f78a87b")
+		(uuid "25ae79ee-49c2-41eb-aacc-c62171e80e66")
 	)
 	(wire
 		(pts
@@ -4337,6 +4449,16 @@
 	)
 	(wire
 		(pts
+			(xy 101.6 26.67) (xy 114.3 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2febb017-54d2-471c-b91b-5d41079e994f")
+	)
+	(wire
+		(pts
 			(xy 121.92 107.95) (xy 116.84 107.95)
 		)
 		(stroke
@@ -4354,6 +4476,16 @@
 			(type default)
 		)
 		(uuid "3426d241-421f-4778-a7b4-82edf158bb64")
+	)
+	(wire
+		(pts
+			(xy 114.3 38.1) (xy 114.3 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "370f5820-64ad-4811-8dbf-2b803402bf02")
 	)
 	(wire
 		(pts
@@ -4487,6 +4619,16 @@
 	)
 	(wire
 		(pts
+			(xy 76.2 27.94) (xy 76.2 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4c6924c5-159f-4a4b-9df9-b336e384a92b")
+	)
+	(wire
+		(pts
 			(xy 234.95 88.9) (xy 234.95 91.44)
 		)
 		(stroke
@@ -4607,16 +4749,6 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 36.83) (xy 114.3 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6a218a5c-8139-495d-ac37-0ecc13eb897b")
-	)
-	(wire
-		(pts
 			(xy 245.11 35.56) (xy 245.11 36.83)
 		)
 		(stroke
@@ -4677,16 +4809,6 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 38.1) (xy 111.76 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7439e19b-dc2e-46cc-9f84-4b54ecda4d3e")
-	)
-	(wire
-		(pts
 			(xy 104.14 134.62) (xy 100.33 134.62)
 		)
 		(stroke
@@ -4714,6 +4836,16 @@
 			(type default)
 		)
 		(uuid "79f35eb5-9af2-4b5d-88ee-da9ee2a73332")
+	)
+	(wire
+		(pts
+			(xy 114.3 36.83) (xy 111.76 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7c9b960f-719f-4343-8e02-cb51c2e9d64c")
 	)
 	(wire
 		(pts
@@ -4947,6 +5079,16 @@
 	)
 	(wire
 		(pts
+			(xy 88.9 36.83) (xy 101.6 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ad7ae8e6-237c-45b9-9588-7d031b32939f")
+	)
+	(wire
+		(pts
 			(xy 83.82 60.96) (xy 83.82 66.04)
 		)
 		(stroke
@@ -4977,6 +5119,16 @@
 	)
 	(wire
 		(pts
+			(xy 124.46 36.83) (xy 137.16 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b5ed63d5-ec84-4952-a73a-a5c103de9042")
+	)
+	(wire
+		(pts
 			(xy 116.84 106.68) (xy 116.84 107.95)
 		)
 		(stroke
@@ -4984,6 +5136,16 @@
 			(type default)
 		)
 		(uuid "b64c7972-d4b9-4299-a859-38543104c3c8")
+	)
+	(wire
+		(pts
+			(xy 124.46 26.67) (xy 124.46 27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b69cfbbc-0f42-4c9a-8113-0fead0a528ab")
 	)
 	(wire
 		(pts
@@ -5014,6 +5176,36 @@
 			(type default)
 		)
 		(uuid "b921c4af-0e62-40be-8811-a5c106c27e62")
+	)
+	(wire
+		(pts
+			(xy 114.3 26.67) (xy 124.46 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b964cbcc-d803-437d-8c92-c18ddad106c6")
+	)
+	(wire
+		(pts
+			(xy 137.16 36.83) (xy 137.16 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ba4a7561-b911-4e6f-960c-eea527f12642")
+	)
+	(wire
+		(pts
+			(xy 88.9 36.83) (xy 88.9 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ba783d93-c8ba-4aa1-8020-fa8b8c3ca201")
 	)
 	(wire
 		(pts
@@ -5077,6 +5269,16 @@
 	)
 	(wire
 		(pts
+			(xy 88.9 26.67) (xy 101.6 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c82fd9d8-0be7-4f33-aa1d-a19b4b8a0a46")
+	)
+	(wire
+		(pts
 			(xy 101.6 119.38) (xy 104.14 119.38)
 		)
 		(stroke
@@ -5117,6 +5319,16 @@
 	)
 	(wire
 		(pts
+			(xy 76.2 35.56) (xy 76.2 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ce1ca240-0e94-489a-be20-68fee7874bf0")
+	)
+	(wire
+		(pts
 			(xy 129.54 66.04) (xy 130.81 66.04)
 		)
 		(stroke
@@ -5154,6 +5366,16 @@
 			(type default)
 		)
 		(uuid "d5b508ef-2fbc-4922-a95b-5640c61e9fa3")
+	)
+	(wire
+		(pts
+			(xy 88.9 27.94) (xy 88.9 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d5cb64f5-6212-4d3e-a651-62c8870b6107")
 	)
 	(wire
 		(pts
@@ -5207,6 +5429,16 @@
 	)
 	(wire
 		(pts
+			(xy 101.6 26.67) (xy 101.6 27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "de3436a8-f712-4b84-ab30-0b873d11a315")
+	)
+	(wire
+		(pts
 			(xy 203.2 46.99) (xy 205.74 46.99)
 		)
 		(stroke
@@ -5244,6 +5476,26 @@
 			(type default)
 		)
 		(uuid "e252f1ad-c281-4800-8c3f-fc1c7e349769")
+	)
+	(wire
+		(pts
+			(xy 76.2 36.83) (xy 76.2 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4dd8e8b-55ce-423c-91fe-f28b9ae2b38a")
+	)
+	(wire
+		(pts
+			(xy 111.76 36.83) (xy 111.76 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e5a7113a-f970-4c81-b2b5-81ec25df326a")
 	)
 	(wire
 		(pts
@@ -5357,6 +5609,16 @@
 	)
 	(wire
 		(pts
+			(xy 124.46 26.67) (xy 137.16 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f8fe308f-8b96-4744-b5f7-02896c3a260e")
+	)
+	(wire
+		(pts
 			(xy 232.41 78.74) (xy 234.95 78.74)
 		)
 		(stroke
@@ -5404,6 +5666,16 @@
 			(type default)
 		)
 		(uuid "fcfb8f16-9e33-4f56-bccf-2937912da8c7")
+	)
+	(wire
+		(pts
+			(xy 101.6 36.83) (xy 101.6 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fd7e92a5-51e8-4b71-9d01-321d69e975b4")
 	)
 	(wire
 		(pts
@@ -6274,75 +6546,6 @@
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
 					(reference "R6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 222.25 83.82 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "097d1fe7-1dcc-43ad-943e-ea99743ee0c5")
-		(property "Reference" "C3"
-			(at 225.806 83.0579 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 225.806 84.836 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
-			(at 223.2152 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 222.25 83.82 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 222.25 83.82 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "cc047f17-a7a2-4339-97e1-b5a105413266")
-		)
-		(pin "2"
-			(uuid "7b12767f-c2aa-4bae-bf08-99091e98f58a")
-		)
-		(instances
-			(project "Smart_MoCo"
-				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -7592,6 +7795,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 88.9 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5d6ce775-b528-4d26-9ded-ca4c6b2878d5")
+		(property "Reference" "C5"
+			(at 92.71 30.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 92.71 33.0199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder"
+			(at 89.8652 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/503/CL05A104KA5NNNC.pdf"
+			(at 88.9 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 88.9 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Link" "https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL05A104KA5NNNC/3886701"
+			(at 88.9 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "fe17209d-082c-4b2b-8b63-cd7d7eb513a8")
+		)
+		(pin "1"
+			(uuid "ae733fdf-a877-4148-849b-c7b696c1e3e9")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "C5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Interface_CAN_LIN:SN65HVD232")
 		(at 191.77 41.91 0)
 		(unit 1)
@@ -7674,6 +7956,76 @@
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
 					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 222.25 83.82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6dde09bc-2437-43c4-ae77-5d194894ad67")
+		(property "Reference" "C3"
+			(at 226.06 82.5499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 226.06 85.0899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
+			(at 223.2152 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 222.25 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 222.25 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "97cdf523-3c17-4444-9858-2a23b70b9942")
+		)
+		(pin "1"
+			(uuid "3000054b-4328-4c82-9515-294b6dfd46ea")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -8169,6 +8521,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 76.2 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "94c801de-d61b-4313-8386-b808b6d24c11")
+		(property "Reference" "#PWR023"
+			(at 76.2 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 76.2 42.164 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 76.2 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 76.2 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f022dc6f-c283-45d8-b951-27f5010a5507")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "#PWR023")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 92.71 123.19 0)
 		(unit 1)
@@ -8373,6 +8790,85 @@
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
 					(reference "#PWR012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 101.6 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a2e28b09-c10c-46be-b13d-62f073320859")
+		(property "Reference" "C4"
+			(at 105.41 30.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 105.41 33.0199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder"
+			(at 102.5652 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/503/CL05A104KA5NNNC.pdf"
+			(at 101.6 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 101.6 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Link" "https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL05A104KA5NNNC/3886701"
+			(at 101.6 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "6fa5544e-dbf5-473c-988b-2947222528f7")
+		)
+		(pin "1"
+			(uuid "4a1cf24c-5942-4f39-ab2b-5147b1648cde")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "C4")
 					(unit 1)
 				)
 			)
@@ -8864,7 +9360,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 114.3 35.56 0)
+		(at 114.3 22.86 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8873,7 +9369,7 @@
 		(fields_autoplaced yes)
 		(uuid "c8ac9115-1d57-4d0c-9ce8-602902a4a98a")
 		(property "Reference" "#PWR010"
-			(at 114.3 39.37 0)
+			(at 114.3 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8882,7 +9378,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 114.3 30.48 0)
+			(at 114.3 17.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8890,7 +9386,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 114.3 35.56 0)
+			(at 114.3 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8899,7 +9395,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 114.3 35.56 0)
+			(at 114.3 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8908,7 +9404,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 114.3 35.56 0)
+			(at 114.3 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9475,6 +9971,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 137.16 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "dbd1f275-dc32-47f3-81de-ff918267c565")
+		(property "Reference" "C8"
+			(at 140.97 30.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1uF"
+			(at 140.97 33.0199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder"
+			(at 138.1252 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/609/CL05A105KO5NNNC_Spec_5-2-19.pdf"
+			(at 137.16 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 137.16 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Link" "https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL05A105KO5NNNC/3886725"
+			(at 137.16 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "2aa6be48-6f6c-46ef-9bfe-670e2170afb8")
+		)
+		(pin "1"
+			(uuid "e8a975e3-2118-4efa-824e-9ef9efa71d40")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "C8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "MCU_ST_STM32F0:STM32F042F6Px")
 		(at 111.76 60.96 0)
 		(unit 1)
@@ -9814,6 +10389,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 76.2 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ec9e9eb2-df9d-4ec1-bf09-95c9dd163733")
+		(property "Reference" "C6"
+			(at 80.01 30.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "4.7uF"
+			(at 80.01 33.0199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder"
+			(at 77.1652 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/2822/CL05A475MO5NUNC_Spec.pdf"
+			(at 76.2 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 76.2 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Link" "https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL05A475MO5NUNC/5961320"
+			(at 76.2 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "57b6ad52-26a8-4071-81fc-0aba97b99ce0")
+		)
+		(pin "1"
+			(uuid "23bb29fd-ed05-48ad-9d8d-fbd20d0ca6fc")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "C6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 191.77 31.75 0)
 		(unit 1)
@@ -9943,6 +10597,150 @@
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
 					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 124.46 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "efd17663-1a3d-44f6-a11b-75d821c5eac5")
+		(property "Reference" "C7"
+			(at 128.27 30.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10nF"
+			(at 128.27 33.0199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder"
+			(at 125.4252 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.yageogroup.com/content/datasheet/asset/file/UPY-GPHC_X7R_6_3V-TO-250V"
+			(at 124.46 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 124.46 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Link" "https://www.digikey.com/en/products/detail/yageo/CC0402KRX7R9BB103/2103087"
+			(at 124.46 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "3edb5b4b-6ce8-4953-99b0-ef8ce9b0ae13")
+		)
+		(pin "1"
+			(uuid "e0486ce2-7b11-4b4c-ae3d-d830e8760002")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 137.16 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fffce6b1-5a18-4f32-9327-d5296e001a02")
+		(property "Reference" "#PWR024"
+			(at 137.16 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 137.16 42.164 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 137.16 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 137.16 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 137.16 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1d091efe-3c0f-4a34-844f-f131756b27e4")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "#PWR024")
 					(unit 1)
 				)
 			)

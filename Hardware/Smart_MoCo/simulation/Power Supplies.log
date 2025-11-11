@@ -1,0 +1,14 @@
+LTspice 24.1.9 for Windows
+Circuit: C:\GitHub\MRDT\Electrical\Smart_MoCo\Hardware\Smart_MoCo\simulation\Power Supplies.net
+Start Time: Tue Nov 11 09:52:34 2025
+solver = Normal
+Maximum thread count: 16
+tnom = 27
+temp = 27
+method = modified trap
+Direct Newton iteration for .op point succeeded.
+Total elapsed time: 0.107 seconds.
+
+Files loaded:
+C:\GitHub\MRDT\Electrical\Smart_MoCo\Hardware\Smart_MoCo\simulation\Power Supplies.net
+

@@ -4,5 +4,5 @@ jobs:
     kicad-generate:
         uses: MissouriMRDT/KiCAD_Reuse_Actions/.github/workflows/kicad.yml@development
         with:
-            project-name: "Smart_Moco"
+            project-name: "Smart_MoCo"
             board-path: "./Hardware/Smart_MoCo"

@@ -510,7 +510,7 @@
       "plot": "Gerbs/",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "Smart_MoCo.step",
       "svg": "",
       "vrml": ""
     },

@@ -468,7 +468,9 @@
   },
   "libraries": {
     "pinned_footprint_libs": [],
-    "pinned_symbol_libs": []
+    "pinned_symbol_libs": [
+      "SmartMoco"
+    ]
   },
   "meta": {
     "filename": "Smart_MoCo.kicad_pro",

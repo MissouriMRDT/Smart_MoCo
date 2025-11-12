@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "SmartMoco")(type "KiCad")(uri "C:/GitHub/MRDT/Electrical/Smart_MoCo/Hardware/Local Libraries/SmartMoco.kicad_sym")(options "")(descr ""))
+)

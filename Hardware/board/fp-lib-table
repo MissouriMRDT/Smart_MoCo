@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Smart_MoCo")(type "KiCad")(uri "${KIPRJMOD}/../lib/SmartMoco.pretty")(options "")(descr ""))
+)

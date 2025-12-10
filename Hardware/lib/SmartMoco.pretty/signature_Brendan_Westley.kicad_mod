@@ -1,7 +1,7 @@
 (footprint "signature_Brendan_Westley"
-	(version 20240108)
+	(version 20241229)
 	(generator "pcbnew")
-	(generator_version "8.0")
+	(generator_version "9.0")
 	(layer "F.Cu")
 	(property "Reference" "REF**"
 		(at 0 -0.5 0)
@@ -21,19 +21,6 @@
 		(unlocked yes)
 		(layer "F.Fab")
 		(uuid "a1be206b-1c3a-46ea-88b9-47d363b5945c")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Footprint" ""
-		(at 0 0 0)
-		(unlocked yes)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "5993e6c8-c3fc-4926-8e74-a9b891805869")
 		(effects
 			(font
 				(size 1 1)
@@ -2798,18 +2785,6 @@
 		(layer "F.SilkS")
 		(uuid "6d770ef3-c4fc-4bf7-ba79-d48672ba3607")
 	)
-	(fp_text user "${REFERENCE}"
-		(at 0 2.5 0)
-		(unlocked yes)
-		(layer "F.Fab")
-		(uuid "fa9741b2-8242-44cc-af75-9d8f705a668d")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
 	(group ""
 		(uuid "76618493-160a-43cf-bb76-c83a076a8cfc")
 		(members "012696ca-605c-4e5a-bfa6-2f5f9bd650fe" "015a6b4e-fffb-4a2b-aca1-a551cfc85b46"
@@ -2951,4 +2926,5 @@
 			"fed3380d-cffb-44a0-9fa1-a159d7047acc"
 		)
 	)
+	(embedded_fonts no)
 )

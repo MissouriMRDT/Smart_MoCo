@@ -57,8 +57,6 @@ enum ControlMode {
 
 /* USER CODE END EM */
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -94,9 +92,8 @@ void Error_Handler(void);
 #define MESSAGE_ID_TARGET 0x2
 #define MESSAGE_ID_SMOOTHING 0x3
 #define MESSAGE_ID_PID 0x4
-#define MESSAGE_ID_LIMIT 0x5
-#define MESSAGE_ID_SOFT_LIMIT 0x6
-#define MESSAGE_ID_CALIBRATE 0x7
+#define MESSAGE_ID_SOFT_LIMIT 0x5
+#define MESSAGE_ID_CALIBRATE 0x6
 #define MESSAGE_ID_STOP 0xC
 #define MESSAGE_ID_ERROR 0xD
 #define MESSAGE_ID_ECHO_REQUEST 0xE

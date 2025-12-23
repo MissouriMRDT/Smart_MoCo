@@ -82,9 +82,23 @@ typedef union {
     int32_t limitSwitchPosition;
   } startPositionCalibration;
   struct __attribute__((__packed__)) {
+    bool enable;
+  } debugTelemetry;
+  struct __attribute__((__packed__)) {
     uint64_t payload;
   } echoRequest;
 } CANMessage;
+typedef struct __attribute__((__packed__)) {
+  uint64_t tick;
+  int64_t angle;
+  double velocity;
+  double current;
+  double pOut;
+  double iOut;
+  double dOut;
+  double error;
+  double deltaT;
+} DebugTelemetry;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -111,6 +125,9 @@ const uint32_t MOCO_ID = 0x0B << 4;
 // Telemetry interval (ms)
 const uint32_t TELEMETRY_INTERVAL = 500;
 
+// Rate to capture debug telemetry (ms)
+const uint32_t DEBUG_TELEMETRY_INTERVAL = 100;
+
 // Missing parameter request interval (ms)
 const uint32_t PARAMETER_REQUEST_INTERVAL = 500;
 
@@ -132,13 +149,13 @@ If the following are all true:
 Then follow these steps to change this value to an angle out of the range of the
 joint.
   1. Power off the motor controller.
-  2. Comment out ABSOLUTE_ENCODER_STARTUP_THRESHOLD
+  2. Comment out ABSOLUTE_ENCODER_STARTUP_THRESHOLD.
   3. Move the joint in the positive direction as far as possible.
-  4. Power on the motor controller.
+  4. Power on the motor controller and upload the software.
   5. Set ABSOLUTE_ENCODER_STARTUP_THRESHOLD to the reported joint angle plus
      several steps to get this value out of the joint's range.
 */
-#define ABSOLUTE_ENCODER_STARTUP_THRESHOLD 3308
+// #define ABSOLUTE_ENCODER_STARTUP_THRESHOLD 0
 
 // ABSOLUTE_ENCODER_RESOLUTION * step
 volatile int32_t absoluteEncoderRotations = 0;
@@ -151,7 +168,8 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 static void reportCommandError(uint8_t commandID);
 static double pide(double error, double P, double I, double D, double errorGain,
-                   double *lastError, double *integralError, uint32_t deltaT);
+                   double *lastError, double *integralError, double deltaT,
+                   DebugTelemetry *debugTelemetry);
 static void lowPass(double in, double *out, double alpha, double deltaT);
 uint16_t u16FromBytes(uint8_t *bytes);
 int16_t i16FromBytes(uint8_t *bytes);
@@ -230,6 +248,10 @@ int main(void) {
   CANMessage rxData = {0};
 
   // Controller state
+  bool debugTelemetryEnabled = false;
+  uint8_t debugTelemetrySending = UINT8_MAX;
+  uint32_t nextDebugTelemetryCaptureTime = 0; // ms
+  DebugTelemetry debugTelemetry = {0};
   ControlMode controlMode = CONTROL_MODE_STOP;
   bool ignoreLimit = false;
   uint32_t nextReportTime = 0; // ms
@@ -316,13 +338,16 @@ int main(void) {
               commandOK = false;
               break;
             }
-            if (lastPIDUsed && controlMode != CONTROL_MODE_POSITION) {
-              setParameters &= ~(1 << MESSAGE_ID_PID);
-              lastPIDUsed = false;
+            if (controlMode != CONTROL_MODE_POSITION) {
+              lastError = 0;
+              integralError = 0;
+              if (lastPIDUsed)
+                setParameters &= ~(1 << MESSAGE_ID_PID);
             }
+            lastPIDUsed = true;
             controlMode = CONTROL_MODE_POSITION;
             ignoreLimit = rxData.target.sid & 0b00000001;
-            errorGain = (double)rxData.target.targetPosition.errorGain / 256;
+            errorGain = (double)rxData.target.targetPosition.errorGain / 1024;
             target = rxData.target.targetPosition.position;
             break;
           case MESSAGE_SID_VELOCITY:
@@ -330,13 +355,16 @@ int main(void) {
               commandOK = false;
               break;
             }
-            if (lastPIDUsed && controlMode != CONTROL_MODE_VELOCITY) {
-              setParameters &= ~(1 << MESSAGE_ID_PID);
-              lastPIDUsed = false;
+            if (controlMode != CONTROL_MODE_VELOCITY) {
+              lastError = 0;
+              integralError = 0;
+              if (lastPIDUsed)
+                setParameters &= ~(1 << MESSAGE_ID_PID);
             }
+            lastPIDUsed = true;
             controlMode = CONTROL_MODE_VELOCITY;
             ignoreLimit = rxData.target.sid & 0b00000001;
-            errorGain = (double)rxData.target.targetVelocity.errorGain / 256;
+            errorGain = (double)rxData.target.targetVelocity.errorGain / 1024;
             target = rxData.target.targetVelocity.velocity;
             break;
           case MESSAGE_SID_CURRENT:
@@ -344,13 +372,16 @@ int main(void) {
               commandOK = false;
               break;
             }
-            if (lastPIDUsed && controlMode != CONTROL_MODE_CURRENT) {
-              setParameters &= ~(1 << MESSAGE_ID_PID);
-              lastPIDUsed = false;
+            if (controlMode != CONTROL_MODE_CURRENT) {
+              lastError = 0;
+              integralError = 0;
+              if (lastPIDUsed)
+                setParameters &= ~(1 << MESSAGE_ID_PID);
             }
+            lastPIDUsed = true;
             controlMode = CONTROL_MODE_CURRENT;
             ignoreLimit = rxData.target.sid & 0b00000001;
-            errorGain = (double)rxData.target.targetCurrent.errorGain / 256;
+            errorGain = (double)rxData.target.targetCurrent.errorGain / 1024;
             target = rxData.target.targetCurrent.current;
             break;
           default:
@@ -366,7 +397,7 @@ int main(void) {
           setParameters |= 1 << MESSAGE_ID_SMOOTHING;
           break;
         case MESSAGE_ID_PID:
-          if (rxHeader.DLC < 8) {
+          if (rxHeader.DLC < 6) {
             commandOK = false;
             break;
           }
@@ -403,6 +434,13 @@ int main(void) {
           limitSwitchPosition =
               rxData.startPositionCalibration.limitSwitchPosition;
           break;
+        case MESSAGE_ID_DEBUG:
+          if (rxHeader.DLC < 1) {
+            commandOK = false;
+            break;
+          }
+          debugTelemetryEnabled = rxData.debugTelemetry.enable;
+          break;
         case MESSAGE_ID_STOP:
           controlMode = CONTROL_MODE_STOP;
           P = 0.0;
@@ -411,6 +449,8 @@ int main(void) {
           errorGain = 1.0;
           alpha = 0.0;
           target = 0;
+          lastError = 0;
+          integralError = 0;
           lastPIDUsed = false;
           setParameters = 0;
           break;
@@ -465,6 +505,17 @@ int main(void) {
 
     currentCurrent = HAL_ADC_GetValue(&hadc) & 0x00FF;
 
+    DebugTelemetry *debugTelemetryCapture =
+        debugTelemetryEnabled && currentHALTick > nextDebugTelemetryCaptureTime
+            ? &debugTelemetry
+            : NULL;
+    if (debugTelemetryCapture != NULL) {
+      debugTelemetry.tick = currentTick;
+      debugTelemetry.angle = currentPosition;
+      debugTelemetry.velocity = currentVelocity;
+      debugTelemetry.current = currentCurrent;
+    }
+
     double error;
     switch (controlMode) {
     case CONTROL_MODE_OPEN_LOOP:
@@ -472,21 +523,18 @@ int main(void) {
       break;
     case CONTROL_MODE_POSITION:
       error = target - currentPosition;
-      lowPass(
-          pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT),
-          &pwm, alpha, deltaT);
+      pwm = pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT,
+                 debugTelemetryCapture);
       break;
     case CONTROL_MODE_VELOCITY:
       error = target - currentVelocity;
-      lowPass(
-          pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT),
-          &pwm, alpha, deltaT);
+      pwm = pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT,
+                 debugTelemetryCapture);
       break;
     case CONTROL_MODE_CURRENT:
       error = target - currentCurrent;
-      lowPass(
-          pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT),
-          &pwm, alpha, deltaT);
+      pwm = pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT,
+                 debugTelemetryCapture);
       break;
     default:
       break;
@@ -572,11 +620,11 @@ int main(void) {
           uint8_t txData[8] = {0};
           uint32_t txMailbox;
           HAL_CAN_AddTxMessage(&hcan, &txHeader, txData, &txMailbox);
-        } else if (target < -2) {
+        } else if (target < -1) {
           motorA = false;
           motorB = true;
           motorPWM = -target / 2;
-        } else if (target > 2) {
+        } else if (target > 1) {
           motorA = false;
           motorB = true;
           motorPWM = target / 2;
@@ -657,6 +705,30 @@ int main(void) {
       uint32_t txMailbox;
       HAL_CAN_AddTxMessage(&hcan, &txHeader, (uint8_t *)&txData, &txMailbox);
     }
+
+    if (debugTelemetryEnabled) {
+      if (currentHALTick > nextDebugTelemetryCaptureTime) {
+        nextDebugTelemetryCaptureTime =
+            currentHALTick + DEBUG_TELEMETRY_INTERVAL;
+        debugTelemetrySending = 0;
+      }
+      if (debugTelemetrySending < 9 &&
+          HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
+        CAN_TxHeaderTypeDef txHeader = {.StdId = MESSAGE_ID_DEBUG_OFFSET |
+                                                 debugTelemetrySending,
+                                        .IDE = CAN_ID_STD,
+                                        .RTR = CAN_RTR_DATA,
+                                        .DLC = 8,
+                                        .TransmitGlobalTime = DISABLE};
+
+        uint32_t txMailbox;
+        if (HAL_CAN_AddTxMessage(&hcan, &txHeader,
+                                 (uint8_t *)&debugTelemetry +
+                                     debugTelemetrySending * 8,
+                                 &txMailbox) == HAL_OK)
+          debugTelemetrySending++;
+      }
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -701,7 +773,8 @@ void SystemClock_Config(void) {
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  tick += UINT16_MAX;
+  if (htim->Instance == TIM1)
+    tick += UINT16_MAX;
 }
 
 #ifndef QUADRATURE_ENCODER
@@ -758,8 +831,17 @@ static void reportCommandError(uint8_t commandID) {
 }
 
 static double pide(double error, double P, double I, double D, double errorGain,
-                   double *lastError, double *integralError, uint32_t deltaT) {
+                   double *lastError, double *integralError, double deltaT,
+                   DebugTelemetry *debugTelemetry) {
+  error *= errorGain;
   *integralError += error * deltaT;
+  if (debugTelemetry != NULL) {
+    debugTelemetry->pOut = P * error;
+    debugTelemetry->iOut = I * *integralError;
+    debugTelemetry->dOut = D * (error - *lastError);
+    debugTelemetry->error = error;
+    debugTelemetry->deltaT = deltaT;
+  }
   double out =
       P * error + I * *integralError + D * (error - *lastError) / deltaT;
   *lastError = error;

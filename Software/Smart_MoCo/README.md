@@ -30,19 +30,19 @@ Data parameter information is given as (Unit Datatype) and all parameters are li
 
 ### Telemetry CAN Messages
 
-| Name                | ID  | D0                 | D1  | D2  | D3  | D4                              | D5  | D6               | D7                                                 |
-|---------------------|-----|--------------------|-----|-----|-----|---------------------------------|-----|------------------|----------------------------------------------------|
-| Position            | xx0 | Angle (step i32)   | ... | ... | ... | Angular Velocity (step/sec i16) | ... | Current (A/8 u8) | Limit A, Limit B, Soft Limit A, Soft Limit B, 0000 |
-| Position Calibrated | xx1 |                    |     |     |     |                                 |     |                  |                                                    |
-| Command Error       | xxD | Command ID (u8)    |     |     |     |                                 |     |                  |                                                    |
-| Echo Reply          | xxF | Payload (u64)      | ... | ... | ... | ...                             | ... | ...              | ...                                                |
+| Name                | ID  | D0                  | D1  | D2  | D3  | D4                      | D5  | D6               | D7                                                 |
+|---------------------|-----|---------------------|-----|-----|-----|-------------------------|-----|------------------|----------------------------------------------------|
+| Position            | xx0 | Position (step i32) | ... | ... | ... | Velocity (step/sec i16) | ... | Current (A/8 u8) | Limit A, Limit B, Soft Limit A, Soft Limit B, 0000 |
+| Position Calibrated | xx1 |                     |     |     |     |                         |     |                  |                                                    |
+| Command Error       | xxD | Command ID (u8)     |     |     |     |                         |     |                  |                                                    |
+| Echo Reply          | xxF | Payload (u64)       | ... | ... | ... | ...                     | ... | ...              | ...                                                |
 
 ### Debug Telemetry
 When debug telemetry is enabled it is sent periodically.
 | Name     | ID  | Type |
 |----------|-----|------|
 | Tick     | 7F0 | u64  |
-| Angle    | 7F1 | i64  |
+| Position | 7F1 | i64  |
 | Velocity | 7F2 | f64  |
 | Current  | 7F3 | f64  |
 | P Out    | 7F4 | f64  |

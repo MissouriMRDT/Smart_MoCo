@@ -34,8 +34,8 @@
 /* USER CODE BEGIN PTD */
 typedef union {
   struct __attribute__((__packed__)) {
-    int32_t angle;
-    int16_t angularVelocity;
+    int32_t position;
+    int16_t velocity;
     uint8_t current;
     uint8_t flags;
   } position;
@@ -90,7 +90,7 @@ typedef union {
 } CANMessage;
 typedef struct __attribute__((__packed__)) {
   uint64_t tick;
-  int64_t angle;
+  int64_t position;
   double velocity;
   double current;
   double pOut;
@@ -130,13 +130,13 @@ If the following are all true:
      that zero point.
   3. The absolute position must correlate with the same joint position every
      time the motor controller powers up.
-Then follow these steps to change this value to an angle out of the range of the
-joint.
+Then follow these steps to change this value to a position out of the range of
+the joint.
   1. Power off the motor controller.
   2. Comment out ABSOLUTE_ENCODER_STARTUP_THRESHOLD.
   3. Move the joint in the positive direction as far as possible.
   4. Power on the motor controller and upload the software.
-  5. Set ABSOLUTE_ENCODER_STARTUP_THRESHOLD to the reported joint angle plus
+  5. Set ABSOLUTE_ENCODER_STARTUP_THRESHOLD to the reported joint position plus
      several steps to get this value out of the joint's range.
 */
 // #define ABSOLUTE_ENCODER_STARTUP_THRESHOLD 0
@@ -495,7 +495,7 @@ int main(void) {
             : NULL;
     if (debugTelemetryCapture != NULL) {
       debugTelemetry.tick = currentTick;
-      debugTelemetry.angle = currentPosition;
+      debugTelemetry.position = currentPosition;
       debugTelemetry.velocity = currentVelocity;
       debugTelemetry.current = currentCurrent;
     }
@@ -680,8 +680,8 @@ int main(void) {
                                       .TransmitGlobalTime = DISABLE};
 
       CANMessage txData = {
-          .position = {.angle = currentPosition,
-                       .angularVelocity = currentVelocity,
+          .position = {.position = currentPosition,
+                       .velocity = currentVelocity,
                        .current = currentCurrent >> 4, // TODO: Current (A/8 u8)
                        .flags = (limitA ? 0b10000000 : 0) |
                                 (limitB ? 0b01000000 : 0) |
@@ -787,7 +787,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 #ifdef ABSOLUTE_ENCODER_STARTUP_THRESHOLD
       else {
         // On startup, if the encoder position is past
-        // ABSOLUTE_ENCODER_STARTUP_THRESHOLD, move the angle back one
+        // ABSOLUTE_ENCODER_STARTUP_THRESHOLD, move the position back one
         // revolution.
         if (ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod >
             ABSOLUTE_ENCODER_STARTUP_THRESHOLD)

@@ -477,31 +477,31 @@ def app_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
 
 
 def can_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
-    bus = can.Bus(channel=0, interface="gs_usb", bitrate=125 * 1000)
-    last_message = can.Message()
-    while True:
-        message = bus.recv(1)
-        if message != None and (
-            message.arbitration_id != last_message.arbitration_id
-            or message.dlc != last_message.dlc
-            or message.data != last_message.data
-        ):
-            last_message = message
-            can_recv.put(message, False)
+    with can.Bus(channel=0, interface="gs_usb", bitrate=125 * 1000) as bus:
+        last_message = can.Message()
+        while True:
+            message = bus.recv(1)
+            if message != None and (
+                message.arbitration_id != last_message.arbitration_id
+                or message.dlc != last_message.dlc
+                or message.data != last_message.data
+            ):
+                last_message = message
+                can_recv.put(message, False)
 
-        try:
-            message = can_send.get(False)
-            print(
-                f"TX ID: 0x{message.arbitration_id:03X}, Data: 0x{" ".join((f"{byte:02X}" for byte in message.data))}, Success: ",
-                end="",
-            )
             try:
-                bus.send(message, 0.5)
-                print("true")
+                message = can_send.get(False)
+                print(
+                    f"TX ID: 0x{message.arbitration_id:03X}, Data: 0x{" ".join((f"{byte:02X}" for byte in message.data))}, Success: ",
+                    end="",
+                )
+                try:
+                    bus.send(message, 0.5)
+                    print("true")
+                except:
+                    print("false")
             except:
-                print("false")
-        except:
-            pass
+                pass
 
 
 if __name__ == "__main__":

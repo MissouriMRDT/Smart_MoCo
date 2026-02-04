@@ -114,22 +114,6 @@ typedef struct __attribute__((__packed__)) {
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// Comment out to use absolute PWM encoder on PA5 and uncomment to use
-// quadrature encoder on PA1 and PA5.
-// #define QUADRATURE_ENCODER 1
-
-// (0x7F to 0x00) << 4 The high two nybbles of all CAN IDs associated with this
-// device. This should be unique for each Smart MoCo on the CAN bus.
-const uint32_t MOCO_ID = 0x0B << 4;
-
-// Telemetry interval (ms)
-const uint32_t TELEMETRY_INTERVAL = 500;
-
-// Rate to capture debug telemetry (ms)
-const uint32_t DEBUG_TELEMETRY_INTERVAL = 100;
-
-// Missing parameter request interval (ms)
-const uint32_t PARAMETER_REQUEST_INTERVAL = 500;
 
 volatile uint64_t tick = 0;           // 0.5us
 volatile int32_t currentPosition = 0; // step
@@ -233,14 +217,14 @@ int main(void) {
   // Elapsed time counter
   HAL_TIM_Base_Start_IT(&htim1);
 
-  CAN_FilterTypeDef filter = {.FilterIdHigh = 0x0000,
-                              .FilterIdLow = 0x0000,
-                              .FilterMaskIdHigh = 0x0000,
-                              .FilterMaskIdLow = 0x0000,
+  CAN_FilterTypeDef filter = {.FilterIdHigh = (MOCO_ID << 4) << 5,
+                              .FilterIdLow = 0,
+                              .FilterMaskIdHigh = 0xFFFFF0 << 5,
+                              .FilterMaskIdLow = 0,
                               .FilterFIFOAssignment = CAN_FILTER_FIFO0,
                               .FilterBank = 0,
                               .FilterMode = CAN_FILTERMODE_IDMASK,
-                              .FilterScale = CAN_FILTERSCALE_16BIT,
+                              .FilterScale = CAN_FILTERSCALE_32BIT,
                               .FilterActivation = CAN_FILTER_ENABLE};
   HAL_CAN_ConfigFilter(&hcan, &filter);
   HAL_CAN_Start(&hcan);
@@ -455,8 +439,8 @@ int main(void) {
           setParameters = 0;
           break;
         case MESSAGE_ID_ECHO_REQUEST: {
-          CAN_TxHeaderTypeDef txHeader = {.StdId =
-                                              MOCO_ID | MESSAGE_ID_ECHO_REPLY,
+          CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) |
+                                                   MESSAGE_ID_ECHO_REPLY,
                                           .IDE = CAN_ID_STD,
                                           .RTR = CAN_RTR_DATA,
                                           .DLC = rxHeader.DLC,
@@ -612,7 +596,7 @@ int main(void) {
           encoderOffset += limitSwitchPosition - currentPosition;
           controlMode = CONTROL_MODE_STOP;
           CAN_TxHeaderTypeDef txHeader = {
-              .StdId = MOCO_ID | MESSAGE_ID_POSITION_CALIBRATED,
+              .StdId = (MOCO_ID << 4) | MESSAGE_ID_POSITION_CALIBRATED,
               .IDE = CAN_ID_STD,
               .RTR = CAN_RTR_DATA,
               .DLC = 0,
@@ -661,7 +645,7 @@ int main(void) {
         }
 
         nextParameterRequestTime = currentHALTick + PARAMETER_REQUEST_INTERVAL;
-        CAN_TxHeaderTypeDef txHeader = {.StdId = MOCO_ID |
+        CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) |
                                                  nextMissingParameterRequestID,
                                         .IDE = CAN_ID_STD,
                                         .RTR = CAN_RTR_REMOTE,
@@ -688,7 +672,8 @@ int main(void) {
     if (currentHALTick > nextReportTime &&
         HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
       nextReportTime = currentHALTick + TELEMETRY_INTERVAL;
-      CAN_TxHeaderTypeDef txHeader = {.StdId = MOCO_ID | MESSAGE_ID_POSITION,
+      CAN_TxHeaderTypeDef txHeader = {.StdId =
+                                          (MOCO_ID << 4) | MESSAGE_ID_POSITION,
                                       .IDE = CAN_ID_STD,
                                       .RTR = CAN_RTR_DATA,
                                       .DLC = 8,
@@ -820,7 +805,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 #endif
 
 static void reportCommandError(uint8_t commandID) {
-  CAN_TxHeaderTypeDef txHeader = {.StdId = MOCO_ID | 0xD,
+  CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) | MESSAGE_ID_ERROR,
                                   .IDE = CAN_ID_STD,
                                   .RTR = CAN_RTR_DATA,
                                   .DLC = 1,

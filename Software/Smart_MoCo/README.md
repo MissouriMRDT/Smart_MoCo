@@ -5,6 +5,17 @@ This is the software running on the STM32F042F6P6 embedded in the motor controll
 ## CAN
 
 Smart MoCo is controlled and reports telemetry via CAN.
+CAN has been tested with the [ACAN_T4](https://github.com/pierremolinaro/acan-t4) library with `ACAN_T4_Settings(125000)` and [gs-usb](https://python-can.readthedocs.io/en/4.0.0/interfaces/gs_usb.html) library with `can.Bus(channel=0, interface="gs_usb", bitrate=125000)`.
+
+| Parameter                    | Value  |
+|------------------------------|--------|
+| Time Quantum                 | 500ns  |
+| Time Quanta in Bit Segment 1 | 8      |
+| Time Quanta in Bit Segment 2 | 7      |
+| Time for one Bit             | 8000ns |
+| Baud Rate                    | 125000 |
+| ReSynchronization Jump Width | 4      |
+
 Each motor controller has an ID 0x00-0x7F which corresponds to the upper two nybbles of the CAN IDs used by that motor controller.
 The low nybble of the CAN ID is the ID of the telemetry/command message.
 All control modes assume the limit switch A is in the low direction and limit switch B is in the high direction. I.e., with conventional current flowing from M+ to M- the motor will eventually contact limit switch B. Therefore Limit B should always be greater than Limit A. Swap the limit switch wires if this is not the case.
@@ -38,7 +49,9 @@ Data parameter information is given as (Unit Datatype) and all parameters are li
 | Echo Reply          | xxF | Payload (u64)       | ... | ... | ... | ...                   | ... | ...              | ...                                                |
 
 ### Debug Telemetry
+
 When debug telemetry is enabled it is sent periodically.
+
 | Name     | ID  | Type |
 |----------|-----|------|
 | Tick     | 7F0 | u64  |

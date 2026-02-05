@@ -9,7 +9,7 @@ import multiprocessing
 import numpy as np
 
 DEBUG_DATA_LABELS = [
-    "Angle",
+    "Position",
     "Velocity",
     "Current",
     "P Out",
@@ -60,10 +60,10 @@ class App(tk.Frame):
         tk.Button(text="Stop and Reset", command=self.send_stop).grid(
             row=0, column=6, sticky="nsew"
         )
-        tk.Label(text="Alpha").grid(row=1, column=4, sticky="e")
-        self.alpha = tk.DoubleVar(value=0.3)
-        tk.Entry(textvariable=self.alpha).grid(row=1, column=5, sticky="nsew")
-        tk.Button(text="Set Low-Pass Smoothing Factor", command=self.send_alpha).grid(
+        tk.Label(text="Ramp Rate (1/s)").grid(row=1, column=4, sticky="e")
+        self.ramp_rate = tk.DoubleVar(value=1.0)
+        tk.Entry(textvariable=self.ramp_rate).grid(row=1, column=5, sticky="nsew")
+        tk.Button(text="Set Ramp Rate", command=self.send_ramp_rate).grid(
             row=1, column=6, sticky="nsew"
         )
         tk.Label(text="P").grid(row=2, column=0, sticky="e")
@@ -136,7 +136,7 @@ class App(tk.Frame):
         ).grid(row=4, column=6, sticky="nsew")
 
         self.data = tk.StringVar(
-            value="Angle (step): , Angular Velocity (step/s): , Current (A): \nLimit A: , Limit B: , Soft Limit A: , Soft Limit B: "
+            value="Position (step): , Angular Velocity (step/s): , Current (A): \nLimit A: , Limit B: , Soft Limit A: , Soft Limit B: "
         )
         tk.Label(textvariable=self.data).grid(row=9, column=0, sticky="w", columnspan=5)
 
@@ -209,7 +209,7 @@ class App(tk.Frame):
         if time.time() > self.redraw_graph_after and not self.graph_paused:
             self.redraw_graph_after = time.time() + 1
             self.debugText.set(
-                f"Time: {self.time[-1]:.4f}, Angle: {self.debugData[0, -1]:.0f}, Velocity: {self.debugData[1, -1]:.2f}, Current: {self.debugData[2, -1]:.0f}\nP Out: {self.debugData[3, -1]:.4f}, I Out: {self.debugData[4, -1]:.4f}, D Out: {self.debugData[5, -1]:.4}\nError: {self.debugData[6, -1]:.4f}, DeltaT: {self.debugData[7, -1]:.5f}, Target: {self.debugData[8, -1]:.2f}"
+                f"Time: {self.time[-1]:.4f}, Position: {self.debugData[0, -1]:.0f}, Velocity: {self.debugData[1, -1]:.2f}, Current: {self.debugData[2, -1]:.0f}\nP Out: {self.debugData[3, -1]:.4f}, I Out: {self.debugData[4, -1]:.4f}, D Out: {self.debugData[5, -1]:.4}\nError: {self.debugData[6, -1]:.4f}, DeltaT: {self.debugData[7, -1]:.5f}, Target: {self.debugData[8, -1]:.2f}"
             )
             self.debugData = np.nan_to_num(self.debugData, 0)
             for i in range(self.debugData.shape[0]):
@@ -269,7 +269,7 @@ class App(tk.Frame):
             print(f"RX ID: 0x{message.arbitration_id:03X}, Remote")
             match message.arbitration_id & 0x00F:
                 case 0x3:
-                    self.send_alpha()
+                    self.send_ramp_rate()
                 case 0x4:
                     self.send_pid()
                 case 0x5:
@@ -277,7 +277,7 @@ class App(tk.Frame):
         else:
             match message.arbitration_id & 0xF:
                 case 0x0:
-                    angle, velocity, current, flags = struct.unpack(
+                    position, velocity, current, flags = struct.unpack(
                         "<ihcc", message.data
                     )
                     current = current[0] / 8
@@ -286,7 +286,7 @@ class App(tk.Frame):
                     soft_limit_a_reached = flags[0] & 0b00100000 != 0
                     soft_limit_b_reached = flags[0] & 0b00010000 != 0
                     self.data.set(
-                        f"Angle (step): {angle:06}, Angular Velocity (step/s): {velocity:06}, Current (A): {current:05.2f}\nLimit A: {limit_a:1}, Limit B: {limit_b:1}, Soft Limit A: {soft_limit_a_reached:1}, Soft Limit B: {soft_limit_b_reached:1}",
+                        f"Position (step): {position:06}, Angular Velocity (step/s): {velocity:06}, Current (A): {current:05.2f}\nLimit A: {limit_a:1}, Limit B: {limit_b:1}, Soft Limit A: {soft_limit_a_reached:1}, Soft Limit B: {soft_limit_b_reached:1}",
                     )
                 case 0x1:
                     print(f"RX ID: 0x{message.arbitration_id:03X}, Position Calibrated")
@@ -324,14 +324,14 @@ class App(tk.Frame):
             False,
         )
 
-    def send_alpha(self):
+    def send_ramp_rate(self):
         self.can_send.put(
             can.Message(
                 arbitration_id=int(self.id.get() + "0", 16) | 0x3,
                 is_extended_id=False,
                 is_remote_frame=False,
-                dlc=2,
-                data=struct.pack("<H", int(self.alpha.get() * 32768)),
+                dlc=8,
+                data=struct.pack("<d", self.ramp_rate.get()),
             ),
             False,
         )

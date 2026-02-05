@@ -31,7 +31,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "moco_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

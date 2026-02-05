@@ -66,8 +66,8 @@ typedef union {
     };
   } target;
   struct __attribute__((__packed__)) {
-    uint16_t alpha;
-  } setLowPassSmoothingFactor;
+    double rampRate;
+  } setRampRate;
   struct __attribute__((__packed__)) {
     uint16_t p;
     uint16_t i;
@@ -120,27 +120,6 @@ volatile int32_t currentPosition = 0; // step
 int32_t encoderOffset = 0;            // step
 
 #ifndef QUADRATURE_ENCODER
-// Absolute encoder resolution (steps traveled as PWM duty cycle increases from
-// 0% to 100%)
-#define ABSOLUTE_ENCODER_RESOLUTION 4096
-/*
-If the following are all true:
-  1. The range of the absolute encoder crosses over the zero point.
-  2. The motor controller can be powered up with the encoder on either side of
-     that zero point.
-  3. The absolute position must correlate with the same joint position every
-     time the motor controller powers up.
-Then follow these steps to change this value to a position out of the range of
-the joint.
-  1. Power off the motor controller.
-  2. Comment out ABSOLUTE_ENCODER_STARTUP_THRESHOLD.
-  3. Move the joint in the positive direction as far as possible.
-  4. Power on the motor controller and upload the software.
-  5. Set ABSOLUTE_ENCODER_STARTUP_THRESHOLD to the reported joint position plus
-     several steps to get this value out of the joint's range.
-*/
-// #define ABSOLUTE_ENCODER_STARTUP_THRESHOLD 0
-
 // ABSOLUTE_ENCODER_RESOLUTION * step
 volatile int32_t absoluteEncoderRotations = 0;
 bool absoluteEncoderFirstReading = true;
@@ -154,6 +133,8 @@ static void reportCommandError(uint8_t commandID);
 static double pide(double error, double P, double I, double D, double errorGain,
                    double *lastError, double *integralError, double deltaT,
                    DebugTelemetry *debugTelemetry);
+static void ramp(double in, double *out, double rampRate, double deltaT,
+                 DebugTelemetry *debugTelemetry);
 static void lowPass(double in, double *out, double alpha, double deltaT);
 uint16_t u16FromBytes(uint8_t *bytes);
 int16_t i16FromBytes(uint8_t *bytes);
@@ -242,11 +223,12 @@ int main(void) {
   bool softLimitA = false;
   bool softLimitB = false;
   uint32_t lastTick = 0;
-  double deltaT = 0;
+  double deltaT = 0; // (s)
+  uint32_t statusOffTime = UINT32_MAX;
 
-  double lastError = 0;
-  double integralError = 0;
-  double pwm = 0;
+  double lastError = 0;     // (target)
+  double integralError = 0; // (target * s)
+  double pwm = 0;           // (duty cycle) [-1.0, 1.0]
 
   // Parameter tracking
   uint16_t setParameters = 0;
@@ -262,7 +244,7 @@ int main(void) {
   //   \---Reset OR Other Target---/
 
   // Controller feedback
-  double currentVelocity = 0;  // step/sec
+  double currentVelocity = 0;  // step/s
   uint16_t currentCurrent = 0; // ADC
   bool limitA = false;
   bool limitB = false;
@@ -272,15 +254,15 @@ int main(void) {
   double I = 0.0;
   double D = 0.0;
   double errorGain = 1.0;
-  double alpha = 0.0;
+  double rampRate = 10;                   // (duty cycle/s)
   int32_t limitSwitchPosition = 0;        // step
   int32_t softLimitAPosition = INT32_MIN; // step
   int32_t softLimitBPosition = INT32_MAX; // step
 
   // Controller input
-  // Open Loop: 1/32768 i16
+  // Open Loop: duty cycle/32768 i16
   // Position: step
-  // Velocity: step/sec
+  // Velocity: step/s
   // Current: ADC
   int32_t target = 0;
 
@@ -295,6 +277,12 @@ int main(void) {
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
+    // Timeout status LED.
+    if (statusOffTime < uwTick) {
+      statusOffTime = UINT32_MAX;
+      HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_RESET);
+    }
+
     // Process a single received CAN message
     if (HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0) > 0 &&
         HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &rxHeader,
@@ -373,11 +361,15 @@ int main(void) {
           }
           break;
         case MESSAGE_ID_SMOOTHING:
-          if (rxHeader.DLC < 1) {
+          if (rxHeader.DLC < 8) {
             commandOK = false;
             break;
           }
-          alpha = (double)rxData.setLowPassSmoothingFactor.alpha / 65536;
+          if (rxData.setRampRate.rampRate < 0.1) {
+            commandOK = false;
+            break;
+          }
+          rampRate = rxData.setRampRate.rampRate;
           setParameters |= 1 << MESSAGE_ID_SMOOTHING;
           break;
         case MESSAGE_ID_PID:
@@ -431,7 +423,8 @@ int main(void) {
           I = 0.0;
           D = 0.0;
           errorGain = 1.0;
-          alpha = 0.0;
+          rampRate = 10;
+          pwm = 0;
           target = 0;
           lastError = 0;
           integralError = 0;
@@ -439,6 +432,8 @@ int main(void) {
           setParameters = 0;
           break;
         case MESSAGE_ID_ECHO_REQUEST: {
+          HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_SET);
+          statusOffTime = uwTick + 100;
           CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) |
                                                    MESSAGE_ID_ECHO_REPLY,
                                           .IDE = CAN_ID_STD,
@@ -460,7 +455,6 @@ int main(void) {
     }
 
     // Update controller
-    uint32_t currentHALTick = HAL_GetTick();                     // ms
     uint64_t currentTick = tick + __HAL_TIM_GET_COUNTER(&htim1); // 0.5 us
     if (currentTick < lastTick) {
       // Timer overflowed since the last iteration and tick hasn't been
@@ -490,7 +484,7 @@ int main(void) {
     currentCurrent = HAL_ADC_GetValue(&hadc) & 0x00FF;
 
     DebugTelemetry *debugTelemetryCapture =
-        debugTelemetryEnabled && currentHALTick > nextDebugTelemetryCaptureTime
+        debugTelemetryEnabled && uwTick > nextDebugTelemetryCaptureTime
             ? &debugTelemetry
             : NULL;
     if (debugTelemetryCapture != NULL) {
@@ -503,7 +497,9 @@ int main(void) {
     double error;
     switch (controlMode) {
     case CONTROL_MODE_OPEN_LOOP:
-      lowPass((double)target / 32768, &pwm, alpha, deltaT);
+      pwm = pwm < -1 ? -1 : pwm > 1 ? 1 : pwm;
+      ramp((double)target / 32768, &pwm, rampRate, deltaT,
+           debugTelemetryCapture);
       break;
     case CONTROL_MODE_POSITION:
       error = target - currentPosition;
@@ -527,10 +523,7 @@ int main(void) {
     bool parametersOK = true;
     missingParameters = 0;
     if (!(setParameters & (1 << MESSAGE_ID_SMOOTHING)) &&
-        (controlMode == CONTROL_MODE_OPEN_LOOP ||
-         controlMode == CONTROL_MODE_POSITION ||
-         controlMode == CONTROL_MODE_VELOCITY ||
-         controlMode == CONTROL_MODE_CURRENT)) {
+        (controlMode == CONTROL_MODE_OPEN_LOOP)) {
       parametersOK = false;
       missingParameters |= 1 << MESSAGE_ID_SMOOTHING;
     }
@@ -627,7 +620,7 @@ int main(void) {
       motorB = false;
       motorPWM = 0;
 
-      if (currentHALTick > nextParameterRequestTime &&
+      if (uwTick > nextParameterRequestTime &&
           HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
         if (missingParameters & (1 << nextMissingParameterRequestID)) {
           // The next missing parameter to request is still missing
@@ -644,7 +637,7 @@ int main(void) {
                 (nextMissingParameterRequestID + 1) % 16;
         }
 
-        nextParameterRequestTime = currentHALTick + PARAMETER_REQUEST_INTERVAL;
+        nextParameterRequestTime = uwTick + PARAMETER_REQUEST_INTERVAL;
         CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) |
                                                  nextMissingParameterRequestID,
                                         .IDE = CAN_ID_STD,
@@ -669,9 +662,8 @@ int main(void) {
     htim14.Instance->CCR1 = motorPWM;
 
     // Send telemetry
-    if (currentHALTick > nextReportTime &&
-        HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
-      nextReportTime = currentHALTick + TELEMETRY_INTERVAL;
+    if (uwTick > nextReportTime && HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
+      nextReportTime = uwTick + TELEMETRY_INTERVAL;
       CAN_TxHeaderTypeDef txHeader = {.StdId =
                                           (MOCO_ID << 4) | MESSAGE_ID_POSITION,
                                       .IDE = CAN_ID_STD,
@@ -692,9 +684,8 @@ int main(void) {
     }
 
     if (debugTelemetryEnabled) {
-      if (currentHALTick > nextDebugTelemetryCaptureTime) {
-        nextDebugTelemetryCaptureTime =
-            currentHALTick + DEBUG_TELEMETRY_INTERVAL;
+      if (uwTick > nextDebugTelemetryCaptureTime) {
+        nextDebugTelemetryCaptureTime = uwTick + DEBUG_TELEMETRY_INTERVAL;
         debugTelemetrySending = 0;
       }
       if (debugTelemetrySending < 9 &&
@@ -823,14 +814,32 @@ static double pide(double error, double P, double I, double D, double errorGain,
   if (debugTelemetry != NULL) {
     debugTelemetry->pOut = P * error;
     debugTelemetry->iOut = I * *integralError;
-    debugTelemetry->dOut = D * (error - *lastError);
+    debugTelemetry->dOut = D * (error - *lastError) * deltaT;
     debugTelemetry->error = error;
     debugTelemetry->deltaT = deltaT;
   }
   double out =
-      P * error + I * *integralError + D * (error - *lastError) / deltaT;
+      P * error + I * *integralError + D * (error - *lastError) * deltaT;
   *lastError = error;
   return out;
+}
+
+static void ramp(double in, double *out, double rampRate, double deltaT,
+                 DebugTelemetry *debugTelemetry) {
+  if (debugTelemetry != NULL) {
+    debugTelemetry->pOut = *out;
+    debugTelemetry->iOut = 0;
+    debugTelemetry->dOut = 0;
+    debugTelemetry->error = in - *out;
+    debugTelemetry->deltaT = deltaT;
+  }
+  if (in > *out + rampRate * deltaT) {
+    *out += rampRate * deltaT;
+  } else if (in < *out - rampRate * deltaT) {
+    *out -= rampRate * deltaT;
+  } else {
+    *out = in;
+  }
 }
 
 static void lowPass(double in, double *out, double alpha, double deltaT) {
@@ -848,8 +857,25 @@ void Error_Handler(void) {
   /* User can add his own implementation to report the HAL error return
    * state */
   __disable_irq();
-  HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_SET);
   while (1) {
+    HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_SET);
+    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+      ;
+    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+      ;
+    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+      ;
+    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+      ;
+    HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_RESET);
+    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+      ;
+    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+      ;
+    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+      ;
+    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+      ;
   }
   /* USER CODE END Error_Handler_Debug */
 }

@@ -30,12 +30,12 @@ Data parameter information is given as (Unit Datatype) and all parameters are li
 
 ### Telemetry CAN Messages
 
-| Name                | ID  | D0                  | D1  | D2  | D3  | D4                      | D5  | D6               | D7                                                 |
-|---------------------|-----|---------------------|-----|-----|-----|-------------------------|-----|------------------|----------------------------------------------------|
-| Position            | xx0 | Position (step i32) | ... | ... | ... | Velocity (step/sec i16) | ... | Current (A/8 u8) | Limit A, Limit B, Soft Limit A, Soft Limit B, 0000 |
-| Position Calibrated | xx1 |                     |     |     |     |                         |     |                  |                                                    |
-| Command Error       | xxD | Command ID (u8)     |     |     |     |                         |     |                  |                                                    |
-| Echo Reply          | xxF | Payload (u64)       | ... | ... | ... | ...                     | ... | ...              | ...                                                |
+| Name                | ID  | D0                  | D1  | D2  | D3  | D4                    | D5  | D6               | D7                                                 |
+|---------------------|-----|---------------------|-----|-----|-----|-----------------------|-----|------------------|----------------------------------------------------|
+| Position            | xx0 | Position (step i32) | ... | ... | ... | Velocity (step/s i16) | ... | Current (A/8 u8) | Limit A, Limit B, Soft Limit A, Soft Limit B, 0000 |
+| Position Calibrated | xx1 |                     |     |     |     |                       |     |                  |                                                    |
+| Command Error       | xxD | Command ID (u8)     |     |     |     |                       |     |                  |                                                    |
+| Echo Reply          | xxF | Payload (u64)       | ... | ... | ... | ...                   | ... | ...              | ...                                                |
 
 ### Debug Telemetry
 When debug telemetry is enabled it is sent periodically.
@@ -53,20 +53,20 @@ When debug telemetry is enabled it is sent periodically.
 
 ### Command CAN Messages and Required Parameters
 
-| Name                          | ID  | D0                       | D1                       | D2                               | D3                      | D4                    | D5  | D6  | D7  | 3 | 4 | 5 |
-|-------------------------------|-----|--------------------------|--------------------------|----------------------------------|-------------------------|-----------------------|-----|-----|-----|---|---|---|
-| Open Loop                     | xx2 | 0                        | Duty Cycle (1/32768 i16) | ...                              |                         |                       |     |     |     | x | x | x |
-| Open Loop Ignore Limit        | xx2 | 1                        | Duty Cycle (1/32768 i16) | ...                              |                         |                       |     |     |     | x | x |   |
-| Target Position               | xx2 | 2                        | Error Gain (1/1024 u16)  | ...                              | Position (step i32)     | ...                   | ... | ... |     | x | x | x |
-| Target Position Ignore Limit  | xx2 | 3                        | Error Gain (1/1024 u16)  | ...                              | Position (step i32)     | ...                   | ... | ... |     | x | x |   |
-| Target Velocity               | xx2 | 4                        | Error Gain (1/1024 u16)  | ...                              | Velocity (step/sec i32) | ...                   | ... | ... |     | x | x | x |
-| Target Velocity Ignore Limit  | xx2 | 5                        | Error Gain (1/1024 u16)  | ...                              | Velocity (step/sec i32) | ...                   | ... | ... |     | x | x |   |
-| Target Current                | xx2 | 6                        | Error Gain (1/1024 u16)  | ...                              | Current (ADC i16)       | ...                   |     |     |     | x | x | x |
-| Target Current Ignore Limit   | xx2 | 7                        | Error Gain (1/1024 u16)  | ...                              | Current (ADC i16)       | ...                   |     |     |     | x | x |   |
-| Set Low-Pass Smoothing Factor | xx3 | Alpha (1/65536 u16)      | ...                      |                                  |                         |                       |     |     |     |   |   |   |
-| Set PID                       | xx4 | P (1/256 u16)            | ...                      | I (sec/256 u16)                  | ...                     | D (1/256/sec u16)     | ... |     |     |   |   |   |
-| Set Soft Limit Position       | xx5 | A Position (step i32)    | ...                      | ...                              | ...                     | B Position (step i32) | ... | ... | ... |   |   |   |
-| Start Position Calibration    | xx6 | Duty Cycle (1/32768 i16) | ...                      | Limit Switch Position (step i32) | ...                     | ...                   | ... |     |     |   |   |   |
-| Debug Telemetry               | xx7 | Enable (u8)              |                          |                                  |                         |                       |     |     |     |   |   |   |
-| Stop and Reset                | xxC |                          |                          |                                  |                         |                       |     |     |     |   |   |   |
-| Echo Request                  | xxE | Payload (u64)            | ...                      | ...                              | ...                     | ...                   | ... | ... | ... |   |   |   |
+| Name                         | ID  | D0                       | D1                       | D2                               | D3                    | D4                    | D5  | D6  | D7  | 3 | 4 | 5 |
+|------------------------------|-----|--------------------------|--------------------------|----------------------------------|-----------------------|-----------------------|-----|-----|-----|---|---|---|
+| Open Loop                    | xx2 | 0                        | Duty Cycle (1/32768 i16) | ...                              |                       |                       |     |     |     | x | x | x |
+| Open Loop Ignore Limit       | xx2 | 1                        | Duty Cycle (1/32768 i16) | ...                              |                       |                       |     |     |     | x | x |   |
+| Target Position              | xx2 | 2                        | Error Gain (1/1024 u16)  | ...                              | Position (step i32)   | ...                   | ... | ... |     |   | x | x |
+| Target Position Ignore Limit | xx2 | 3                        | Error Gain (1/1024 u16)  | ...                              | Position (step i32)   | ...                   | ... | ... |     |   | x |   |
+| Target Velocity              | xx2 | 4                        | Error Gain (1/1024 u16)  | ...                              | Velocity (step/s i32) | ...                   | ... | ... |     |   | x | x |
+| Target Velocity Ignore Limit | xx2 | 5                        | Error Gain (1/1024 u16)  | ...                              | Velocity (step/s i32) | ...                   | ... | ... |     |   | x |   |
+| Target Current               | xx2 | 6                        | Error Gain (1/1024 u16)  | ...                              | Current (ADC i16)     | ...                   |     |     |     |   | x | x |
+| Target Current Ignore Limit  | xx2 | 7                        | Error Gain (1/1024 u16)  | ...                              | Current (ADC i16)     | ...                   |     |     |     |   | x |   |
+| Set Ramp Rate                | xx3 | Ramp Rate (1/s f64)      | ...                      | ...                              | ...                   | ...                   | ... | ... | ... |   |   |   |
+| Set PID                      | xx4 | P (1/256 u16)            | ...                      | I (s/256 u16)                    | ...                   | D (1/256/s u16)       | ... |     |     |   |   |   |
+| Set Soft Limit Position      | xx5 | A Position (step i32)    | ...                      | ...                              | ...                   | B Position (step i32) | ... | ... | ... |   |   |   |
+| Start Position Calibration   | xx6 | Duty Cycle (1/32768 i16) | ...                      | Limit Switch Position (step i32) | ...                   | ...                   | ... |     |     |   |   |   |
+| Debug Telemetry              | xx7 | Enable (u8)              |                          |                                  |                       |                       |     |     |     |   |   |   |
+| Stop and Reset               | xxC |                          |                          |                                  |                       |                       |     |     |     |   |   |   |
+| Echo Request                 | xxE | Payload (u64)            | ...                      | ...                              | ...                   | ...                   | ... | ... | ... |   |   |   |

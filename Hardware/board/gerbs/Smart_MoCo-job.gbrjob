@@ -3,9 +3,9 @@
     "GenerationSoftware": {
       "Vendor": "KiCad",
       "Application": "Pcbnew",
-      "Version": "9.0.4"
+      "Version": "9.0.7-9.0.7~ubuntu24.04.1"
     },
-    "CreationDate": "2025-11-09T18:49:48-06:00"
+    "CreationDate": "2026-03-15T04:49:07-05:00"
   },
   "GeneralSpecs": {
     "ProjectId": {
@@ -14,8 +14,8 @@
       "Revision": "rev?"
     },
     "Size": {
-      "X": 26.9732,
-      "Y": 39.928
+      "X": 40.55,
+      "Y": 33.05
     },
     "LayerNumber": 4,
     "BoardThickness": 1.6,
@@ -24,20 +24,20 @@
   "DesignRules": [
     {
       "Layers": "Outer",
-      "PadToPad": 0.2032,
-      "PadToTrack": 0.2032,
-      "TrackToTrack": 0.2032,
-      "MinLineWidth": 0.254,
-      "TrackToRegion": 0.2032,
-      "RegionToRegion": 0.2032
+      "PadToPad": 0.2,
+      "PadToTrack": 0.2,
+      "TrackToTrack": 0.2,
+      "MinLineWidth": 0.25,
+      "TrackToRegion": 0.2,
+      "RegionToRegion": 0.2
     },
     {
       "Layers": "Inner",
-      "PadToPad": 0.2032,
-      "PadToTrack": 0.2032,
-      "TrackToTrack": 0.2032,
-      "TrackToRegion": 0.2032,
-      "RegionToRegion": 0.2032
+      "PadToPad": 0.2,
+      "PadToTrack": 0.2,
+      "TrackToTrack": 0.2,
+      "TrackToRegion": 0.2,
+      "RegionToRegion": 0.2
     }
   ],
   "FilesAttributes": [
@@ -48,12 +48,12 @@
     },
     {
       "Path": "Smart_MoCo-In1_Cu.gbr",
-      "FileFunction": "Copper,L5,Inr",
+      "FileFunction": "Copper,L2,Inr",
       "FilePolarity": "Positive"
     },
     {
       "Path": "Smart_MoCo-In2_Cu.gbr",
-      "FileFunction": "Copper,L7,Inr",
+      "FileFunction": "Copper,L3,Inr",
       "FilePolarity": "Positive"
     },
     {

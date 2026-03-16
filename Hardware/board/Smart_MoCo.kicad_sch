@@ -3328,7 +3328,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "MRDT_Connectors:Molex_UltraFit_02"
+		(symbol "MRDT_Connectors:Molex_UltraFit_02_Horizontal"
 			(pin_names
 				(offset 0.254)
 			)
@@ -3343,15 +3343,15 @@
 					)
 				)
 			)
-			(property "Value" "Molex_UltraFit_02"
-				(at 0 0 0)
+			(property "Value" "Molex_UltraFit_02_Horizontal"
+				(at 9.144 4.064 0)
 				(effects
 					(font
 						(size 1.524 1.524)
 					)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "MRDT_Connectors:MOLEX_UltraFit_02_Horizontal"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3380,6 +3380,15 @@
 					(hide yes)
 				)
 			)
+			(property "MPN" "1723102000"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
 			(property "ki_keywords" "1722861102"
 				(at 0 0 0)
 				(effects
@@ -3398,10 +3407,24 @@
 					(hide yes)
 				)
 			)
-			(symbol "Molex_UltraFit_02_1_1"
+			(symbol "Molex_UltraFit_02_Horizontal_0_1"
 				(polyline
 					(pts
-						(xy 5.08 2.54) (xy 5.08 -5.08)
+						(xy 10.16 -5.08) (xy 10.16 -6.35)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Molex_UltraFit_02_Horizontal_1_1"
+				(polyline
+					(pts
+						(xy 5.08 2.54) (xy 5.08 -6.35)
 					)
 					(stroke
 						(width 0.127)
@@ -3413,7 +3436,7 @@
 				)
 				(polyline
 					(pts
-						(xy 5.08 -5.08) (xy 12.7 -5.08)
+						(xy 5.08 -6.35) (xy 12.7 -6.35)
 					)
 					(stroke
 						(width 0.127)
@@ -3497,6 +3520,18 @@
 				)
 				(polyline
 					(pts
+						(xy 10.16 -5.08) (xy 5.08 -5.08)
+					)
+					(stroke
+						(width 0.127)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
 						(xy 12.7 2.54) (xy 5.08 2.54)
 					)
 					(stroke
@@ -3509,7 +3544,7 @@
 				)
 				(polyline
 					(pts
-						(xy 12.7 -5.08) (xy 12.7 2.54)
+						(xy 12.7 -6.35) (xy 12.7 2.54)
 					)
 					(stroke
 						(width 0.127)
@@ -3555,8 +3590,26 @@
 						)
 					)
 				)
+				(pin unspecified line
+					(at 0 -5.08 0)
+					(length 5.08)
+					(name "MP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "MP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
 			)
-			(symbol "Molex_UltraFit_02_1_2"
+			(symbol "Molex_UltraFit_02_Horizontal_1_2"
 				(polyline
 					(pts
 						(xy 5.08 2.54) (xy 5.08 -5.08)
@@ -5199,6 +5252,12 @@
 		(uuid "4d99fce1-e704-482c-9d22-46da7595197d")
 	)
 	(junction
+		(at 177.8 92.71)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "558692e3-93db-4719-908d-99acae3bcee8")
+	)
+	(junction
 		(at 213.36 87.63)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5758,7 +5817,7 @@
 	)
 	(wire
 		(pts
-			(xy 177.8 90.17) (xy 177.8 106.68)
+			(xy 177.8 90.17) (xy 177.8 92.71)
 		)
 		(stroke
 			(width 0)
@@ -6178,6 +6237,16 @@
 	)
 	(wire
 		(pts
+			(xy 127 123.19) (xy 127 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7eb98e0e-7806-4595-bdb2-056a42bc7400")
+	)
+	(wire
+		(pts
 			(xy 236.22 90.17) (xy 241.3 90.17)
 		)
 		(stroke
@@ -6585,6 +6654,16 @@
 			(type default)
 		)
 		(uuid "be02fb29-828c-4e37-9841-9aa91ee218e0")
+	)
+	(wire
+		(pts
+			(xy 127 123.19) (xy 128.27 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c1921e3b-f9ab-40f1-bc67-5715f158e095")
 	)
 	(wire
 		(pts
@@ -7018,6 +7097,16 @@
 	)
 	(wire
 		(pts
+			(xy 177.8 92.71) (xy 177.8 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb4ff8a2-ebde-4b04-a2ca-33071a12b0bf")
+	)
+	(wire
+		(pts
 			(xy 191.77 29.21) (xy 191.77 34.29)
 		)
 		(stroke
@@ -7065,6 +7154,16 @@
 			(type default)
 		)
 		(uuid "fd7e92a5-51e8-4b71-9d01-321d69e975b4")
+	)
+	(wire
+		(pts
+			(xy 176.53 92.71) (xy 177.8 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fdb1575d-a534-4d26-8f54-94e2810290cb")
 	)
 	(wire
 		(pts
@@ -7929,6 +8028,90 @@
 				)
 				(justify left)
 				(hide yes)
+			)
+		)
+	)
+	(symbol
+		(lib_id "MRDT_Connectors:Molex_UltraFit_02_Horizontal")
+		(at 128.27 118.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "05ab175b-91d7-4037-8c04-aa9e0f6bb182")
+		(property "Reference" "J6"
+			(at 142.24 118.7449 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Molex_UltraFit_02_Horizontal"
+			(at 142.24 121.2849 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MRDT_Connectors:MOLEX_UltraFit_02_Horizontal"
+			(at 128.27 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 128.27 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 128.27 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "1723102000"
+			(at 128.27 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "MP"
+			(uuid "c5dfd1f9-ea96-4b82-9a71-9d109c63d23e")
+		)
+		(pin "2"
+			(uuid "6382008e-a8d4-4e99-900f-7d9c2b5bb4b7")
+		)
+		(pin "1"
+			(uuid "52f8b400-8e21-420c-9c07-4eabbb46d885")
+		)
+		(instances
+			(project ""
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "J6")
+					(unit 1)
+				)
 			)
 		)
 	)
@@ -8919,146 +9102,6 @@
 			(project ""
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
 					(reference "U2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "MRDT_Connectors:Molex_UltraFit_02")
-		(at 128.27 118.11 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3caaff20-cd5c-440c-97e8-950a8058300d")
-		(property "Reference" "J6"
-			(at 137.16 128.27 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Value" "Molex_UltraFit_02"
-			(at 137.16 125.73 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "MRDT_Connectors:CONN_1723102000_02_MOL"
-			(at 128.27 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 128.27 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 128.27 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f447bec3-461a-4afc-9ec7-41212c2e9a1e")
-		)
-		(pin "2"
-			(uuid "893a3f23-5967-4f33-8c17-568f1cdb27de")
-		)
-		(instances
-			(project "Smart_MoCo"
-				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "MRDT_Connectors:Molex_UltraFit_02")
-		(at 176.53 87.63 0)
-		(mirror y)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "3ec56436-1926-4d84-9440-326488181de2")
-		(property "Reference" "J5"
-			(at 167.64 80.01 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Value" "Molex_UltraFit_02"
-			(at 167.64 82.55 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Footprint" "MRDT_Connectors:CONN_1723102000_02_MOL"
-			(at 176.53 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 176.53 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 176.53 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bf3370d3-0210-4ade-8d6d-de658ce21685")
-		)
-		(pin "2"
-			(uuid "555f717c-1a5f-40fa-984f-8faff486b7c1")
-		)
-		(instances
-			(project ""
-				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
-					(reference "J5")
 					(unit 1)
 				)
 			)
@@ -10262,6 +10305,73 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 127 124.46 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "89d47407-da2c-4969-8d9b-98251339eac3")
+		(property "Reference" "#PWR06"
+			(at 127 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 127 128.5955 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 127 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 127 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 127 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "64e830dd-508f-4cb4-9696-c1b7547996a9")
+		)
+		(instances
+			(project "Smart_MoCo"
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "#PWR06")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 226.06 99.06 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -10456,6 +10566,88 @@
 			(project "Smart_MoCo"
 				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
 					(reference "#PWR023")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "MRDT_Connectors:Molex_UltraFit_02_Horizontal")
+		(at 176.53 87.63 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "982a83a5-b5c2-46e5-8f81-130e40403fbf")
+		(property "Reference" "J5"
+			(at 160.782 92.964 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+			)
+		)
+		(property "Value" "Molex_UltraFit_02_Horizontal"
+			(at 160.782 95.504 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+			)
+		)
+		(property "Footprint" "MRDT_Connectors:MOLEX_UltraFit_02_Horizontal"
+			(at 176.53 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 176.53 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 176.53 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "1723102000"
+			(at 176.53 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "MP"
+			(uuid "8dcb8800-7c9c-436d-82be-1c0e72301e2e")
+		)
+		(pin "2"
+			(uuid "5d6f0362-c896-470a-b2be-3e1d0f56f5dc")
+		)
+		(pin "1"
+			(uuid "5c51978e-578a-435b-87a6-361abd5a6dad")
+		)
+		(instances
+			(project ""
+				(path "/c46cac59-4a31-49e2-b33d-ee7106bde1b5"
+					(reference "J5")
 					(unit 1)
 				)
 			)

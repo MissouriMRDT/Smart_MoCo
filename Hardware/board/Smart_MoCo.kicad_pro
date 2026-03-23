@@ -509,7 +509,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "Gerbs/",
+      "plot": "Smart_Moco_Gerbs/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "Smart_MoCo.step",

@@ -56,7 +56,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern TIM_HandleTypeDef htim1;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -121,7 +121,7 @@ void SysTick_Handler(void) {
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
+
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -140,9 +140,11 @@ void SysTick_Handler(void) {
  */
 void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
   /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 0 */
-
+  if (LL_TIM_IsActiveFlag_UPDATE(TIM1)) {
+    LL_TIM_ClearFlag_UPDATE(TIM1);
+    TIM1_PeriodElapsedCallback();
+  }
   /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 1 */
 
   /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 1 */
@@ -150,15 +152,14 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 
 /* USER CODE BEGIN 1 */
 #ifndef QUADRATURE_ENCODER
-extern TIM_HandleTypeDef htim2;
+/**
+ * @brief This function handles TIM2 global interrupt.
+ */
 void TIM2_IRQHandler(void) {
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
-
-  /* USER CODE END TIM2_IRQn 1 */
+  if (LL_TIM_IsActiveFlag_CC1(TIM2)) {
+    LL_TIM_ClearFlag_CC1(TIM2);
+    TIM2_IC_CaptureCallback();
+  }
 }
 #endif
 /* USER CODE END 1 */

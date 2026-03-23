@@ -19,12 +19,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
-#include "can.h"
 #include "gpio.h"
 #include "tim.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "can.h"
 #include <machine/endian.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -46,37 +46,22 @@ typedef union {
     uint64_t payload;
   } echoReply;
   struct __attribute__((__packed__)) {
-    uint8_t sid;
-    union {
-      struct __attribute__((__packed__)) {
-        int16_t dutyCycle;
-      } openLoop;
-      struct __attribute__((__packed__)) {
-        uint16_t errorGain;
-        int32_t position;
-      } targetPosition;
-      struct __attribute__((__packed__)) {
-        uint16_t errorGain;
-        int32_t velocity;
-      } targetVelocity;
-      struct __attribute__((__packed__)) {
-        uint16_t errorGain;
-        int16_t current;
-      } targetCurrent;
-    };
-  } target;
-  struct __attribute__((__packed__)) {
-    double rampRate;
+    float rampRate;
   } setRampRate;
   struct __attribute__((__packed__)) {
-    uint16_t p;
-    uint16_t i;
-    uint16_t d;
-  } setPID;
+    float p;
+    float i;
+  } setPI;
+  struct __attribute__((__packed__)) {
+    float d;
+  } setD;
   struct __attribute__((__packed__)) {
     int32_t aPosition;
     int32_t bPosition;
   } setSoftLimitPosition;
+  struct __attribute__((__packed__)) {
+    uint8_t ab;
+  } ignoreLimitSwitch;
   struct __attribute__((__packed__)) {
     int16_t dutyCycle;
     int32_t limitSwitchPosition;
@@ -85,19 +70,40 @@ typedef union {
     bool enable;
   } debugTelemetry;
   struct __attribute__((__packed__)) {
+    int16_t fwdMax;
+    int16_t fwdMin;
+    int16_t revMin;
+    int16_t revMax;
+  } setDutyCycleRange;
+  struct __attribute__((__packed__)) {
     uint64_t payload;
   } echoRequest;
+  struct __attribute__((__packed__)) {
+    int16_t dutyCycle;
+  } openLoop;
+  struct __attribute__((__packed__)) {
+    int16_t feedForward;
+    int32_t position;
+  } targetPosition;
+  struct __attribute__((__packed__)) {
+    int16_t feedForward;
+    float velocity;
+  } targetVelocity;
+  struct __attribute__((__packed__)) {
+    int16_t feedForward;
+    int16_t current;
+  } targetCurrent;
 } CANMessage;
 typedef struct __attribute__((__packed__)) {
-  uint64_t tick;
-  int64_t position;
-  double velocity;
-  double current;
-  double pOut;
-  double iOut;
-  double dOut;
-  double error;
-  double deltaT;
+  uint32_t tick;
+  int32_t position;
+  float velocity;
+  float current;
+  float pOut;
+  float iOut;
+  float dOut;
+  float error;
+  float deltaT;
 } DebugTelemetry;
 /* USER CODE END PTD */
 
@@ -115,7 +121,7 @@ typedef struct __attribute__((__packed__)) {
 
 /* USER CODE BEGIN PV */
 
-volatile uint64_t tick = 0;           // 0.5us
+volatile uint32_t tick = 0;           // 0.5us
 volatile int32_t currentPosition = 0; // step
 int32_t encoderOffset = 0;            // step
 
@@ -130,16 +136,14 @@ bool absoluteEncoderFirstReading = true;
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 static void reportCommandError(uint8_t commandID);
-static double pide(double error, double P, double I, double D, double errorGain,
-                   double *lastError, double *integralError, double deltaT,
-                   DebugTelemetry *debugTelemetry);
-static void ramp(double in, double *out, double rampRate, double deltaT,
+static float pide(float error, float P, float I, float D, float feedForward,
+                  float *lastError, float *integralError, float deltaT,
+                  DebugTelemetry *debugTelemetry);
+static void ramp(float in, float *out, float rampRate, float deltaT,
                  DebugTelemetry *debugTelemetry);
-static void lowPass(double in, double *out, double alpha, double deltaT);
-uint16_t u16FromBytes(uint8_t *bytes);
-int16_t i16FromBytes(uint8_t *bytes);
-uint32_t u32FromBytes(uint8_t *bytes);
-int32_t i32FromBytes(uint8_t *bytes);
+static void lowPass(float in, float *out, float alpha, float deltaT);
+static int16_t clamp4(int16_t x, int16_t pMax, int16_t pMin, int16_t nMin,
+                      int16_t nMax);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -161,7 +165,13 @@ int main(void) {
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick.
    */
-  HAL_Init();
+  LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SYSCFG);
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+
+  /* SysTick_IRQn interrupt configuration */
+  NVIC_SetPriority(SysTick_IRQn, 3);
+
+  LL_SYSCFG_EnablePinRemap();
 
   /* USER CODE BEGIN Init */
 
@@ -179,37 +189,32 @@ int main(void) {
   MX_ADC_Init();
   MX_TIM2_Init();
   MX_TIM14_Init();
-  MX_CAN_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   // Motor PWM
-  HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
+  LL_TIM_EnableCounter(TIM14);
+  LL_TIM_CC_EnableChannel(TIM14, LL_TIM_CHANNEL_CH1);
 
-  // Encoder
+// Encoder
 #ifdef QUADRATURE_ENCODER
-  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
-  __HAL_TIM_SET_COUNTER(&htim2, UINT16_MAX);
+  LL_TIM_EnableCounter(TIM2);
+  LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH2);
+  LL_TIM_SetCounter(TIM2, UINT16_MAX);
   encoderOffset = -UINT16_MAX;
 #else
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+  LL_TIM_EnableIT_CC1(TIM2);
+  LL_TIM_EnableIT_CC2(TIM2);
 #endif
 
   // Elapsed time counter
-  HAL_TIM_Base_Start_IT(&htim1);
+  LL_TIM_EnableIT_UPDATE(TIM1);
+  LL_TIM_EnableCounter(TIM1);
 
-  CAN_FilterTypeDef filter = {.FilterIdHigh = (MOCO_ID << 4) << 5,
-                              .FilterIdLow = 0,
-                              .FilterMaskIdHigh = 0xFFFFF0 << 5,
-                              .FilterMaskIdLow = 0,
-                              .FilterFIFOAssignment = CAN_FILTER_FIFO0,
-                              .FilterBank = 0,
-                              .FilterMode = CAN_FILTERMODE_IDMASK,
-                              .FilterScale = CAN_FILTERSCALE_32BIT,
-                              .FilterActivation = CAN_FILTER_ENABLE};
-  HAL_CAN_ConfigFilter(&hcan, &filter);
-  HAL_CAN_Start(&hcan);
-  CAN_RxHeaderTypeDef rxHeader;
+  // STID[10:5] == MOCO_ID
+  CAN_ConfigFilter(0, true, false, false, true, (MOCO_ID << 6) << 21,
+                   0xFE000000);
+
+  CAN_RxHeader rxHeader;
   CANMessage rxData = {0};
 
   // Controller state
@@ -218,23 +223,30 @@ int main(void) {
   uint32_t nextDebugTelemetryCaptureTime = 0; // ms
   DebugTelemetry debugTelemetry = {0};
   ControlMode controlMode = CONTROL_MODE_STOP;
-  bool ignoreLimit = false;
-  uint32_t nextReportTime = 0; // ms
+
+  bool ignoreLimitA = false;
+  bool ignoreLimitB = false;
   bool softLimitA = false;
   bool softLimitB = false;
+  int16_t fwdMaxPwm = INT16_MIN;
+  int16_t fwdMinPwm = 0;
+  int16_t revMinPwm = 0;
+  int16_t revMaxPwm = INT16_MIN;
+
+  uint32_t nextReportTime = 0; // ms
   uint32_t lastTick = 0;
-  double deltaT = 0; // (s)
+  float deltaT = 0; // (s)
   uint32_t statusOffTime = UINT32_MAX;
 
-  double lastError = 0;     // (target)
-  double integralError = 0; // (target * s)
-  double pwm = 0;           // (duty cycle) [-1.0, 1.0]
+  float lastError = 0;     // (target)
+  float integralError = 0; // (target * s)
+  float pwm = 0;           // (duty cycle) [-1.0, 1.0]
 
   // Parameter tracking
-  uint16_t setParameters = 0;
+  uint64_t setParameters = 0;
   bool lastPIDUsed = false;
-  uint16_t missingParameters = 0;
-  uint8_t nextMissingParameterRequestID = 0;
+  uint64_t missingParameters = 0;
+  uint16_t nextMissingParameterRequestID = 0;
   uint32_t nextParameterRequestTime = 0;
   // Set PID logic
   // +-----+      +---+         +----+
@@ -244,17 +256,17 @@ int main(void) {
   //   \---Reset OR Other Target---/
 
   // Controller feedback
-  double currentVelocity = 0;  // step/s
+  float currentVelocity = 0;   // step/s
   uint16_t currentCurrent = 0; // ADC
   bool limitA = false;
   bool limitB = false;
 
   // Controller configuration
-  double P = 0.0;
-  double I = 0.0;
-  double D = 0.0;
-  double errorGain = 1.0;
-  double rampRate = 10;                   // (duty cycle/s)
+  float P = 0.0;
+  float I = 0.0;
+  float D = 0.0;
+  int16_t feedForward = 0;
+  float rampRate = 10;                    // (duty cycle/s)
   int32_t limitSwitchPosition = 0;        // step
   int32_t softLimitAPosition = INT32_MIN; // step
   int32_t softLimitBPosition = INT32_MAX; // step
@@ -270,119 +282,74 @@ int main(void) {
   bool motorA = false;
   bool motorB = false;
   uint16_t motorPWM = 0; // 1/65536
-  double currentPositionLP = 0;
-  double lastPositionLP = 0;
+  float currentPositionLP = 0;
+  float lastPositionLP = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
     // Timeout status LED.
-    if (statusOffTime < uwTick) {
+    if (statusOffTime < tick) {
       statusOffTime = UINT32_MAX;
-      HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_RESET);
+      LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
     }
 
     // Process a single received CAN message
-    if (HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0) > 0 &&
-        HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &rxHeader,
-                             (uint8_t *)&rxData) == HAL_OK) {
+    if (CAN_GetRxMessage(CAN_RX_FIFO0, &rxHeader, (uint8_t *)&rxData)) {
       bool commandOK = true;
       if (rxHeader.RTR == CAN_RTR_DATA) {
-        switch (rxHeader.StdId & 0x00F) {
-        case MESSAGE_ID_TARGET:
-          if (rxHeader.DLC < 1) {
-            commandOK = false;
-            break;
-          }
-          switch (rxData.target.sid & 0b11111110) {
-          case MESSAGE_SID_OPEN_LOOP:
-            if (rxHeader.DLC < 3) {
-              commandOK = false;
-              break;
-            }
-            ignoreLimit = rxData.target.sid & 0b00000001;
-            controlMode = CONTROL_MODE_OPEN_LOOP;
-            target = rxData.target.openLoop.dutyCycle;
-            break;
-          case MESSAGE_SID_POSITION:
-            if (rxHeader.DLC < 7) {
-              commandOK = false;
-              break;
-            }
-            if (controlMode != CONTROL_MODE_POSITION) {
-              lastError = 0;
-              integralError = 0;
-              if (lastPIDUsed)
-                setParameters &= ~(1 << MESSAGE_ID_PID);
-            }
-            lastPIDUsed = true;
-            controlMode = CONTROL_MODE_POSITION;
-            ignoreLimit = rxData.target.sid & 0b00000001;
-            errorGain = (double)rxData.target.targetPosition.errorGain / 1024;
-            target = rxData.target.targetPosition.position;
-            break;
-          case MESSAGE_SID_VELOCITY:
-            if (rxHeader.DLC < 7) {
-              commandOK = false;
-              break;
-            }
-            if (controlMode != CONTROL_MODE_VELOCITY) {
-              lastError = 0;
-              integralError = 0;
-              if (lastPIDUsed)
-                setParameters &= ~(1 << MESSAGE_ID_PID);
-            }
-            lastPIDUsed = true;
-            controlMode = CONTROL_MODE_VELOCITY;
-            ignoreLimit = rxData.target.sid & 0b00000001;
-            errorGain = (double)rxData.target.targetVelocity.errorGain / 1024;
-            target = rxData.target.targetVelocity.velocity;
-            break;
-          case MESSAGE_SID_CURRENT:
-            if (rxHeader.DLC < 5) {
-              commandOK = false;
-              break;
-            }
-            if (controlMode != CONTROL_MODE_CURRENT) {
-              lastError = 0;
-              integralError = 0;
-              if (lastPIDUsed)
-                setParameters &= ~(1 << MESSAGE_ID_PID);
-            }
-            lastPIDUsed = true;
-            controlMode = CONTROL_MODE_CURRENT;
-            ignoreLimit = rxData.target.sid & 0b00000001;
-            errorGain = (double)rxData.target.targetCurrent.errorGain / 1024;
-            target = rxData.target.targetCurrent.current;
-            break;
-          default:
-            break;
-          }
+        switch (rxHeader.StdId & 0x03F) {
+        case MESSAGE_ID_STOP:
+          controlMode = CONTROL_MODE_STOP;
+          P = 0.0;
+          I = 0.0;
+          D = 0.0;
+          feedForward = 0;
+          rampRate = 10;
+          pwm = 0;
+          target = 0;
+          lastError = 0;
+          integralError = 0;
+          lastPIDUsed = false;
+          setParameters = 0;
           break;
-        case MESSAGE_ID_SMOOTHING:
-          if (rxHeader.DLC < 8) {
-            commandOK = false;
-            break;
-          }
-          if (rxData.setRampRate.rampRate < 0.1) {
+        case MESSAGE_ID_RAMP_RATE:
+          if (rxHeader.DLC < 4) {
             commandOK = false;
             break;
           }
           rampRate = rxData.setRampRate.rampRate;
-          setParameters |= 1 << MESSAGE_ID_SMOOTHING;
+          setParameters |= 1 << MESSAGE_ID_RAMP_RATE;
           break;
-        case MESSAGE_ID_PID:
-          if (rxHeader.DLC < 6) {
+        case MESSAGE_ID_PI:
+          if (rxHeader.DLC < 8) {
             commandOK = false;
             break;
           }
           if (lastPIDUsed)
             lastPIDUsed = false;
-          P = (double)rxData.setPID.p / 256;
-          I = (double)rxData.setPID.i / 256;
-          D = (double)rxData.setPID.d / 256;
-          setParameters |= 1 << MESSAGE_ID_PID;
+          P = rxData.setPI.p;
+          I = rxData.setPI.i;
+          setParameters |= 1 << MESSAGE_ID_PI;
+          break;
+        case MESSAGE_ID_D:
+          if (rxHeader.DLC < 4) {
+            commandOK = false;
+            break;
+          }
+          if (lastPIDUsed)
+            lastPIDUsed = false;
+          D = rxData.setD.d;
+          setParameters |= 1 << MESSAGE_ID_D;
+          break;
+        case MESSAGE_ID_IGNORE_LIMIT:
+          if (rxHeader.DLC < 1) {
+            commandOK = false;
+            break;
+          }
+          ignoreLimitA = (rxData.ignoreLimitSwitch.ab & 0b10000000) != 0;
+          ignoreLimitB = (rxData.ignoreLimitSwitch.ab & 0b01000000) != 0;
           break;
         case MESSAGE_ID_SOFT_LIMIT:
           if (rxHeader.DLC < 8) {
@@ -417,56 +384,119 @@ int main(void) {
           }
           debugTelemetryEnabled = rxData.debugTelemetry.enable;
           break;
-        case MESSAGE_ID_STOP:
-          controlMode = CONTROL_MODE_STOP;
-          P = 0.0;
-          I = 0.0;
-          D = 0.0;
-          errorGain = 1.0;
-          rampRate = 10;
-          pwm = 0;
-          target = 0;
-          lastError = 0;
-          integralError = 0;
-          lastPIDUsed = false;
-          setParameters = 0;
+        case MESSAGE_ID_DUTY_CYCLE_RANGE:
+          if (rxHeader.DLC < 8) {
+            commandOK = false;
+            break;
+          }
+          if (rxData.setDutyCycleRange.fwdMax <=
+                  rxData.setDutyCycleRange.fwdMin ||
+              rxData.setDutyCycleRange.fwdMin <=
+                  rxData.setDutyCycleRange.revMin ||
+              rxData.setDutyCycleRange.revMin <=
+                  rxData.setDutyCycleRange.revMax) {
+            // Limit A must be less than limit B
+            commandOK = false;
+            break;
+          }
+          fwdMaxPwm = rxData.setDutyCycleRange.fwdMax;
+          fwdMinPwm = rxData.setDutyCycleRange.fwdMin;
+          revMinPwm = rxData.setDutyCycleRange.revMin;
+          revMaxPwm = rxData.setDutyCycleRange.revMax;
+          setParameters |= 1 << MESSAGE_ID_DUTY_CYCLE_RANGE;
           break;
         case MESSAGE_ID_ECHO_REQUEST: {
-          HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_SET);
-          statusOffTime = uwTick + 100;
-          CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) |
-                                                   MESSAGE_ID_ECHO_REPLY,
-                                          .IDE = CAN_ID_STD,
-                                          .RTR = CAN_RTR_DATA,
-                                          .DLC = rxHeader.DLC,
-                                          .TransmitGlobalTime = DISABLE};
-          uint32_t txMailbox;
-          HAL_CAN_AddTxMessage(&hcan, &txHeader,
-                               (uint8_t *)&rxData.echoRequest.payload,
-                               &txMailbox);
-        } break;
+          LL_GPIO_SetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
+          statusOffTime = GetTick() + 200000;
+          CAN_TxHeader txHeader = {.StdId =
+                                       (MOCO_ID << 6) | MESSAGE_ID_ECHO_REPLY,
+                                   .IDE = CAN_ID_STD,
+                                   .RTR = CAN_RTR_DATA,
+                                   .DLC = rxHeader.DLC,
+                                   .TransmitGlobalTime = DISABLE};
+          CAN_Tx_Mailboxes txMailbox;
+          CAN_AddTxMessage(&txHeader, (uint8_t *)&rxData.echoRequest.payload,
+                           &txMailbox);
+          break;
+        }
+        case MESSAGE_ID_OPEN_LOOP:
+          if (rxHeader.DLC < 2) {
+            commandOK = false;
+            break;
+          }
+          controlMode = CONTROL_MODE_OPEN_LOOP;
+          target = rxData.openLoop.dutyCycle;
+          break;
+        case MESSAGE_ID_TARGET_POSITION:
+          if (rxHeader.DLC < 7) {
+            commandOK = false;
+            break;
+          }
+          if (controlMode != CONTROL_MODE_POSITION) {
+            lastError = 0;
+            integralError = 0;
+            if (lastPIDUsed)
+              setParameters &= ~((1 << MESSAGE_ID_PI) | (1 << MESSAGE_ID_D));
+          }
+          lastPIDUsed = true;
+          controlMode = CONTROL_MODE_POSITION;
+          feedForward = rxData.targetPosition.feedForward;
+          target = rxData.targetPosition.position;
+          break;
+        case MESSAGE_ID_TARGET_VELOCITY:
+          if (rxHeader.DLC < 7) {
+            commandOK = false;
+            break;
+          }
+          if (controlMode != CONTROL_MODE_VELOCITY) {
+            lastError = 0;
+            integralError = 0;
+            if (lastPIDUsed)
+              setParameters &= ~((1 << MESSAGE_ID_PI) | (1 << MESSAGE_ID_D));
+          }
+          lastPIDUsed = true;
+          controlMode = CONTROL_MODE_VELOCITY;
+          feedForward = rxData.targetVelocity.feedForward;
+          target = rxData.targetVelocity.velocity;
+          break;
+        case MESSAGE_ID_TARGET_CURRENT:
+          if (rxHeader.DLC < 5) {
+            commandOK = false;
+            break;
+          }
+          if (controlMode != CONTROL_MODE_CURRENT) {
+            lastError = 0;
+            integralError = 0;
+            if (lastPIDUsed)
+              setParameters &= ~((1 << MESSAGE_ID_PI) | (1 << MESSAGE_ID_D));
+          }
+          lastPIDUsed = true;
+          controlMode = CONTROL_MODE_CURRENT;
+          feedForward = rxData.targetCurrent.feedForward;
+          target = rxData.targetCurrent.current;
+          break;
         default:
           break;
         }
       }
       if (!commandOK) {
-        reportCommandError(rxHeader.StdId & 0x00F);
+        reportCommandError(rxHeader.StdId & 0x03F);
       }
     }
 
     // Update controller
-    uint64_t currentTick = tick + __HAL_TIM_GET_COUNTER(&htim1); // 0.5 us
+    uint32_t currentTick = GetTick(); // 0.5 us
     if (currentTick < lastTick) {
       // Timer overflowed since the last iteration and tick hasn't been
       // incremented by UINT16_MAX yet.
       currentTick += UINT16_MAX;
     }
-    deltaT = (double)(currentTick - lastTick) / 2000000;
+    deltaT = (float)(currentTick - lastTick) / 2000000;
     lastTick = currentTick;
 
     currentPositionLP = lastPositionLP;
-    lowPass((double)currentPosition, &currentPositionLP, 20.0, deltaT);
-    currentVelocity = (double)(currentPositionLP - lastPositionLP) / deltaT;
+    lowPass((float)currentPosition, &currentPositionLP, 20.0, deltaT);
+    currentVelocity = (float)(currentPositionLP - lastPositionLP) / deltaT;
     lastPositionLP = currentPositionLP;
 
 #ifdef QUADRATURE_ENCODER
@@ -475,16 +505,17 @@ int main(void) {
     // Absolute encoder updates currentPosition from HAL_TIM_IC_CaptureCallback.
 
     // Read limit switches.
-    limitA = HAL_GPIO_ReadPin(LIM_A_GPIO_Port, LIM_A_Pin) == GPIO_PIN_SET;
-    limitB = HAL_GPIO_ReadPin(LIM_B_GPIO_Port, LIM_B_Pin) == GPIO_PIN_SET;
+    limitA = (LL_GPIO_ReadInputPort(LIM_A_GPIO_Port) & LIM_A_Pin) != 0;
+    limitB = (LL_GPIO_ReadInputPort(LIM_B_GPIO_Port) & LIM_B_Pin) != 0;
 
     softLimitA = currentPosition <= softLimitAPosition;
     softLimitB = currentPosition >= softLimitBPosition;
 
-    currentCurrent = HAL_ADC_GetValue(&hadc) & 0x00FF;
+    currentCurrent = LL_ADC_REG_ReadConversionData32(ADC1) & 0x00FF;
 
     DebugTelemetry *debugTelemetryCapture =
-        debugTelemetryEnabled && uwTick > nextDebugTelemetryCaptureTime
+        debugTelemetryEnabled &&
+                (GetTick() / TICKS_PER_MS) > nextDebugTelemetryCaptureTime
             ? &debugTelemetry
             : NULL;
     if (debugTelemetryCapture != NULL) {
@@ -494,27 +525,27 @@ int main(void) {
       debugTelemetry.current = currentCurrent;
     }
 
-    double error;
+    float error;
     switch (controlMode) {
     case CONTROL_MODE_OPEN_LOOP:
       pwm = pwm < -1 ? -1 : pwm > 1 ? 1 : pwm;
-      ramp((double)target / 32768, &pwm, rampRate, deltaT,
+      ramp((float)target / 32768, &pwm, rampRate, deltaT,
            debugTelemetryCapture);
       break;
     case CONTROL_MODE_POSITION:
       error = target - currentPosition;
-      pwm = pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT,
-                 debugTelemetryCapture);
+      pwm = pide(error, P, I, D, feedForward, &lastError, &integralError,
+                 deltaT, debugTelemetryCapture);
       break;
     case CONTROL_MODE_VELOCITY:
       error = target - currentVelocity;
-      pwm = pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT,
-                 debugTelemetryCapture);
+      pwm = pide(error, P, I, D, feedForward, &lastError, &integralError,
+                 deltaT, debugTelemetryCapture);
       break;
     case CONTROL_MODE_CURRENT:
       error = target - currentCurrent;
-      pwm = pide(error, P, I, D, errorGain, &lastError, &integralError, deltaT,
-                 debugTelemetryCapture);
+      pwm = pide(error, P, I, D, feedForward, &lastError, &integralError,
+                 deltaT, debugTelemetryCapture);
       break;
     default:
       break;
@@ -522,17 +553,32 @@ int main(void) {
 
     bool parametersOK = true;
     missingParameters = 0;
-    if (!(setParameters & (1 << MESSAGE_ID_SMOOTHING)) &&
+    if (!(setParameters & (1 << MESSAGE_ID_RAMP_RATE)) &&
         (controlMode == CONTROL_MODE_OPEN_LOOP)) {
       parametersOK = false;
-      missingParameters |= 1 << MESSAGE_ID_SMOOTHING;
+      missingParameters |= 1 << MESSAGE_ID_RAMP_RATE;
     }
-    if (!(setParameters & (1 << MESSAGE_ID_PID)) &&
+    if (!(setParameters & (1 << MESSAGE_ID_PI)) &&
         (controlMode == CONTROL_MODE_POSITION ||
          controlMode == CONTROL_MODE_VELOCITY ||
          controlMode == CONTROL_MODE_CURRENT)) {
       parametersOK = false;
-      missingParameters |= 1 << MESSAGE_ID_PID;
+      missingParameters |= 1 << MESSAGE_ID_PI;
+    }
+    if (!(setParameters & (1 << MESSAGE_ID_D)) &&
+        (controlMode == CONTROL_MODE_POSITION ||
+         controlMode == CONTROL_MODE_VELOCITY ||
+         controlMode == CONTROL_MODE_CURRENT)) {
+      parametersOK = false;
+      missingParameters |= 1 << MESSAGE_ID_D;
+    }
+    if (!(setParameters & (1 << MESSAGE_ID_IGNORE_LIMIT)) &&
+        (controlMode == CONTROL_MODE_OPEN_LOOP ||
+         controlMode == CONTROL_MODE_POSITION ||
+         controlMode == CONTROL_MODE_VELOCITY ||
+         controlMode == CONTROL_MODE_CURRENT)) {
+      parametersOK = false;
+      missingParameters |= 1 << MESSAGE_ID_IGNORE_LIMIT;
     }
     if (!(setParameters & (1 << MESSAGE_ID_SOFT_LIMIT)) &&
         (controlMode == CONTROL_MODE_OPEN_LOOP ||
@@ -541,6 +587,14 @@ int main(void) {
          controlMode == CONTROL_MODE_CURRENT)) {
       parametersOK = false;
       missingParameters |= 1 << MESSAGE_ID_SOFT_LIMIT;
+    }
+    if (!(setParameters & (1 << MESSAGE_ID_DUTY_CYCLE_RANGE)) &&
+        (controlMode == CONTROL_MODE_OPEN_LOOP ||
+         controlMode == CONTROL_MODE_POSITION ||
+         controlMode == CONTROL_MODE_VELOCITY ||
+         controlMode == CONTROL_MODE_CURRENT)) {
+      parametersOK = false;
+      missingParameters |= 1 << MESSAGE_ID_DUTY_CYCLE_RANGE;
     }
 
     if (parametersOK) {
@@ -558,21 +612,23 @@ int main(void) {
           pwm = -0.99999;
         if (pwm > 0.99999)
           pwm = 0.99999;
-        if (pwm < -0.0001) {
-          if (!softLimitA && (ignoreLimit || !limitA)) {
+        int16_t clampedPWM =
+            clamp4(pwm * INT16_MAX, fwdMaxPwm, fwdMinPwm, revMinPwm, revMaxPwm);
+        if (clampedPWM < 0) {
+          if (!softLimitA && (ignoreLimitA || !limitA)) {
             motorA = false;
             motorB = true;
-            motorPWM = -pwm * UINT16_MAX;
+            motorPWM = -clampedPWM;
           } else {
             motorA = false;
             motorB = false;
             motorPWM = 0;
           }
-        } else if (pwm > 0.0001) {
-          if (!softLimitB && (ignoreLimit || !limitB)) {
+        } else if (clampedPWM > 0) {
+          if (!softLimitB && (ignoreLimitB || !limitB)) {
             motorA = true;
             motorB = false;
-            motorPWM = pwm * UINT16_MAX;
+            motorPWM = clampedPWM;
           } else {
             motorA = false;
             motorB = false;
@@ -588,15 +644,15 @@ int main(void) {
         if (target < 0 ? limitA : limitB) {
           encoderOffset += limitSwitchPosition - currentPosition;
           controlMode = CONTROL_MODE_STOP;
-          CAN_TxHeaderTypeDef txHeader = {
-              .StdId = (MOCO_ID << 4) | MESSAGE_ID_POSITION_CALIBRATED,
-              .IDE = CAN_ID_STD,
-              .RTR = CAN_RTR_DATA,
-              .DLC = 0,
-              .TransmitGlobalTime = DISABLE};
+          CAN_TxHeader txHeader = {.StdId = (MOCO_ID << 6) |
+                                            MESSAGE_ID_POSITION_CALIBRATED,
+                                   .IDE = CAN_ID_STD,
+                                   .RTR = CAN_RTR_DATA,
+                                   .DLC = 0,
+                                   .TransmitGlobalTime = false};
           uint8_t txData[8] = {0};
-          uint32_t txMailbox;
-          HAL_CAN_AddTxMessage(&hcan, &txHeader, txData, &txMailbox);
+          CAN_Tx_Mailboxes txMailbox;
+          CAN_AddTxMessage(&txHeader, txData, &txMailbox);
         } else if (target < -1) {
           motorA = false;
           motorB = true;
@@ -620,56 +676,61 @@ int main(void) {
       motorB = false;
       motorPWM = 0;
 
-      if (uwTick > nextParameterRequestTime &&
-          HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
+      if ((GetTick() / TICKS_PER_MS) > nextParameterRequestTime &&
+          CAN_GetTxMailboxesFreeLevel() > 0) {
         if (missingParameters & (1 << nextMissingParameterRequestID)) {
           // The next missing parameter to request is still missing
         } else {
           // The next missing parameter to request isn't missing. Find the next
           // one
           nextMissingParameterRequestID =
-              (nextMissingParameterRequestID + 1) % 16;
+              (nextMissingParameterRequestID + 1) % 64;
           // WARNING: this loop will be infinite if there are no set bits in
           // missingParameters. missingParameters will have a set bit if
           // parametersOK is false
           while (!(missingParameters & (1 << nextMissingParameterRequestID)))
             nextMissingParameterRequestID =
-                (nextMissingParameterRequestID + 1) % 16;
+                (nextMissingParameterRequestID + 1) % 64;
         }
 
-        nextParameterRequestTime = uwTick + PARAMETER_REQUEST_INTERVAL;
-        CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) |
-                                                 nextMissingParameterRequestID,
-                                        .IDE = CAN_ID_STD,
-                                        .RTR = CAN_RTR_REMOTE,
-                                        .DLC = 0,
-                                        .TransmitGlobalTime = DISABLE};
+        nextParameterRequestTime =
+            (GetTick() / TICKS_PER_MS) + PARAMETER_REQUEST_INTERVAL;
+        CAN_TxHeader txHeader = {.StdId = (MOCO_ID << 6) |
+                                          nextMissingParameterRequestID,
+                                 .IDE = CAN_ID_STD,
+                                 .RTR = CAN_RTR_REMOTE,
+                                 .DLC = 0,
+                                 .TransmitGlobalTime = false};
         uint8_t txData[8] = {0};
 
         // Cycle through the missing parameters.
         nextMissingParameterRequestID += 1;
 
-        uint32_t txMailbox;
-        HAL_CAN_AddTxMessage(&hcan, &txHeader, txData, &txMailbox);
+        CAN_Tx_Mailboxes txMailbox;
+        CAN_AddTxMessage(&txHeader, txData, &txMailbox);
       }
     }
 
     // Output motor IN_A, IN_B, PWM
-    HAL_GPIO_WritePin(IN_A_GPIO_Port, IN_A_Pin,
-                      motorA ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(IN_B_GPIO_Port, IN_B_Pin,
-                      motorB ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    htim14.Instance->CCR1 = motorPWM;
+    if (motorA)
+      LL_GPIO_SetOutputPin(IN_A_GPIO_Port, IN_A_Pin);
+    else
+      LL_GPIO_ResetOutputPin(IN_A_GPIO_Port, IN_A_Pin);
+    if (motorB)
+      LL_GPIO_SetOutputPin(IN_B_GPIO_Port, IN_B_Pin);
+    else
+      LL_GPIO_ResetOutputPin(IN_B_GPIO_Port, IN_B_Pin);
+    LL_TIM_OC_SetCompareCH1(TIM14, motorPWM);
 
     // Send telemetry
-    if (uwTick > nextReportTime && HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
-      nextReportTime = uwTick + TELEMETRY_INTERVAL;
-      CAN_TxHeaderTypeDef txHeader = {.StdId =
-                                          (MOCO_ID << 4) | MESSAGE_ID_POSITION,
-                                      .IDE = CAN_ID_STD,
-                                      .RTR = CAN_RTR_DATA,
-                                      .DLC = 8,
-                                      .TransmitGlobalTime = DISABLE};
+    if ((GetTick() / TICKS_PER_MS) > nextReportTime &&
+        CAN_GetTxMailboxesFreeLevel() > 0) {
+      nextReportTime = (GetTick() / TICKS_PER_MS) + TELEMETRY_INTERVAL;
+      CAN_TxHeader txHeader = {.StdId = (MOCO_ID << 6) | MESSAGE_ID_POSITION,
+                               .IDE = CAN_ID_STD,
+                               .RTR = CAN_RTR_DATA,
+                               .DLC = 8,
+                               .TransmitGlobalTime = false};
 
       CANMessage txData = {
           .position = {.position = currentPosition,
@@ -679,29 +740,29 @@ int main(void) {
                                 (limitB ? 0b01000000 : 0) |
                                 (softLimitA ? 0b00100000 : 0) |
                                 (softLimitB ? 0b00010000 : 0)}};
-      uint32_t txMailbox;
-      HAL_CAN_AddTxMessage(&hcan, &txHeader, (uint8_t *)&txData, &txMailbox);
+      CAN_Tx_Mailboxes txMailbox;
+      CAN_AddTxMessage(&txHeader, (uint8_t *)&txData, &txMailbox);
     }
 
     if (debugTelemetryEnabled) {
-      if (uwTick > nextDebugTelemetryCaptureTime) {
-        nextDebugTelemetryCaptureTime = uwTick + DEBUG_TELEMETRY_INTERVAL;
+      if ((GetTick() / TICKS_PER_MS) > nextDebugTelemetryCaptureTime) {
+        nextDebugTelemetryCaptureTime =
+            (GetTick() / TICKS_PER_MS) + DEBUG_TELEMETRY_INTERVAL;
         debugTelemetrySending = 0;
       }
-      if (debugTelemetrySending < 9 &&
-          HAL_CAN_GetTxMailboxesFreeLevel(&hcan) > 0) {
-        CAN_TxHeaderTypeDef txHeader = {.StdId = MESSAGE_ID_DEBUG_OFFSET |
-                                                 debugTelemetrySending,
-                                        .IDE = CAN_ID_STD,
-                                        .RTR = CAN_RTR_DATA,
-                                        .DLC = 8,
-                                        .TransmitGlobalTime = DISABLE};
+      if (debugTelemetrySending < 9 && CAN_GetTxMailboxesFreeLevel() > 0) {
+        CAN_TxHeader txHeader = {.StdId = MESSAGE_ID_DEBUG_OFFSET |
+                                          debugTelemetrySending,
+                                 .IDE = CAN_ID_STD,
+                                 .RTR = CAN_RTR_DATA,
+                                 .DLC = 4,
+                                 .TransmitGlobalTime = false};
 
-        uint32_t txMailbox;
-        if (HAL_CAN_AddTxMessage(&hcan, &txHeader,
-                                 (uint8_t *)&debugTelemetry +
-                                     debugTelemetrySending * 8,
-                                 &txMailbox) == HAL_OK)
+        CAN_Tx_Mailboxes txMailbox;
+        if (CAN_AddTxMessage(&txHeader,
+                             (uint8_t *)&debugTelemetry +
+                                 debugTelemetrySending * 4,
+                             &txMailbox))
           debugTelemetrySending++;
       }
     }
@@ -717,99 +778,91 @@ int main(void) {
  * @retval None
  */
 void SystemClock_Config(void) {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-  /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
-   */
-  RCC_OscInitStruct.OscillatorType =
-      RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSI14;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSI14State = RCC_HSI14_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.HSI14CalibrationValue = 16;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-    Error_Handler();
+  LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
+  while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0) {
   }
+  LL_RCC_HSI_Enable();
 
-  /** Initializes the CPU, AHB and APB buses clocks
-   */
-  RCC_ClkInitStruct.ClockType =
-      RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK) {
-    Error_Handler();
+  /* Wait till HSI is ready */
+  while (LL_RCC_HSI_IsReady() != 1) {
   }
+  LL_RCC_HSI_SetCalibTrimming(16);
+  LL_RCC_HSI14_Enable();
+
+  /* Wait till HSI14 is ready */
+  while (LL_RCC_HSI14_IsReady() != 1) {
+  }
+  LL_RCC_HSI14_SetCalibTrimming(16);
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
+
+  /* Wait till System clock is ready */
+  while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI) {
+  }
+  LL_Init1msTick(8000000);
+  LL_SetSystemCoreClock(8000000);
+  LL_RCC_HSI14_EnableADCControl();
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  if (htim->Instance == TIM1)
-    tick += UINT16_MAX;
-}
+// Return current time as a multiple of 0.5us.
+uint32_t GetTick(void) { return tick + LL_TIM_GetCounter(TIM1); }
+
+void TIM1_PeriodElapsedCallback(void) { tick += UINT16_MAX; }
 
 #ifndef QUADRATURE_ENCODER
 uint32_t encoderLastWidth = 0;
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-  if (htim != &htim2)
-    return;
-  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
-    uint32_t encoderPeriod = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-    if (encoderPeriod) {
-      // `if (encoderPeriod)` ensures we don't divide by 0.
-      uint32_t encoderWidth = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
-      if (encoderLastWidth) {
-        // Don't rollover on startup.
-        if (encoderLastWidth > encoderPeriod * 0.8 &&
-            encoderWidth < encoderPeriod * 0.2) {
-          // High to low rollover:
-          absoluteEncoderRotations++;
-        } else if (encoderLastWidth < encoderPeriod * 0.2 &&
-                   encoderWidth > encoderPeriod * 0.8) {
-          // Low to high rollover:
-          absoluteEncoderRotations--;
-        }
+void TIM2_IC_CaptureCallback(void) {
+  uint32_t encoderPeriod = LL_TIM_OC_GetCompareCH1(TIM2);
+  if (encoderPeriod) {
+    // `if (encoderPeriod)` ensures we don't divide by 0.
+    uint32_t encoderWidth = LL_TIM_OC_GetCompareCH2(TIM2);
+    if (encoderLastWidth) {
+      // Don't rollover on startup.
+      if (encoderLastWidth > encoderPeriod * 0.8 &&
+          encoderWidth < encoderPeriod * 0.2) {
+        // High to low rollover:
+        absoluteEncoderRotations++;
+      } else if (encoderLastWidth < encoderPeriod * 0.2 &&
+                 encoderWidth > encoderPeriod * 0.8) {
+        // Low to high rollover:
+        absoluteEncoderRotations--;
       }
-#ifdef ABSOLUTE_ENCODER_STARTUP_THRESHOLD
-      else {
-        // On startup, if the encoder position is past
-        // ABSOLUTE_ENCODER_STARTUP_THRESHOLD, move the position back one
-        // revolution.
-        if (ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod >
-            ABSOLUTE_ENCODER_STARTUP_THRESHOLD)
-          absoluteEncoderRotations = -1;
-      }
-#endif
-      encoderLastWidth = encoderWidth;
-      currentPosition =
-          ABSOLUTE_ENCODER_RESOLUTION * absoluteEncoderRotations +
-          ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod +
-          encoderOffset;
     }
+#ifdef ABSOLUTE_ENCODER_STARTUP_THRESHOLD
+    else {
+      // On startup, if the encoder position is past
+      // ABSOLUTE_ENCODER_STARTUP_THRESHOLD, move the position back one
+      // revolution.
+      if (ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod >
+          ABSOLUTE_ENCODER_STARTUP_THRESHOLD)
+        absoluteEncoderRotations = -1;
+    }
+#endif
+    encoderLastWidth = encoderWidth;
+    currentPosition =
+        ABSOLUTE_ENCODER_RESOLUTION * absoluteEncoderRotations +
+        ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod +
+        encoderOffset;
   }
 }
 #endif
 
 static void reportCommandError(uint8_t commandID) {
-  CAN_TxHeaderTypeDef txHeader = {.StdId = (MOCO_ID << 4) | MESSAGE_ID_ERROR,
-                                  .IDE = CAN_ID_STD,
-                                  .RTR = CAN_RTR_DATA,
-                                  .DLC = 1,
-                                  .TransmitGlobalTime = DISABLE};
+  CAN_TxHeader txHeader = {.StdId = (MOCO_ID << 6) | MESSAGE_ID_ERROR,
+                           .IDE = CAN_ID_STD,
+                           .RTR = CAN_RTR_DATA,
+                           .DLC = 1,
+                           .TransmitGlobalTime = false};
   CANMessage txData = {.commandError = {commandID}};
-  uint32_t txMailbox = 0;
-  HAL_CAN_AddTxMessage(&hcan, &txHeader, (uint8_t *)&txData, &txMailbox);
+  CAN_Tx_Mailboxes txMailbox = 0;
+  CAN_AddTxMessage(&txHeader, (uint8_t *)&txData, &txMailbox);
 }
 
-static double pide(double error, double P, double I, double D, double errorGain,
-                   double *lastError, double *integralError, double deltaT,
-                   DebugTelemetry *debugTelemetry) {
-  error *= errorGain;
+static float pide(float error, float P, float I, float D, float feedForward,
+                  float *lastError, float *integralError, float deltaT,
+                  DebugTelemetry *debugTelemetry) {
   *integralError += error * deltaT;
   if (debugTelemetry != NULL) {
     debugTelemetry->pOut = P * error;
@@ -818,13 +871,13 @@ static double pide(double error, double P, double I, double D, double errorGain,
     debugTelemetry->error = error;
     debugTelemetry->deltaT = deltaT;
   }
-  double out =
-      P * error + I * *integralError + D * (error - *lastError) * deltaT;
+  float out = P * error + I * *integralError +
+              D * (error - *lastError) * deltaT + feedForward;
   *lastError = error;
   return out;
 }
 
-static void ramp(double in, double *out, double rampRate, double deltaT,
+static void ramp(float in, float *out, float rampRate, float deltaT,
                  DebugTelemetry *debugTelemetry) {
   if (debugTelemetry != NULL) {
     debugTelemetry->pOut = *out;
@@ -842,10 +895,18 @@ static void ramp(double in, double *out, double rampRate, double deltaT,
   }
 }
 
-static void lowPass(double in, double *out, double alpha, double deltaT) {
+static void lowPass(float in, float *out, float alpha, float deltaT) {
   *out += alpha * deltaT * (in - *out);
 }
 
+static int16_t clamp4(int16_t x, int16_t pMax, int16_t pMin, int16_t nMin,
+                      int16_t nMax) {
+  if (x < 0) {
+    return x < nMax ? nMax : x > nMin ? nMin : x;
+  } else {
+    return x > pMax ? pMax : x < pMin ? pMin : x;
+  }
+}
 /* USER CODE END 4 */
 
 /**
@@ -858,23 +919,23 @@ void Error_Handler(void) {
    * state */
   __disable_irq();
   while (1) {
-    HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_SET);
-    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+    LL_GPIO_SetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
+    while (LL_TIM_GetCounter(TIM1) < 0x8000)
       ;
-    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+    while (LL_TIM_GetCounter(TIM1) >= 0x8000)
       ;
-    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+    while (LL_TIM_GetCounter(TIM1) < 0x8000)
       ;
-    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+    while (LL_TIM_GetCounter(TIM1) >= 0x8000)
       ;
-    HAL_GPIO_WritePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin, GPIO_PIN_RESET);
-    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+    LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
+    while (LL_TIM_GetCounter(TIM1) < 0x8000)
       ;
-    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+    while (LL_TIM_GetCounter(TIM1) >= 0x8000)
       ;
-    while (__HAL_TIM_GET_COUNTER(&htim1) < 0x8000)
+    while (LL_TIM_GetCounter(TIM1) < 0x8000)
       ;
-    while (__HAL_TIM_GET_COUNTER(&htim1) >= 0x8000)
+    while (LL_TIM_GetCounter(TIM1) >= 0x8000)
       ;
   }
   /* USER CODE END Error_Handler_Debug */

@@ -60,8 +60,10 @@ DebugTelemetry debugTelemetry = {0};
 void TIM17_PeriodElapsedCallback(void) {
   // Timeout status LED
   if (statusOffTime < GetTick()) {
-    statusOffTime = UINT32_MAX;
-    LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
+    statusOffTime = UINT64_MAX;
+    LL_TIM_OC_SetCompareCH1(TIM_LED, 0x0000);
+    LL_TIM_OC_SetCompareCH2(TIM_LED, 0xffff);
+    LL_TIM_OC_SetCompareCH4(TIM_LED, 0x0000);
   }
 
   // Update controller
@@ -73,25 +75,13 @@ void TIM17_PeriodElapsedCallback(void) {
   uint8_t current = LL_ADC_REG_ReadConversionData32(ADC1) & 0x00FF;
 
   // Read limit switches
-  bool limitA = (LL_GPIO_ReadInputPort(LIM_A_GPIO_Port) & LIM_A_Pin) != 0;
-  bool limitB = (LL_GPIO_ReadInputPort(LIM_B_GPIO_Port) & LIM_B_Pin) != 0;
+  bool limitA = (LL_GPIO_ReadInputPort(LIM_A_GPIO_Port) & LIM_A_Pin) == 0;
+  bool limitB = (LL_GPIO_ReadInputPort(LIM_B_GPIO_Port) & LIM_B_Pin) == 0;
 
   bool softLimitA =
       position <= ACCEPTED_COMMAND(SMOCO_MID_SOFT_LIMIT).aPosition;
   bool softLimitB =
       position >= ACCEPTED_COMMAND(SMOCO_MID_SOFT_LIMIT).bPosition;
-
-  // DebugTelemetry *debugTelemetryCapture =
-  //     debugTelemetryEnabled &&
-  //             (GetTick() / TICKS_PER_MS) > nextDebugTelemetryCaptureTime
-  //         ? &debugTelemetry
-  //         : NULL;
-  // if (debugTelemetryCapture != NULL) {
-  //   debugTelemetry.tick = currentTick;
-  //   debugTelemetry.position = currentPosition;
-  //   debugTelemetry.velocity = currentVelocity;
-  //   debugTelemetry.current = currentCurrent;
-  // }
 
   if (controlMode[readBuffer] == CONTROL_MODE_OPEN_LOOP) {
     pwm = pwm < -1 ? -1 : pwm > 1 ? 1 : pwm;
@@ -104,6 +94,7 @@ void TIM17_PeriodElapsedCallback(void) {
     if (pwm < 0 ? limitA : limitB) {
       Encoder_SetPosition(
           ACCEPTED_COMMAND(SMOCO_MID_CALIBRATE).limitSwitchPosition);
+      controlMode[readBuffer] = CONTROL_MODE_STOP;
       controlMode[!readBuffer] = CONTROL_MODE_STOP;
       CAN_TX_QueueCalibrated();
     }
@@ -191,13 +182,23 @@ void TIM17_PeriodElapsedCallback(void) {
 void Controller_Init(void) {
   LL_TIM_EnableIT_UPDATE(TIM_OUTPUT);
   LL_TIM_EnableCounter(TIM_OUTPUT);
+
   LL_TIM_CC_EnableChannel(TIM_MOTOR, LL_TIM_CHANNEL_CH1);
   LL_TIM_EnableCounter(TIM_MOTOR);
+
+  Controller_SetStatusLED(UINT64_MAX, 0x0000, 0xffff, 0x0000);
+  LL_TIM_CC_EnableChannel(TIM_LED, LL_TIM_CHANNEL_CH1);
+  LL_TIM_CC_EnableChannel(TIM_LED, LL_TIM_CHANNEL_CH2);
+  LL_TIM_CC_EnableChannel(TIM_LED, LL_TIM_CHANNEL_CH4);
+  LL_TIM_EnableCounter(TIM_LED);
 }
 
-void Controller_SetStatusLED(uint32_t timeout) {
+void Controller_SetStatusLED(uint64_t timeout, uint16_t r, uint16_t g,
+                             uint16_t b) {
   statusOffTime = GetTick() + timeout;
-  LL_GPIO_SetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
+  LL_TIM_OC_SetCompareCH1(TIM_LED, r);
+  LL_TIM_OC_SetCompareCH2(TIM_LED, g);
+  LL_TIM_OC_SetCompareCH4(TIM_LED, b);
 }
 
 void Controller_ResetPID(void) {

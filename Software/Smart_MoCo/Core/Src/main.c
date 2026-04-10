@@ -99,16 +99,17 @@ int main(void) {
   MX_TIM14_Init();
   MX_TIM1_Init();
   MX_TIM17_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   LL_SYSTICK_EnableIT();
   Controller_Init();
   Encoder_Init();
   CAN_RX_Init();
 
-  // LL_TIM_EnableIT_CC1(TIM_SCHEDULER); // Schedule CAN_TX_SendTelemetry
-  // LL_TIM_EnableIT_CC2(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
+  LL_TIM_EnableIT_CC1(TIM_SCHEDULER); // Schedule CAN_TX_SendTelemetry
+  LL_TIM_EnableIT_CC2(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
   LL_TIM_EnableIT_CC3(TIM_SCHEDULER); // Schedule CAN_TX_RequestMissingParameter
-  // LL_TIM_EnableIT_CC4(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
+  LL_TIM_EnableIT_CC4(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
   LL_TIM_EnableCounter(TIM_SCHEDULER);
   /* USER CODE END 2 */
 
@@ -167,25 +168,8 @@ void Error_Handler(void) {
   /* User can add his own implementation to report the HAL error return
    * state */
   __disable_irq();
+  Controller_SetStatusLED(UINT64_MAX, 0xFFFF, 0x0000, 0xFFFF);
   while (1) {
-    LL_GPIO_SetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) < 0x8000)
-      ;
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) >= 0x8000)
-      ;
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) < 0x8000)
-      ;
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) >= 0x8000)
-      ;
-    LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) < 0x8000)
-      ;
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) >= 0x8000)
-      ;
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) < 0x8000)
-      ;
-    while (LL_TIM_GetCounter(TIM_SCHEDULER) >= 0x8000)
-      ;
   }
   /* USER CODE END Error_Handler_Debug */
 }

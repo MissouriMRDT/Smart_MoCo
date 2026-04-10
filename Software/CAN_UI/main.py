@@ -516,24 +516,6 @@ class App(tk.Frame):
             self.rev_max.get(),
         )
 
-    def send_duty_cycle_range(self):
-        self.can_send.put(
-            can.Message(
-                arbitration_id=self.get_shifted_id() | MESSAGE_ID_DUTY_CYCLE_RANGE,
-                is_extended_id=False,
-                is_remote_frame=False,
-                dlc=8,
-                data=struct.pack(
-                    "<hhhh",
-                    self.fwd_max.get(),
-                    self.fwd_min.get(),
-                    self.rev_min.get(),
-                    self.rev_max.get(),
-                ),
-            ),
-            False,
-        )
-
     def send_ping(self):
         self.ping_reply.set("Pinging")
         self.send_data(SMOCO_MID_ECHO_REQUEST, int(time.time() * 1000))

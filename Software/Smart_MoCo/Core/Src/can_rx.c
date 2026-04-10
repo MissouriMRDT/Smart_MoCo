@@ -105,7 +105,7 @@ void CAN_FMP0_IRQHandler(void) {
     }
     break;
   case SMOCO_MID_ECHO_REQUEST: {
-    Controller_SetStatusLED(200 * TICKS_PER_MS);
+    Controller_SetStatusLED(200 * TICKS_PER_MS, 0xffff, 0xffff, 0x0000);
     CAN_TxHeader txHeader = {.StdId = (SMOCO_ID << 6) | SMOCO_MID_ECHO_REPLY,
                              .IDE = CAN_ID_STD,
                              .RTR = CAN_RTR_DATA,
@@ -170,9 +170,15 @@ void CAN_FMP0_IRQHandler(void) {
   controlMode[!readBuffer] = controlMode[readBuffer];
   memcpy(acceptedCommands[!readBuffer], acceptedCommands[readBuffer],
          sizeof(acceptedCommands[0]));
-  Controller_SetStatusLED(100 * TICKS_PER_MS);
+
+  if (messageID == SMOCO_MID_ECHO_REQUEST)
+    Controller_SetStatusLED(200 * TICKS_PER_MS, 0xffff, 0xffff, 0x0000);
+  else
+    Controller_SetStatusLED(100 * TICKS_PER_MS, 0x0000, 0xffff, 0xffff);
+
   return;
 
 error_handler:
+  Controller_SetStatusLED(UINT64_MAX, 0xffff, 0x0000, 0x0000);
   CAN_TX_QueueCommandError(messageID);
 }

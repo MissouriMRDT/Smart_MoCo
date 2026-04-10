@@ -41,6 +41,7 @@ extern "C" {
 #include "stm32f0xx_ll_tim.h"
 #include "stm32f0xx_ll_utils.h"
 
+
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"
 #endif /* USE_FULL_ASSERT */
@@ -73,10 +74,12 @@ uint64_t GetTick(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_STATUS_Pin LL_GPIO_PIN_0
-#define LED_STATUS_GPIO_Port GPIOF
-#define DIAG_A_Pin LL_GPIO_PIN_1
-#define DIAG_A_GPIO_Port GPIOF
+#define GPIO_Pin LL_GPIO_PIN_8
+#define GPIO_GPIO_Port GPIOB
+#define IN_B_Pin LL_GPIO_PIN_0
+#define IN_B_GPIO_Port GPIOF
+#define IN_A_Pin LL_GPIO_PIN_1
+#define IN_A_GPIO_Port GPIOF
 #define CS_Pin LL_GPIO_PIN_0
 #define CS_GPIO_Port GPIOA
 #define ENC_B_Pin LL_GPIO_PIN_1
@@ -89,10 +92,12 @@ uint64_t GetTick(void);
 #define PWM_GPIO_Port GPIOA
 #define ENC_A_Pin LL_GPIO_PIN_5
 #define ENC_A_GPIO_Port GPIOA
-#define IN_B_Pin LL_GPIO_PIN_7
-#define IN_B_GPIO_Port GPIOA
-#define IN_A_Pin LL_GPIO_PIN_1
-#define IN_A_GPIO_Port GPIOB
+#define LED_R_Pin LL_GPIO_PIN_6
+#define LED_R_GPIO_Port GPIOA
+#define LED_G_Pin LL_GPIO_PIN_7
+#define LED_G_GPIO_Port GPIOA
+#define LED_B_Pin LL_GPIO_PIN_1
+#define LED_B_GPIO_Port GPIOB
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0                                                   \
   ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,                 \

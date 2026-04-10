@@ -17,7 +17,8 @@ extern DebugTelemetry debugTelemetry;
 
 void TIM17_PeriodElapsedCallback(void);
 void Controller_Init(void);
-void Controller_SetStatusLED(uint32_t timeout);
+void Controller_SetStatusLED(uint64_t timeout, uint16_t r, uint16_t g,
+                             uint16_t b);
 void Controller_ResetPID(void);
 
 #endif /* __CONTROLLER_H */

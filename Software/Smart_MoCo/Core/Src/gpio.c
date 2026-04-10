@@ -44,12 +44,9 @@ void MX_GPIO_Init(void) {
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
-
-  /**/
-  LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
 
   /**/
   LL_GPIO_ResetOutputPin(IN_B_GPIO_Port, IN_B_Pin);
@@ -58,30 +55,10 @@ void MX_GPIO_Init(void) {
   LL_GPIO_ResetOutputPin(IN_A_GPIO_Port, IN_A_Pin);
 
   /**/
-  GPIO_InitStruct.Pin = LED_STATUS_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(LED_STATUS_GPIO_Port, &GPIO_InitStruct);
-
-  /**/
-  GPIO_InitStruct.Pin = DIAG_A_Pin;
+  GPIO_InitStruct.Pin = GPIO_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(DIAG_A_GPIO_Port, &GPIO_InitStruct);
-
-  /**/
-  GPIO_InitStruct.Pin = LIM_A_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
-  LL_GPIO_Init(LIM_A_GPIO_Port, &GPIO_InitStruct);
-
-  /**/
-  GPIO_InitStruct.Pin = LIM_B_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
-  LL_GPIO_Init(LIM_B_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(GPIO_GPIO_Port, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = IN_B_Pin;
@@ -98,6 +75,18 @@ void MX_GPIO_Init(void) {
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(IN_A_GPIO_Port, &GPIO_InitStruct);
+
+  /**/
+  GPIO_InitStruct.Pin = LIM_A_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  LL_GPIO_Init(LIM_A_GPIO_Port, &GPIO_InitStruct);
+
+  /**/
+  GPIO_InitStruct.Pin = LIM_B_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  LL_GPIO_Init(LIM_B_GPIO_Port, &GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 2 */

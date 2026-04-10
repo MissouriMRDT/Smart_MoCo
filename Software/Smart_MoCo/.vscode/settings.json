@@ -14,5 +14,12 @@
     ],
     "editor.formatOnSave": true,
     "C_Cpp.intelliSenseEngine": "disabled",
-    "editor.defaultFormatter": "STMicroelectronics.stm32cube-ide-clangd"
+    "editor.defaultFormatter": "STMicroelectronics.stm32cube-ide-clangd",
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "editor.tabSize": 2
 }

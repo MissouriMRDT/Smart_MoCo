@@ -27,7 +27,23 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f0xx_hal.h"
+
+#include "stm32f0xx_ll_adc.h"
+#include "stm32f0xx_ll_bus.h"
+#include "stm32f0xx_ll_cortex.h"
+#include "stm32f0xx_ll_crs.h"
+#include "stm32f0xx_ll_dma.h"
+#include "stm32f0xx_ll_exti.h"
+#include "stm32f0xx_ll_gpio.h"
+#include "stm32f0xx_ll_pwr.h"
+#include "stm32f0xx_ll_rcc.h"
+#include "stm32f0xx_ll_system.h"
+#include "stm32f0xx_ll_tim.h"
+#include "stm32f0xx_ll_utils.h"
+
+#if defined(USE_FULL_ASSERT)
+#include "stm32_assert.h"
+#endif /* USE_FULL_ASSERT */
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -35,20 +51,12 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-typedef enum ControlMode ControlMode;
-enum ControlMode {
-  CONTROL_MODE_STOP,
-  CONTROL_MODE_OPEN_LOOP,
-  CONTROL_MODE_POSITION,
-  CONTROL_MODE_VELOCITY,
-  CONTROL_MODE_CURRENT,
-  CONTROL_MODE_CALIBRATING
-};
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+volatile extern uint64_t sysTickOffset;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -60,52 +68,60 @@ enum ControlMode {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+uint64_t GetTick(void);
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_STATUS_Pin GPIO_PIN_0
+#define LED_STATUS_Pin LL_GPIO_PIN_0
 #define LED_STATUS_GPIO_Port GPIOF
-#define DIAG_A_Pin GPIO_PIN_1
+#define DIAG_A_Pin LL_GPIO_PIN_1
 #define DIAG_A_GPIO_Port GPIOF
-#define CS_Pin GPIO_PIN_0
+#define CS_Pin LL_GPIO_PIN_0
 #define CS_GPIO_Port GPIOA
-#define ENC_B_Pin GPIO_PIN_1
+#define ENC_B_Pin LL_GPIO_PIN_1
 #define ENC_B_GPIO_Port GPIOA
-#define LIM_A_Pin GPIO_PIN_2
+#define LIM_A_Pin LL_GPIO_PIN_2
 #define LIM_A_GPIO_Port GPIOA
-#define LIM_B_Pin GPIO_PIN_3
+#define LIM_B_Pin LL_GPIO_PIN_3
 #define LIM_B_GPIO_Port GPIOA
-#define PWM_Pin GPIO_PIN_4
+#define PWM_Pin LL_GPIO_PIN_4
 #define PWM_GPIO_Port GPIOA
-#define ENC_A_Pin GPIO_PIN_5
+#define ENC_A_Pin LL_GPIO_PIN_5
 #define ENC_A_GPIO_Port GPIOA
-#define IN_B_Pin GPIO_PIN_7
+#define IN_B_Pin LL_GPIO_PIN_7
 #define IN_B_GPIO_Port GPIOA
-#define IN_A_Pin GPIO_PIN_1
+#define IN_A_Pin LL_GPIO_PIN_1
 #define IN_A_GPIO_Port GPIOB
+#ifndef NVIC_PRIORITYGROUP_0
+#define NVIC_PRIORITYGROUP_0                                                   \
+  ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,                 \
+                              4 bits for subpriority */
+#define NVIC_PRIORITYGROUP_1                                                   \
+  ((uint32_t)0x00000006) /*!< 1 bit  for pre-emption priority,                 \
+                              3 bits for subpriority */
+#define NVIC_PRIORITYGROUP_2                                                   \
+  ((uint32_t)0x00000005) /*!< 2 bits for pre-emption priority,                 \
+                              2 bits for subpriority */
+#define NVIC_PRIORITYGROUP_3                                                   \
+  ((uint32_t)0x00000004) /*!< 3 bits for pre-emption priority,                 \
+                              1 bit  for subpriority */
+#define NVIC_PRIORITYGROUP_4                                                   \
+  ((uint32_t)0x00000003) /*!< 4 bits for pre-emption priority,                 \
+                              0 bit  for subpriority */
+#endif
 
 /* USER CODE BEGIN Private defines */
-#define MESSAGE_ID_POSITION 0x30
-#define MESSAGE_ID_POSITION_CALIBRATED 0x31
-#define MESSAGE_ID_ERROR 0x32
-#define MESSAGE_ID_ECHO_REPLY 0x3F
-#define MESSAGE_ID_STOP 0x00
-#define MESSAGE_ID_RAMP_RATE 0x01
-#define MESSAGE_ID_PI 0x02
-#define MESSAGE_ID_D 0x03
-#define MESSAGE_ID_IGNORE_LIMIT 0x04
-#define MESSAGE_ID_SOFT_LIMIT 0x05
-#define MESSAGE_ID_CALIBRATE 0x06
-#define MESSAGE_ID_DEBUG 0x07
-#define MESSAGE_ID_DUTY_CYCLE_RANGE 0x08
-#define MESSAGE_ID_ECHO_REQUEST 0x0F
-#define MESSAGE_ID_OPEN_LOOP 0x10
-#define MESSAGE_ID_TARGET_POSITION 0x11
-#define MESSAGE_ID_TARGET_VELOCITY 0x12
-#define MESSAGE_ID_TARGET_CURRENT 0x13
-#define MESSAGE_ID_DEBUG_OFFSET 0x7F0
+#define TICKS_PER_S 8000000
+#define TICKS_PER_MS 8000
+#define TICKS_PER_US 8
 
+#define TIM_SCHEDULER TIM1
+#define TIM_ENCODER TIM2
+#define TIM_LED TIM3
+#define TIM_MOTOR TIM14
+#define TIM_GPIO TIM16
+#define TIM_OUTPUT TIM17
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

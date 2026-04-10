@@ -20,9 +20,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "can_rx.h"
+#include "can_tx.h"
+#include "controller.h"
+#include "encoder.h"
+#include "stm32f0xx_ll_tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +60,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern TIM_HandleTypeDef htim1;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -119,9 +123,9 @@ void PendSV_Handler(void) {
  */
 void SysTick_Handler(void) {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+  sysTickOffset += TICKS_PER_MS;
   /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
+
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -135,30 +139,59 @@ void SysTick_Handler(void) {
 /******************************************************************************/
 
 /**
- * @brief This function handles TIM1 break, update, trigger and commutation
- * interrupts.
+ * @brief This function handles TIM1 capture compare interrupt.
  */
-void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
-  /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 0 */
+void TIM1_CC_IRQHandler(void) {
+  /* USER CODE BEGIN TIM1_CC_IRQn 0 */
+  if (LL_TIM_IsActiveFlag_CC1(TIM1)) {
+    LL_TIM_ClearFlag_CC1(TIM1);
+    CAN_TX_SendTelemetry();
+  }
+  if (LL_TIM_IsActiveFlag_CC3(TIM1)) {
+    LL_TIM_ClearFlag_CC3(TIM1);
+    CAN_TX_RequestMissingParameter();
+  }
+  if (LL_TIM_IsActiveFlag_CC2(TIM1) | LL_TIM_IsActiveFlag_CC4(TIM1)) {
+    LL_TIM_ClearFlag_CC2(TIM1);
+    LL_TIM_ClearFlag_CC4(TIM1);
+    CAN_TX_SendDebugTelemetry();
+  }
+  /* USER CODE END TIM1_CC_IRQn 0 */
+  /* USER CODE BEGIN TIM1_CC_IRQn 1 */
 
-  /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim1);
-  /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 1 */
+  /* USER CODE END TIM1_CC_IRQn 1 */
+}
 
-  /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 1 */
+/**
+ * @brief This function handles TIM17 global interrupt.
+ */
+void TIM17_IRQHandler(void) {
+  /* USER CODE BEGIN TIM17_IRQn 0 */
+  if (LL_TIM_IsActiveFlag_UPDATE(TIM17)) {
+    LL_TIM_ClearFlag_UPDATE(TIM17);
+    TIM17_PeriodElapsedCallback();
+  }
+  /* USER CODE END TIM17_IRQn 0 */
+  /* USER CODE BEGIN TIM17_IRQn 1 */
+
+  /* USER CODE END TIM17_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
 #ifndef QUADRATURE_ENCODER
-extern TIM_HandleTypeDef htim2;
+/**
+ * @brief This function handles TIM2 global interrupt.
+ */
 void TIM2_IRQHandler(void) {
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
-
-  /* USER CODE END TIM2_IRQn 1 */
+  if (LL_TIM_IsActiveFlag_CC1(TIM2)) {
+    LL_TIM_ClearFlag_CC1(TIM2);
+    TIM2_IC_CaptureCallback();
+  }
 }
 #endif
+
+void CEC_CAN_IRQHandler(void) {
+  if ((CAN->RF0R & CAN_RF0R_FMP0) != 0)
+    CAN_FMP0_IRQHandler();
+}
 /* USER CODE END 1 */

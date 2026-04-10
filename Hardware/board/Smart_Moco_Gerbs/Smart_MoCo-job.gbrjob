@@ -3,9 +3,9 @@
     "GenerationSoftware": {
       "Vendor": "KiCad",
       "Application": "Pcbnew",
-      "Version": "9.0.4"
+      "Version": "9.0.8-9.0.8~ubuntu22.04.1"
     },
-    "CreationDate": "2025-11-09T18:49:48-06:00"
+    "CreationDate": "2026-03-23T10:20:52-05:00"
   },
   "GeneralSpecs": {
     "ProjectId": {
@@ -48,12 +48,12 @@
     },
     {
       "Path": "Smart_MoCo-In1_Cu.gbr",
-      "FileFunction": "Copper,L5,Inr",
+      "FileFunction": "Copper,L2,Inr",
       "FilePolarity": "Positive"
     },
     {
       "Path": "Smart_MoCo-In2_Cu.gbr",
-      "FileFunction": "Copper,L7,Inr",
+      "FileFunction": "Copper,L3,Inr",
       "FilePolarity": "Positive"
     },
     {

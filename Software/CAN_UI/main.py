@@ -1,4 +1,6 @@
-import can, struct, time
+import can
+import struct
+import time
 import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -7,6 +9,73 @@ import tkinter.font as tkFont
 import multiprocessing
 
 import numpy as np
+
+SMOCO_WIDTH_DID = 5
+SMOCO_WIDTH_MID = 6
+
+SMOCO_MID_POSITION = 0x30
+SMOCO_MID_POSITION_CALIBRATED = 0x31
+SMOCO_MID_ERROR = 0x32
+SMOCO_MID_ECHO_REPLY = 0x3F
+SMOCO_MID_STOP = 0x00
+SMOCO_MID_RAMP_RATE = 0x01
+SMOCO_MID_PI = 0x02
+SMOCO_MID_D = 0x03
+SMOCO_MID_IGNORE_LIMIT = 0x04
+SMOCO_MID_SOFT_LIMIT = 0x05
+SMOCO_MID_CALIBRATE = 0x06
+SMOCO_MID_DEBUG = 0x07
+SMOCO_MID_DUTY_CYCLE_RANGE = 0x08
+SMOCO_MID_ECHO_REQUEST = 0x0F
+SMOCO_MID_OPEN_LOOP = 0x10
+SMOCO_MID_TARGET_POSITION = 0x11
+SMOCO_MID_TARGET_VELOCITY = 0x12
+SMOCO_MID_TARGET_CURRENT = 0x13
+
+SMOCO_WIDTH = {
+    SMOCO_MID_POSITION: 8,
+    SMOCO_MID_POSITION_CALIBRATED: 0,
+    SMOCO_MID_ERROR: 1,
+    SMOCO_MID_ECHO_REPLY: 8,
+    SMOCO_MID_STOP: 0,
+    SMOCO_MID_RAMP_RATE: 4,
+    SMOCO_MID_PI: 8,
+    SMOCO_MID_D: 4,
+    SMOCO_MID_IGNORE_LIMIT: 1,
+    SMOCO_MID_SOFT_LIMIT: 8,
+    SMOCO_MID_CALIBRATE: 6,
+    SMOCO_MID_DEBUG: 1,
+    SMOCO_MID_DUTY_CYCLE_RANGE: 8,
+    SMOCO_MID_ECHO_REQUEST: 8,
+    SMOCO_MID_OPEN_LOOP: 2,
+    SMOCO_MID_TARGET_POSITION: 6,
+    SMOCO_MID_TARGET_VELOCITY: 6,
+    SMOCO_MID_TARGET_CURRENT: 4,
+}
+
+SMOCO_FORMAT = {
+    SMOCO_MID_POSITION: "<ihBB",
+    SMOCO_MID_POSITION_CALIBRATED: "",
+    SMOCO_MID_ERROR: "<B",
+    SMOCO_MID_ECHO_REPLY: "<Q",
+    SMOCO_MID_STOP: "",
+    SMOCO_MID_RAMP_RATE: "<f",
+    SMOCO_MID_PI: "<ff",
+    SMOCO_MID_D: "<f",
+    SMOCO_MID_IGNORE_LIMIT: "<B",
+    SMOCO_MID_SOFT_LIMIT: "<ii",
+    SMOCO_MID_CALIBRATE: "<hi",
+    SMOCO_MID_DEBUG: "<B",
+    SMOCO_MID_DUTY_CYCLE_RANGE: "<hhhh",
+    SMOCO_MID_ECHO_REQUEST: "<Q",
+    SMOCO_MID_OPEN_LOOP: "<h",
+    SMOCO_MID_TARGET_POSITION: "<hi",
+    SMOCO_MID_TARGET_VELOCITY: "<hf",
+    SMOCO_MID_TARGET_CURRENT: "<hh",
+}
+
+SMOCO_ID_DEBUG = 0x7F0
+SMOCO_WIDTH_DEBUG = 4
 
 DEBUG_DATA_LABELS = [
     "Position",
@@ -35,10 +104,33 @@ DEBUG_DATA_FORMATS = [
 AX1_SERIES = [3, 4, 5, 6]
 
 
+def label(text, bg, r, c, rs=1, cs=1):
+    if bg is None:
+        return tk.Label(text=text, anchor="e").grid(
+            row=r, column=c, rowspan=rs, columnspan=cs, sticky="nsew"
+        )
+    return tk.Label(text=text, bg=bg, anchor="e").grid(
+        row=r, column=c, rowspan=rs, columnspan=cs, sticky="nsew"
+    )
+
+
 class App(tk.Frame):
     def __init__(
         self, master, can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue
     ):
+        color = [
+            "#71ff61",
+            "#a3a3a3",
+            "#787878",
+            "#ffffff",
+            "#a3a3a3",
+            "#787878",
+            "#ffffff",
+            "#a3a3a3",
+            "#787878",
+            "#6785FF",
+        ]
+
         super().__init__(master)
         self.can_send = can_send
         self.can_recv = can_recv
@@ -52,102 +144,143 @@ class App(tk.Frame):
         )
         tk.Label(
             text="Developed by Brendan Westley\nfor testing and configuring the\nSmart Motor Controller.\nMars Rover Design Team 2026"
-        ).grid(row=0, column=2, rowspan=2, columnspan=2)
+        ).grid(row=0, column=2, rowspan=2, columnspan=2, sticky="nsew")
 
-        tk.Label(text="ID 0x").grid(row=0, column=4, sticky="e")
+        label("ID 0x", color[0], 0, 4)
         self.id = tk.StringVar(value="0B")
-        tk.Entry(textvariable=self.id).grid(row=0, column=5, sticky="nsew")
-        tk.Button(text="Stop and Reset", command=self.send_stop).grid(
+        tk.Entry(textvariable=self.id, bg=color[0]).grid(row=0, column=5, sticky="nsew")
+        tk.Button(text="Stop and Reset", command=self.send_stop, bg=color[0]).grid(
             row=0, column=6, sticky="nsew"
         )
-        tk.Label(text="Ramp Rate (1/s)").grid(row=1, column=4, sticky="e")
+        label("Ramp Rate (1/s)", color[1], 1, 4)
         self.ramp_rate = tk.DoubleVar(value=1.0)
-        tk.Entry(textvariable=self.ramp_rate).grid(row=1, column=5, sticky="nsew")
-        tk.Button(text="Set Ramp Rate", command=self.send_ramp_rate).grid(
+        tk.Entry(textvariable=self.ramp_rate, bg=color[1]).grid(
+            row=1, column=5, sticky="nsew"
+        )
+        tk.Button(text="Set Ramp Rate", command=self.send_ramp_rate, bg=color[1]).grid(
             row=1, column=6, sticky="nsew"
         )
-        tk.Label(text="P").grid(row=2, column=0, sticky="e")
+        label("P", color[2], 2, 0)
         self.p = tk.DoubleVar(value=0.7)
-        tk.Entry(textvariable=self.p).grid(row=2, column=1, sticky="nsew")
-        tk.Label(text="I").grid(row=2, column=2, sticky="e")
+        tk.Entry(textvariable=self.p, bg=color[2]).grid(row=2, column=1, sticky="nsew")
+        label("I", color[2], 2, 2)
         self.i = tk.DoubleVar(value=0)
-        tk.Entry(textvariable=self.i).grid(row=2, column=3, sticky="nsew")
-        tk.Label(text="D").grid(row=2, column=4, sticky="e")
+        tk.Entry(textvariable=self.i, bg=color[2]).grid(row=2, column=3, sticky="nsew")
+        label("D", color[2], 2, 4)
         self.d = tk.DoubleVar(value=0)
-        tk.Entry(textvariable=self.d).grid(row=2, column=5, sticky="nsew")
-        tk.Button(text="Set PID", command=self.send_pid).grid(
+        tk.Entry(textvariable=self.d, bg=color[2]).grid(row=2, column=5, sticky="nsew")
+        tk.Button(text="Set PID", command=self.send_pid, bg=color[2]).grid(
             row=2, column=6, sticky="nsew"
         )
-        tk.Label(text="A").grid(row=3, column=0, sticky="e")
-        self.soft_limit_a = tk.IntVar(value=-(2**31))
-        tk.Entry(textvariable=self.soft_limit_a).grid(row=3, column=1, sticky="nsew")
-        tk.Label(text="B").grid(row=3, column=2, sticky="e")
-        self.soft_limit_b = tk.IntVar(value=2**31 - 1)
-        tk.Entry(textvariable=self.soft_limit_b).grid(row=3, column=3, sticky="nsew")
-        tk.Button(text="Set Soft Limit Position", command=self.send_soft_limits).grid(
+        label("Fwd Max Min", color[3], 3, 0)
+        self.fwd_max = tk.IntVar(value=2**15 - 1)
+        tk.Entry(textvariable=self.fwd_max, bg=color[3]).grid(
+            row=3, column=1, sticky="nsew"
+        )
+        self.fwd_min = tk.IntVar(value=0)
+        tk.Entry(textvariable=self.fwd_min, bg=color[3]).grid(
+            row=3, column=2, sticky="nsew"
+        )
+        self.rev_min = tk.IntVar(value=0)
+        label("Rev Min Max", color[3], 3, 3)
+        tk.Entry(textvariable=self.rev_min, bg=color[3]).grid(
+            row=3, column=4, sticky="nsew"
+        )
+        self.rev_max = tk.IntVar(value=-(2**15))
+        tk.Entry(textvariable=self.rev_max, bg=color[3]).grid(
             row=3, column=5, sticky="nsew"
         )
-        tk.Label(text="Duty Cycle").grid(row=4, column=0, sticky="e")
-        self.calibration_duty_cycle = tk.DoubleVar(value=0.5)
-        tk.Entry(textvariable=self.calibration_duty_cycle).grid(
+        tk.Button(
+            text="Set Duty Cycle Range", command=self.send_duty_cycle_range, bg=color[3]
+        ).grid(row=3, column=6, sticky="nsew")
+        label("A", color[4], 4, 0)
+        self.soft_limit_a = tk.IntVar(value=-(2**31))
+        tk.Entry(textvariable=self.soft_limit_a, bg=color[4]).grid(
             row=4, column=1, sticky="nsew"
         )
-        tk.Label(text="Position").grid(row=4, column=2, sticky="e")
-        self.limit_switch_position = tk.IntVar(value=0)
-        tk.Entry(textvariable=self.limit_switch_position).grid(
+        label("B", color[4], 4, 2)
+        self.soft_limit_b = tk.IntVar(value=2**31 - 1)
+        tk.Entry(textvariable=self.soft_limit_b, bg=color[4]).grid(
             row=4, column=3, sticky="nsew"
         )
-        tk.Button(text="Start Position Calibration", command=self.send_calibrate).grid(
-            row=4, column=5, sticky="nsew"
+        tk.Button(
+            text="Set Soft Limit Position", command=self.send_soft_limits, bg=color[4]
+        ).grid(row=4, column=4, columnspan=2, sticky="nsew")
+        label("Duty Cycle", color[5], 5, 0)
+        self.calibration_duty_cycle = tk.IntVar(value=16384)
+        tk.Entry(textvariable=self.calibration_duty_cycle, bg=color[5]).grid(
+            row=5, column=1, sticky="nsew"
         )
-        tk.Label(text="Ignore Limit").grid(row=7, column=0, sticky="e")
-        self.ignore_limit = tk.IntVar()
-        tk.Checkbutton(variable=self.ignore_limit, onvalue=1, offvalue=0).grid(
-            row=7, column=1
+        label("Position", color[5], 5, 2)
+        self.limit_switch_position = tk.IntVar(value=0)
+        tk.Entry(textvariable=self.limit_switch_position, bg=color[5]).grid(
+            row=5, column=3, sticky="nsew"
         )
-        tk.Label(text="Duty Cycle").grid(row=7, column=2, sticky="e")
-        self.duty_cycle = tk.DoubleVar(value=0.5)
-        tk.Entry(textvariable=self.duty_cycle).grid(row=7, column=3, sticky="nsew")
-        tk.Button(text="Open Loop", command=self.send_open_loop).grid(
-            row=7, column=5, sticky="nsew"
-        )
-        tk.Label(text="Error Gain").grid(row=8, column=0, sticky="e")
-        self.error_gain = tk.DoubleVar(value=0.05)
-        tk.Entry(textvariable=self.error_gain).grid(row=8, column=1, sticky="nsew")
-        tk.Label(text="Target").grid(row=8, column=2, sticky="e")
-        self.target = tk.DoubleVar(value=0)
-        tk.Entry(textvariable=self.target).grid(row=8, column=3, sticky="nsew")
-        tk.Button(text="Target Position", command=self.send_target_position).grid(
-            row=7, column=6, sticky="nsew"
-        )
-        tk.Button(text="Target Velocity", command=self.send_target_velocity).grid(
+        tk.Button(
+            text="Start Position Calibration", command=self.send_calibrate, bg=color[5]
+        ).grid(row=5, column=4, columnspan=2, sticky="nsew")
+        label("Ignore Limit", color[6], 8, 0)
+        self.ignore_limit_a = tk.IntVar()
+        tk.Checkbutton(
+            text="A",
+            variable=self.ignore_limit_a,
+            onvalue=1,
+            offvalue=0,
+            command=self.send_ignore_limit,
+            bg=color[6],
+        ).grid(row=8, column=1, sticky="nsew")
+        self.ignore_limit_b = tk.IntVar()
+        tk.Checkbutton(
+            text="B",
+            variable=self.ignore_limit_b,
+            onvalue=1,
+            offvalue=0,
+            command=self.send_ignore_limit,
+            bg=color[6],
+        ).grid(row=8, column=2, sticky="nsew")
+        label("Duty Cycle", color[7], 8, 4)
+        self.duty_cycle = tk.IntVar(value=16384)
+        tk.Entry(textvariable=self.duty_cycle, bg=color[7]).grid(
             row=8, column=5, sticky="nsew"
         )
-        tk.Button(text="Target Current", command=self.send_target_current).grid(
+        tk.Button(text="Open Loop", command=self.send_open_loop, bg=color[7]).grid(
             row=8, column=6, sticky="nsew"
         )
+        label("Feed Forward", color[8], 9, 0)
+        self.feed_forward = tk.IntVar(value=0)
+        tk.Entry(textvariable=self.feed_forward, bg=color[8]).grid(
+            row=9, column=1, sticky="nsew"
+        )
+        label("Target", color[8], 9, 2)
+        self.target = tk.DoubleVar(value=0)
+        tk.Entry(textvariable=self.target, bg=color[8]).grid(
+            row=9, column=3, sticky="nsew"
+        )
         tk.Button(
-            text="Enable Debug Telemetry",
-            command=lambda: self.send_debug_telemetry(True),
-        ).grid(row=3, column=6, sticky="nsew")
+            text="Target Position", command=self.send_target_position, bg=color[8]
+        ).grid(row=9, column=4, sticky="nsew")
         tk.Button(
-            text="Disable Debug Telemetry",
-            command=lambda: self.send_debug_telemetry(False),
-        ).grid(row=4, column=6, sticky="nsew")
+            text="Target Velocity", command=self.send_target_velocity, bg=color[8]
+        ).grid(row=9, column=5, sticky="nsew")
+        tk.Button(
+            text="Target Current", command=self.send_target_current, bg=color[8]
+        ).grid(row=9, column=6, sticky="nsew")
 
         self.data = tk.StringVar(
-            value="Position (step): , Angular Velocity (step/s): , Current (A): \nLimit A: , Limit B: , Soft Limit A: , Soft Limit B: "
+            value="Position (step): ??????, Angular Velocity (step/s): ??????, Current (A): ??.??\nLimit A: ?, Limit B: ?, Soft Limit A: ?, Soft Limit B: ?"
         )
-        tk.Label(textvariable=self.data).grid(row=9, column=0, sticky="w", columnspan=5)
+        tk.Label(textvariable=self.data, bg=color[0], anchor="w").grid(
+            row=10, column=0, sticky="nsew", columnspan=5
+        )
 
         self.ping_reply = tk.StringVar(value="Ping")
-        tk.Button(textvariable=self.ping_reply, command=self.send_ping).grid(
-            row=9, column=5, columnspan=2, sticky="nsew"
-        )
+        tk.Button(
+            textvariable=self.ping_reply, command=self.send_ping, bg=color[0]
+        ).grid(row=10, column=5, columnspan=2, sticky="nsew")
 
         self.debugText = tk.StringVar()
-        tk.Label(textvariable=self.debugText).grid(
-            row=10, column=0, sticky="w", columnspan=4
+        tk.Label(textvariable=self.debugText, bg=color[9], anchor="w").grid(
+            row=11, column=0, sticky="nsew", columnspan=5
         )
 
         self.figure = Figure(figsize=(5, 4), dpi=100)
@@ -192,18 +325,37 @@ class App(tk.Frame):
         self.ax2.legend(loc="upper right")
         self.canvas = FigureCanvasTkAgg(self.figure, master=master)
         self.canvas.draw()
-        self.canvas.get_tk_widget().grid(row=11, column=0, sticky="nsew", columnspan=7)
+        self.canvas.get_tk_widget().grid(row=12, column=0, sticky="nsew", columnspan=7)
         self.redraw_graph_after = time.time() + 1
         self.graph_paused = False
         tk.Button(
-            text="Pause Graph", command=lambda: self.__setattr__("graph_paused", True)
-        ).grid(row=10, column=5, sticky="nsew")
+            text="Enable Debug Telemetry",
+            command=lambda: self.send_debug_telemetry(True),
+            bg=color[9],
+        ).grid(row=4, column=6, sticky="nsew")
+        tk.Button(
+            text="Disable Debug Telemetry",
+            command=lambda: self.send_debug_telemetry(False),
+            bg=color[9],
+        ).grid(row=5, column=6, sticky="nsew")
+        tk.Button(
+            text="Pause Graph",
+            command=lambda: self.__setattr__("graph_paused", True),
+            bg=color[9],
+        ).grid(row=11, column=5, sticky="nsew")
         tk.Button(
             text="Unpause Graph",
             command=lambda: self.__setattr__("graph_paused", False),
-        ).grid(row=10, column=6, sticky="nsew")
+            bg=color[9],
+        ).grid(row=11, column=6, sticky="nsew")
 
         self.update_telemetry()
+
+    def get_id(self):
+        return int(self.id.get(), 16)
+
+    def get_shifted_id(self):
+        return int(self.id.get(), 16) << SMOCO_WIDTH_MID
 
     def update_telemetry(self):
         if time.time() > self.redraw_graph_after and not self.graph_paused:
@@ -222,13 +374,13 @@ class App(tk.Frame):
         try:
             while True:
                 message: can.Message = self.can_recv.get(False)
-                if message.arbitration_id & 0x7F0 == 0x7F0:
+                if message.arbitration_id & SMOCO_ID_DEBUG == SMOCO_ID_DEBUG:
                     self.process_debug_message(message)
-                elif message.arbitration_id & 0x7F0 == int(self.id.get() + "0", 16):
+                elif message.arbitration_id >> SMOCO_WIDTH_MID == self.get_id():
                     self.process_rx_message(message)
                 else:
                     print(
-                        f"RX ID: 0x{message.arbitration_id:03X}, Data: 0x{" ".join((f"{byte:02X}" for byte in message.data))}"
+                        f"RX ID: 0x{message.arbitration_id:03X}, Data: 0x{' '.join((f'{byte:02X}' for byte in message.data))}"
                     )
         except:
             pass
@@ -236,7 +388,7 @@ class App(tk.Frame):
 
     def process_debug_message(self, message: can.Message):
         # Update debug data.
-        if message.arbitration_id & 0xF == 0x0:
+        if message.arbitration_id == SMOCO_ID_DEBUG:
             if self.time[-1] == 0:
                 # Upon receiving the first time, set the x-axis to the previous 10 seconds.
                 current_time = struct.unpack("<Q", message.data)[0] / 2000000
@@ -253,7 +405,7 @@ class App(tk.Frame):
             )[0]
         else:
             self.debugData[(message.arbitration_id & 0xF) - 1, -1] = struct.unpack(
-                "<d", message.data
+                "<f", message.data
             )[0]
 
     def set_graph_paused(self, paused: bool):
@@ -265,123 +417,113 @@ class App(tk.Frame):
         line.figure.canvas.draw_idle()
 
     def process_rx_message(self, message: can.Message):
+        mid = message.arbitration_id & ((1 << SMOCO_WIDTH_MID) - 1)
         if message.is_remote_frame:
             print(f"RX ID: 0x{message.arbitration_id:03X}, Remote")
-            match message.arbitration_id & 0x00F:
-                case 0x3:
-                    self.send_ramp_rate()
-                case 0x4:
-                    self.send_pid()
-                case 0x5:
-                    self.send_soft_limits()
+            if mid == SMOCO_MID_RAMP_RATE:
+                self.send_ramp_rate()
+            elif mid == SMOCO_MID_PI:
+                self.send_pi()
+            elif mid == SMOCO_MID_D:
+                self.send_d()
+            elif mid == SMOCO_MID_IGNORE_LIMIT:
+                self.send_ignore_limit()
+            elif mid == SMOCO_MID_SOFT_LIMIT:
+                self.send_soft_limits()
+            elif mid == SMOCO_MID_DUTY_CYCLE_RANGE:
+                self.send_duty_cycle_range()
         else:
-            match message.arbitration_id & 0xF:
-                case 0x0:
-                    position, velocity, current, flags = struct.unpack(
-                        "<ihcc", message.data
-                    )
-                    current = current[0] / 8
-                    limit_a = flags[0] & 0b10000000 != 0
-                    limit_b = flags[0] & 0b01000000 != 0
-                    soft_limit_a_reached = flags[0] & 0b00100000 != 0
-                    soft_limit_b_reached = flags[0] & 0b00010000 != 0
-                    self.data.set(
-                        f"Position (step): {position:06}, Angular Velocity (step/s): {velocity:06}, Current (A): {current:05.2f}\nLimit A: {limit_a:1}, Limit B: {limit_b:1}, Soft Limit A: {soft_limit_a_reached:1}, Soft Limit B: {soft_limit_b_reached:1}",
-                    )
-                case 0x1:
-                    print(f"RX ID: 0x{message.arbitration_id:03X}, Position Calibrated")
-                case 0xD:
-                    command_id = struct.unpack("<c", message.data)[0]
-                    print(
-                        f"RX ID: 0x{message.arbitration_id:03X}, Command Error, Command ID: {command_id}"
-                    )
-                case 0xF:
-                    self.ping_reply.set(
-                        f"Ping Reply in {int(time.time()*1000) - struct.unpack("<Q", message.data)[0]}ms"
-                    )
-                    print(
-                        f"RX ID: 0x{message.arbitration_id:03X}, Echo Reply, Payload: 0x{" ".join((f"{byte:02X}" for byte in message.data))}"
-                    )
-                case _:
-                    print(
-                        f"RX ID: 0x{message.arbitration_id:03X}, Undefined, Data: 0x{" ".join((f"{byte:02X}" for byte in message.data))}"
-                    )
+            if mid == SMOCO_MID_POSITION:
+                position, velocity, current, flags = struct.unpack(
+                    "<ihcc", message.data
+                )
+                current = current[0] / 8
+                limit_a = flags[0] & 0b1 != 0
+                limit_b = flags[0] & 0b10 != 0
+                soft_limit_a_reached = flags[0] & 0b100 != 0
+                soft_limit_b_reached = flags[0] & 0b1000 != 0
+                self.data.set(
+                    f"Position (step): {position:06}, Angular Velocity (step/s): {velocity:06}, Current (A): {current:05.2f}\nLimit A: {limit_a:1}, Limit B: {limit_b:1}, Soft Limit A: {soft_limit_a_reached:1}, Soft Limit B: {soft_limit_b_reached:1}",
+                )
+            elif mid == SMOCO_MID_POSITION_CALIBRATED:
+                print(f"RX ID: 0x{message.arbitration_id:03X}, Position Calibrated")
+            elif mid == SMOCO_MID_ERROR:
+                command_id = struct.unpack("<c", message.data)[0]
+                print(
+                    f"RX ID: 0x{message.arbitration_id:03X}, Command Error, Command ID: {command_id}"
+                )
+            elif mid == SMOCO_MID_ECHO_REPLY:
+                self.ping_reply.set(
+                    f"Ping Reply in {int(time.time() * 1000) - struct.unpack('<Q', message.data)[0]}ms"
+                )
+                print(
+                    f"RX ID: 0x{message.arbitration_id:03X}, Echo Reply, Payload: 0x{' '.join((f'{byte:02X}' for byte in message.data))}"
+                )
+            else:
+                print(
+                    f"RX ID: 0x{message.arbitration_id:03X}, Undefined, Data: 0x{' '.join((f'{byte:02X}' for byte in message.data))}"
+                )
 
-    def send_pid(self):
+    def send_data(self, mid, *data):
         self.can_send.put(
             can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x4,
+                arbitration_id=self.get_shifted_id() | mid,
                 is_extended_id=False,
                 is_remote_frame=False,
-                dlc=6,
-                data=struct.pack(
-                    "<HHH",
-                    int(self.p.get() * 256),
-                    int(self.i.get() * 256),
-                    int(self.d.get() * 256),
-                ),
+                dlc=SMOCO_WIDTH[mid],
+                data=struct.pack(SMOCO_FORMAT[mid], *data),
             ),
             False,
         )
 
     def send_ramp_rate(self):
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x3,
-                is_extended_id=False,
-                is_remote_frame=False,
-                dlc=8,
-                data=struct.pack("<d", self.ramp_rate.get()),
-            ),
-            False,
+        self.send_data(SMOCO_MID_RAMP_RATE, self.ramp_rate.get())
+
+    def send_pid(self):
+        self.send_pi()
+        self.send_d()
+
+    def send_pi(self):
+        self.send_data(SMOCO_MID_PI, self.p.get(), self.i.get())
+
+    def send_d(self):
+        self.send_data(SMOCO_MID_D, self.d.get())
+
+    def send_ignore_limit(self):
+        self.send_data(
+            SMOCO_MID_IGNORE_LIMIT,
+            self.ignore_limit_a.get() | (self.ignore_limit_b.get() << 1),
         )
 
     def send_soft_limits(self):
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x5,
-                is_extended_id=False,
-                is_remote_frame=False,
-                dlc=8,
-                data=struct.pack(
-                    "<ii",
-                    self.soft_limit_a.get(),
-                    self.soft_limit_b.get(),
-                ),
-            ),
-            False,
+        self.send_data(
+            SMOCO_MID_SOFT_LIMIT, self.soft_limit_a.get(), self.soft_limit_b.get()
         )
 
     def send_calibrate(self):
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x6,
-                is_extended_id=False,
-                data=struct.pack(
-                    "<hi",
-                    int(self.calibration_duty_cycle.get() * 32768),
-                    self.limit_switch_position.get(),
-                ),
-                dlc=6,
-            ),
-            False,
+        self.send_data(
+            SMOCO_MID_CALIBRATE,
+            self.calibration_duty_cycle.get(),
+            self.limit_switch_position.get(),
+        )
+
+    def send_duty_cycle_range(self):
+        self.send_data(
+            SMOCO_MID_DUTY_CYCLE_RANGE,
+            self.fwd_max.get(),
+            self.fwd_min.get(),
+            self.rev_min.get(),
+            self.rev_max.get(),
         )
 
     def send_ping(self):
         self.ping_reply.set("Pinging")
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0xE,
-                is_extended_id=False,
-                dlc=8,
-                data=struct.pack("<Q", int(time.time() * 1000)),
-            )
-        )
+        self.send_data(SMOCO_MID_ECHO_REQUEST, int(time.time() * 1000))
 
     def send_stop(self):
         self.can_send.put(
             can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0xC,
+                arbitration_id=self.get_shifted_id() | SMOCO_MID_STOP,
                 is_extended_id=False,
                 dlc=0,
             ),
@@ -389,84 +531,28 @@ class App(tk.Frame):
         )
 
     def send_open_loop(self):
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x2,
-                is_extended_id=False,
-                data=struct.pack(
-                    "<Bh",
-                    0 + self.ignore_limit.get(),
-                    int(self.duty_cycle.get() * 32768),
-                ),
-                dlc=3,
-            ),
-            False,
-        )
+        self.send_data(SMOCO_MID_OPEN_LOOP, self.duty_cycle.get())
 
     def send_target_position(self):
         target = int(self.target.get())
+        ff = self.feed_forward.get()
         self.debugData[8, -1] = target
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x2,
-                is_extended_id=False,
-                data=struct.pack(
-                    "<BHi",
-                    2 + self.ignore_limit.get(),
-                    int(self.error_gain.get() * 1024),
-                    target,
-                ),
-                dlc=7,
-            ),
-            False,
-        )
+        self.send_data(SMOCO_MID_TARGET_POSITION, ff, target)
 
     def send_target_velocity(self):
-        target = int(self.target.get())
+        target = self.target.get()
+        ff = self.feed_forward.get()
         self.debugData[8, -1] = target
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x2,
-                is_extended_id=False,
-                data=struct.pack(
-                    "<BHi",
-                    4 + self.ignore_limit.get(),
-                    int(self.error_gain.get() * 1024),
-                    target,
-                ),
-                dlc=7,
-            ),
-            False,
-        )
+        self.send_data(SMOCO_MID_TARGET_VELOCITY, ff, target)
 
     def send_target_current(self):
         target = int(self.target.get())
+        ff = self.feed_forward.get()
         self.debugData[8, -1] = target
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x2,
-                is_extended_id=False,
-                data=struct.pack(
-                    "<BHh",
-                    6 + self.ignore_limit.get(),
-                    int(self.error_gain.get() * 1024),
-                    target,
-                ),
-                dlc=5,
-            ),
-            False,
-        )
+        self.send_data(SMOCO_MID_TARGET_CURRENT, ff, target)
 
     def send_debug_telemetry(self, enabled: bool):
-        self.can_send.put(
-            can.Message(
-                arbitration_id=int(self.id.get() + "0", 16) | 0x7,
-                is_extended_id=False,
-                data=struct.pack("<B", 1 if enabled else 0),
-                dlc=5,
-            ),
-            False,
-        )
+        self.send_data(SMOCO_MID_DEBUG, 1 if enabled else 0)
 
 
 def app_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
@@ -481,7 +567,7 @@ def can_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
         last_message = can.Message()
         while True:
             message = bus.recv(1)
-            if message != None and (
+            if message is not None and (
                 message.arbitration_id != last_message.arbitration_id
                 or message.dlc != last_message.dlc
                 or message.data != last_message.data
@@ -492,7 +578,7 @@ def can_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
             try:
                 message = can_send.get(False)
                 print(
-                    f"TX ID: 0x{message.arbitration_id:03X}, Data: 0x{" ".join((f"{byte:02X}" for byte in message.data))}, Success: ",
+                    f"TX ID: 0x{message.arbitration_id:03X}, Data: 0x{' '.join((f'{byte:02X}' for byte in message.data))}, Success: ",
                     end="",
                 )
                 try:

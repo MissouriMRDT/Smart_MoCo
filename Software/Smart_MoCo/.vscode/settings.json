@@ -20,5 +20,6 @@
     },
     "[cpp]": {
         "editor.defaultFormatter": "xaver.clang-format"
-    }
+    },
+    "editor.tabSize": 2
 }

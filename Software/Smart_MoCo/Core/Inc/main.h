@@ -51,20 +51,12 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-typedef enum ControlMode ControlMode;
-enum ControlMode {
-  CONTROL_MODE_STOP,
-  CONTROL_MODE_OPEN_LOOP,
-  CONTROL_MODE_POSITION,
-  CONTROL_MODE_VELOCITY,
-  CONTROL_MODE_CURRENT,
-  CONTROL_MODE_CALIBRATING
-};
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+volatile extern uint64_t sysTickOffset;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -76,11 +68,8 @@ enum ControlMode {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-uint32_t GetTick(void);
-void TIM1_PeriodElapsedCallback(void);
-#ifndef QUADRATURE_ENCODER
-void TIM2_IC_CaptureCallback(void);
-#endif
+uint64_t GetTick(void);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -123,29 +112,16 @@ void TIM2_IC_CaptureCallback(void);
 #endif
 
 /* USER CODE BEGIN Private defines */
-#define MESSAGE_ID_POSITION 0x30
-#define MESSAGE_ID_POSITION_CALIBRATED 0x31
-#define MESSAGE_ID_ERROR 0x32
-#define MESSAGE_ID_ECHO_REPLY 0x3F
-#define MESSAGE_ID_STOP 0x00
-#define MESSAGE_ID_RAMP_RATE 0x01
-#define MESSAGE_ID_PI 0x02
-#define MESSAGE_ID_D 0x03
-#define MESSAGE_ID_IGNORE_LIMIT 0x04
-#define MESSAGE_ID_SOFT_LIMIT 0x05
-#define MESSAGE_ID_CALIBRATE 0x06
-#define MESSAGE_ID_DEBUG 0x07
-#define MESSAGE_ID_DUTY_CYCLE_RANGE 0x08
-#define MESSAGE_ID_ECHO_REQUEST 0x0F
-#define MESSAGE_ID_OPEN_LOOP 0x10
-#define MESSAGE_ID_TARGET_POSITION 0x11
-#define MESSAGE_ID_TARGET_VELOCITY 0x12
-#define MESSAGE_ID_TARGET_CURRENT 0x13
-#define MESSAGE_ID_DEBUG_OFFSET 0x7F0
+#define TICKS_PER_S 8000000
+#define TICKS_PER_MS 8000
+#define TICKS_PER_US 8
 
-#define TICKS_PER_S 2000000
-#define TICKS_PER_MS 2000
-#define TICKS_PER_US 2
+#define TIM_SCHEDULER TIM1
+#define TIM_ENCODER TIM2
+#define TIM_LED TIM3
+#define TIM_MOTOR TIM14
+#define TIM_GPIO TIM16
+#define TIM_OUTPUT TIM17
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

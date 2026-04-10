@@ -4,9 +4,10 @@
 #include "stm32f0xx_ll_bus.h"
 #include "stm32f0xx_ll_gpio.h"
 #include "stm32f0xx_ll_utils.h"
+#include <stdbool.h>
 #include <stdint.h>
 
-uint32_t CAN_TIMEOUT_VALUE = 20000; // 10ms
+uint64_t CAN_TIMEOUT_VALUE = 20000; // 10ms
 void CAN_Init(void) {
   // Peripheral clock enable
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_CAN);
@@ -29,7 +30,7 @@ void CAN_Init(void) {
   SET_BIT(CAN->MCR, CAN_MCR_INRQ);
 
   // Get tick
-  uint32_t tickstart = GetTick();
+  uint64_t tickstart = GetTick();
 
   // Wait initialisation acknowledge
   while ((CAN->MSR & CAN_MSR_INAK) == 0U) {
@@ -151,7 +152,7 @@ void CAN_Start(void) {
   // Request leave initialisation
   CLEAR_BIT(CAN->MCR, CAN_MCR_INRQ);
 
-  uint32_t tickstart = GetTick();
+  uint64_t tickstart = GetTick();
 
   // Wait the acknowledge
   while ((CAN->MSR & CAN_MSR_INAK) != 0U) {

@@ -50,7 +50,7 @@ void CAN_TX_SendTelemetry(void) {
 
   if (queuedCommandError &&
       send_data(
-          commandErrorID,
+          SMOCO_MID_ERROR,
           (SMOCOMessage){.SMOCO_MID_ERROR_ = {.commandID = commandErrorID}}))
     queuedCommandError = false;
 

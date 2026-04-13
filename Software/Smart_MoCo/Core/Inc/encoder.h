@@ -5,6 +5,7 @@
 
 #ifndef QUADRATURE_ENCODER
 void TIM2_IC_CaptureCallback(void);
+void Encoder_UpdatePosition(void);
 #endif
 
 void Encoder_Init(void);

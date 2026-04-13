@@ -2,6 +2,7 @@
 #define __CONTROLLER_H
 
 #include "smoco.h"
+#include <stdint.h>
 
 typedef enum ControlMode {
   CONTROL_MODE_STOP,
@@ -17,7 +18,7 @@ extern DebugTelemetry debugTelemetry;
 
 void TIM17_PeriodElapsedCallback(void);
 void Controller_Init(void);
-void Controller_SetStatusLED(uint32_t timeout);
+void Controller_SetStatusLED(uint64_t timeout);
 void Controller_ResetPID(void);
 
 #endif /* __CONTROLLER_H */

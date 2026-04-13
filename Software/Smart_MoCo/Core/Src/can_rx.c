@@ -170,7 +170,6 @@ void CAN_FMP0_IRQHandler(void) {
   controlMode[!readBuffer] = controlMode[readBuffer];
   memcpy(acceptedCommands[!readBuffer], acceptedCommands[readBuffer],
          sizeof(acceptedCommands[0]));
-  Controller_SetStatusLED(100 * TICKS_PER_MS);
   return;
 
 error_handler:

@@ -28,13 +28,4 @@ the joint.
 ]]
 # ABSOLUTE_ENCODER_STARTUP_THRESHOLD=1600
 
-# Telemetry interval (ms)
-TELEMETRY_INTERVAL=500
-
-# Rate to capture debug telemetry (ms)
-DEBUG_TELEMETRY_INTERVAL=100
-
-# Missing parameter request interval (ms)
-PARAMETER_REQUEST_INTERVAL=500
-
 )

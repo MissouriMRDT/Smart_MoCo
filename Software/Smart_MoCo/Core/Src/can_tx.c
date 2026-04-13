@@ -30,7 +30,7 @@ bool send_remote(uint32_t mid) {
 }
 
 bool queuedCalibrated = false;
-;
+
 void CAN_TX_QueueCalibrated(void) { queuedCalibrated = true; }
 
 bool queuedCommandError = false;
@@ -50,7 +50,7 @@ void CAN_TX_SendTelemetry(void) {
 
   if (queuedCommandError &&
       send_data(
-          commandErrorID,
+          SMOCO_MID_ERROR,
           (SMOCOMessage){.SMOCO_MID_ERROR_ = {.commandID = commandErrorID}}))
     queuedCommandError = false;
 
@@ -58,7 +58,6 @@ void CAN_TX_SendTelemetry(void) {
 }
 
 void CAN_TX_SendDebugTelemetry(void) {
-  return; // TODO: enable
   if (!ACCEPTED_COMMAND(SMOCO_MID_DEBUG).enable)
     return;
 
@@ -86,17 +85,14 @@ void CAN_TX_RequestMissingParameter(void) {
   if (missing == 0)
     return;
 
-  if ((missing & (1ULL << nextMissing)) == 0) {
-    // nextMissingParameter isn't missing. Find the next one
+  // Find the next missing parameter
+  // WARNING: this loop will be infinite if there are no set bits in
+  // missing. The early return above should prevent this.
+  while (!(missing & (1ULL << nextMissing)))
     nextMissing = (nextMissing + 1) % 64;
-    // WARNING: this loop will be infinite if there are no set bits in
-    // missing. The early return above should prevent this.
-    while (!(missing & (1ULL << nextMissing)))
-      nextMissing = (nextMissing + 1) % 64;
-  }
 
   send_remote(nextMissing);
 
-  // Cycle through the missing parameters.
+  // Cycle through the missing parameters
   nextMissing = (nextMissing + 1) % 64;
 }

@@ -34,7 +34,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -56,7 +55,6 @@ volatile uint64_t sysTickOffset = TICKS_PER_MS;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -107,10 +105,10 @@ int main(void) {
   Encoder_Init();
   CAN_RX_Init();
 
-  // LL_TIM_EnableIT_CC1(TIM_SCHEDULER); // Schedule CAN_TX_SendTelemetry
-  // LL_TIM_EnableIT_CC2(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
+  LL_TIM_EnableIT_CC1(TIM_SCHEDULER); // Schedule CAN_TX_SendTelemetry
+  LL_TIM_EnableIT_CC2(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
   LL_TIM_EnableIT_CC3(TIM_SCHEDULER); // Schedule CAN_TX_RequestMissingParameter
-  // LL_TIM_EnableIT_CC4(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
+  LL_TIM_EnableIT_CC4(TIM_SCHEDULER); // Schedule CAN_TX_SendDebugTelemetry
   LL_TIM_EnableCounter(TIM_SCHEDULER);
   /* USER CODE END 2 */
 

@@ -58,17 +58,22 @@ float pwm = 0;
 DebugTelemetry debugTelemetry = {0};
 
 void TIM17_PeriodElapsedCallback(void) {
-  // Timeout status LED
-  if (statusOffTime < GetTick()) {
+  uint64_t now = GetTick();
+  float deltaT = 0.005; // Function is called every 5ms by a timer
+
+  // Update status LED
+  if (statusOffTime < now) {
     statusOffTime = UINT32_MAX;
     LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
   }
 
-  // Update controller
-  float deltaT = 0.02; // Function is called every 20ms by a timer
+// Update controller
+#ifndef QUADRATURE_ENCODER
+  Encoder_UpdatePosition();
+#endif
 
-  // TODO: update
   int32_t position = Encoder_GetPosition();
+  // TODO: update
   float velocity = 0;
   uint8_t current = LL_ADC_REG_ReadConversionData32(ADC1) & 0x00FF;
 
@@ -81,18 +86,6 @@ void TIM17_PeriodElapsedCallback(void) {
   bool softLimitB =
       position >= ACCEPTED_COMMAND(SMOCO_MID_SOFT_LIMIT).bPosition;
 
-  // DebugTelemetry *debugTelemetryCapture =
-  //     debugTelemetryEnabled &&
-  //             (GetTick() / TICKS_PER_MS) > nextDebugTelemetryCaptureTime
-  //         ? &debugTelemetry
-  //         : NULL;
-  // if (debugTelemetryCapture != NULL) {
-  //   debugTelemetry.tick = currentTick;
-  //   debugTelemetry.position = currentPosition;
-  //   debugTelemetry.velocity = currentVelocity;
-  //   debugTelemetry.current = currentCurrent;
-  // }
-
   if (controlMode[readBuffer] == CONTROL_MODE_OPEN_LOOP) {
     pwm = pwm < -1 ? -1 : pwm > 1 ? 1 : pwm;
     ramp((float)ACCEPTED_COMMAND(SMOCO_MID_OPEN_LOOP).dutyCycle / 32768, &pwm,
@@ -104,6 +97,7 @@ void TIM17_PeriodElapsedCallback(void) {
     if (pwm < 0 ? limitA : limitB) {
       Encoder_SetPosition(
           ACCEPTED_COMMAND(SMOCO_MID_CALIBRATE).limitSwitchPosition);
+      controlMode[readBuffer] = CONTROL_MODE_STOP;
       controlMode[!readBuffer] = CONTROL_MODE_STOP;
       CAN_TX_QueueCalibrated();
     }
@@ -181,7 +175,7 @@ void TIM17_PeriodElapsedCallback(void) {
                                        (softLimitA << 2) | (softLimitB << 3)}});
 
   if (ACCEPTED_COMMAND(SMOCO_MID_DEBUG).enable) {
-    debugTelemetry.tick = GetTick();
+    debugTelemetry.tick = now;
     debugTelemetry.position = position;
     debugTelemetry.velocity = velocity;
     debugTelemetry.current = current;
@@ -191,11 +185,12 @@ void TIM17_PeriodElapsedCallback(void) {
 void Controller_Init(void) {
   LL_TIM_EnableIT_UPDATE(TIM_OUTPUT);
   LL_TIM_EnableCounter(TIM_OUTPUT);
+
   LL_TIM_CC_EnableChannel(TIM_MOTOR, LL_TIM_CHANNEL_CH1);
   LL_TIM_EnableCounter(TIM_MOTOR);
 }
 
-void Controller_SetStatusLED(uint32_t timeout) {
+void Controller_SetStatusLED(uint64_t timeout) {
   statusOffTime = GetTick() + timeout;
   LL_GPIO_SetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
 }

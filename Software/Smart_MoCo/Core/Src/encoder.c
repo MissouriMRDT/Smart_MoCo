@@ -6,16 +6,40 @@
 
 int32_t encoderOffset = 0; // step
 
-#ifndef QUADRATURE_ENCODER
+#ifdef QUADRATURE_ENCODER
+void Encoder_Init(void) {
+  LL_TIM_EnableCounter(TIM_ENCODER);
+  LL_TIM_CC_EnableChannel(TIM_ENCODER, LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH2);
+  LL_TIM_SetCounter(TIM_ENCODER, UINT16_MAX);
+  encoderOffset = -UINT16_MAX;
+}
+
+inline int32_t Encoder_GetPosition(void) {
+  return LL_TIM_GetCounter(TIM_ENCODER) + encoderOffset;
+}
+
+void Encoder_SetPosition(int32_t new) {
+  encoderOffset = new - LL_TIM_GetCounter(TIM_ENCODER);
+}
+
+#else
+
+volatile uint32_t encoderPeriod;
+volatile uint32_t encoderWidth;
+
+void TIM2_IC_CaptureCallback(void) {
+  encoderPeriod = LL_TIM_OC_GetCompareCH1(TIM_ENCODER);
+  encoderWidth = LL_TIM_OC_GetCompareCH2(TIM_ENCODER);
+}
+
 volatile int32_t absPosition = 0; // step
 volatile uint32_t absLastWidth = 0;
 volatile int32_t absRotations = 0; // ABSOLUTE_ENCODER_RESOLUTION * step
-
-void TIM2_IC_CaptureCallback(void) {
-  uint32_t encoderPeriod = LL_TIM_OC_GetCompareCH1(TIM_ENCODER);
+// Should be called often enough to not miss rollover. Updates the position
+// returned by Encoder_GetPosition
+void Encoder_UpdatePosition(void) {
   if (encoderPeriod) {
     // `if (encoderPeriod)` ensures we don't divide by 0.
-    uint32_t encoderWidth = LL_TIM_OC_GetCompareCH2(TIM_ENCODER);
     if (absLastWidth) {
       // Don't rollover on startup.
       if (absLastWidth > encoderPeriod * 0.8 &&
@@ -44,36 +68,15 @@ void TIM2_IC_CaptureCallback(void) {
                   encoderOffset;
   }
 }
-#endif
 
 void Encoder_Init(void) {
-#ifdef QUADRATURE_ENCODER
-  LL_TIM_EnableCounter(TIM_ENCODER);
-  LL_TIM_CC_EnableChannel(TIM_ENCODER, LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH2);
-  LL_TIM_SetCounter(TIM_ENCODER, UINT16_MAX);
-  encoderOffset = -UINT16_MAX;
-#else
   LL_TIM_EnableIT_CC1(TIM_ENCODER);
-  LL_TIM_EnableIT_CC2(TIM_ENCODER);
   LL_TIM_CC_EnableChannel(TIM_ENCODER, LL_TIM_CHANNEL_CH1);
   LL_TIM_CC_EnableChannel(TIM_ENCODER, LL_TIM_CHANNEL_CH2);
   LL_TIM_EnableCounter(TIM_ENCODER);
-#endif
 }
 
-inline int32_t Encoder_GetPosition(void) {
-#ifdef QUADRATURE_ENCODER
-  return LL_TIM_GetCounter(TIM_ENCODER) + encoderOffset;
-#else
-  return absPosition + encoderOffset;
-#endif
-}
+inline int32_t Encoder_GetPosition(void) { return absPosition + encoderOffset; }
 
-void Encoder_SetPosition(int32_t new) {
-#ifdef QUADRATURE_ENCODER
-  encoderOffset = new - LL_TIM_GetCounter(TIM_ENCODER);
-#else
-  encoderOffset = new - absPosition;
-  return;
+void Encoder_SetPosition(int32_t new) { encoderOffset = new - absPosition; }
 #endif
-}

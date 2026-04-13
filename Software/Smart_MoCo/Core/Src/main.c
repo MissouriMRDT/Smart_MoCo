@@ -168,7 +168,8 @@ void Error_Handler(void) {
   /* User can add his own implementation to report the HAL error return
    * state */
   __disable_irq();
-  Controller_SetStatusLED(UINT64_MAX, 0xFFFF, 0x0000, 0xFFFF);
+  Controller_SetStatusLED(UINT64_MAX, 0,
+                          (Color){.r = 0xFFFF, .g = 0x0000, .b = 0xFFFF});
   while (1) {
   }
   /* USER CODE END Error_Handler_Debug */

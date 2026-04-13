@@ -58,19 +58,20 @@ float pwm = 0;
 DebugTelemetry debugTelemetry = {0};
 
 void TIM17_PeriodElapsedCallback(void) {
-  // Timeout status LED
-  if (statusOffTime < GetTick()) {
-    statusOffTime = UINT64_MAX;
-    LL_TIM_OC_SetCompareCH1(TIM_LED, 0x0000);
-    LL_TIM_OC_SetCompareCH2(TIM_LED, 0xffff);
-    LL_TIM_OC_SetCompareCH4(TIM_LED, 0x0000);
-  }
+  uint64_t now = GetTick();
+  float deltaT = 0.005; // Function is called every 5ms by a timer
 
-  // Update controller
-  float deltaT = 0.02; // Function is called every 20ms by a timer
+  // Update status LED
+  Controller_SetStatusLED(UINT64_MAX, 7,
+                          (Color){.r = 0x0000, .g = 0xffff, .b = 0x0000});
 
-  // TODO: update
+// Update controller
+#ifndef QUADRATURE_ENCODER
+  Encoder_UpdatePosition();
+#endif
+
   int32_t position = Encoder_GetPosition();
+  // TODO: update
   float velocity = 0;
   uint8_t current = LL_ADC_REG_ReadConversionData32(ADC1) & 0x00FF;
 
@@ -172,7 +173,7 @@ void TIM17_PeriodElapsedCallback(void) {
                                        (softLimitA << 2) | (softLimitB << 3)}});
 
   if (ACCEPTED_COMMAND(SMOCO_MID_DEBUG).enable) {
-    debugTelemetry.tick = GetTick();
+    debugTelemetry.tick = now;
     debugTelemetry.position = position;
     debugTelemetry.velocity = velocity;
     debugTelemetry.current = current;
@@ -186,19 +187,33 @@ void Controller_Init(void) {
   LL_TIM_CC_EnableChannel(TIM_MOTOR, LL_TIM_CHANNEL_CH1);
   LL_TIM_EnableCounter(TIM_MOTOR);
 
-  Controller_SetStatusLED(UINT64_MAX, 0x0000, 0xffff, 0x0000);
+  Controller_SetStatusLED(UINT64_MAX, 7,
+                          (Color){.r = 0x0000, .g = 0xffff, .b = 0x0000});
   LL_TIM_CC_EnableChannel(TIM_LED, LL_TIM_CHANNEL_CH1);
   LL_TIM_CC_EnableChannel(TIM_LED, LL_TIM_CHANNEL_CH2);
   LL_TIM_CC_EnableChannel(TIM_LED, LL_TIM_CHANNEL_CH4);
   LL_TIM_EnableCounter(TIM_LED);
 }
 
-void Controller_SetStatusLED(uint64_t timeout, uint16_t r, uint16_t g,
-                             uint16_t b) {
-  statusOffTime = GetTick() + timeout;
-  LL_TIM_OC_SetCompareCH1(TIM_LED, r);
-  LL_TIM_OC_SetCompareCH2(TIM_LED, g);
-  LL_TIM_OC_SetCompareCH4(TIM_LED, b);
+Color statusColors[8] = {0};
+uint64_t statusTimeouts[8] = {0};
+void Controller_SetStatusLED(uint64_t timeout, uint8_t priority, Color color) {
+  uint64_t now = GetTick();
+  if (priority > 7)
+    priority = 7;
+  statusColors[priority] = color;
+  statusTimeouts[priority] = now + timeout;
+
+  for (int i = 0; i < 8; i++) {
+    if (statusTimeouts[i] > now) {
+      color = statusColors[i];
+      break;
+    }
+  }
+
+  LL_TIM_OC_SetCompareCH1(TIM_LED, color.r);
+  LL_TIM_OC_SetCompareCH2(TIM_LED, color.g);
+  LL_TIM_OC_SetCompareCH4(TIM_LED, color.b);
 }
 
 void Controller_ResetPID(void) {

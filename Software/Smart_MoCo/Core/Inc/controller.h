@@ -2,6 +2,7 @@
 #define __CONTROLLER_H
 
 #include "smoco.h"
+#include <stdint.h>
 
 typedef enum ControlMode {
   CONTROL_MODE_STOP,
@@ -13,12 +14,17 @@ typedef enum ControlMode {
   CONTROL_MODE_COUNT, // Sentinel
 } ControlMode;
 
+typedef struct Color {
+  uint16_t r;
+  uint16_t g;
+  uint16_t b;
+} Color;
+
 extern DebugTelemetry debugTelemetry;
 
 void TIM17_PeriodElapsedCallback(void);
 void Controller_Init(void);
-void Controller_SetStatusLED(uint64_t timeout, uint16_t r, uint16_t g,
-                             uint16_t b);
+void Controller_SetStatusLED(uint64_t timeout, uint8_t priority, Color color);
 void Controller_ResetPID(void);
 
 #endif /* __CONTROLLER_H */

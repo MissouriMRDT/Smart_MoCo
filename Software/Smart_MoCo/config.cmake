@@ -2,7 +2,7 @@
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 
 # (0x7F to 0x00) The high two nybbles of all CAN IDs associated with this device. This should be unique for each Smart MoCo on the CAN bus.
-SMOCO_ID=0x0B
+SMOCO_ID=0x08
 
 # Comment out to use absolute PWM encoder on PA5 and uncomment to use quadrature encoder on PA1 and PA5.
 # QUADRATURE_ENCODER

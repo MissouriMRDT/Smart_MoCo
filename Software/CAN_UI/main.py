@@ -143,12 +143,13 @@ class App(tk.Frame):
         self.image = tk.PhotoImage(file="logo.png")
         tk.Label(image=self.image).grid(
             row=0, column=0, rowspan=2, columnspan=2, sticky="nw"
+ 
         )
         tk.Label(
             text="Developed by Brendan Westley\nfor testing and configuring the\nSmart Motor Controller.\nMars Rover Design Team 2026"
         ).grid(row=0, column=2, rowspan=1, columnspan=2, sticky="nsew")
         self.serial_port = tk.StringVar(value="Select Serial Port")
-        self.serial_dropdown = tk.OptionMenu(master, self.serial_port, *serial.tools.list_ports.comports(), command=self.open_serial)
+        self.serial_dropdown = tk.OptionMenu(master, self.serial_port, "Select Serial Port", *serial.tools.list_ports.comports(), command=self.open_serial)
         self.serial_dropdown.grid(
             row=1, column=2, rowspan=1, columnspan=2, sticky="nw"
         )

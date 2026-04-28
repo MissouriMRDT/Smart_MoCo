@@ -24,30 +24,27 @@ void Encoder_SetPosition(int32_t new) {
 
 #else
 
-volatile uint32_t encoderPeriod;
-volatile uint32_t encoderWidth;
+volatile int32_t absPosition = 0; // step
+volatile uint32_t absLastDutyCycle = 0;
+volatile int32_t absRotations = 0; // ABSOLUTE_ENCODER_RESOLUTION * step
 
 void TIM2_IC_CaptureCallback(void) {
-  encoderPeriod = LL_TIM_OC_GetCompareCH1(TIM_ENCODER);
-  encoderWidth = LL_TIM_OC_GetCompareCH2(TIM_ENCODER);
-}
+  uint32_t encoderPeriod = LL_TIM_OC_GetCompareCH1(TIM_ENCODER);
+  uint32_t encoderWidth = LL_TIM_OC_GetCompareCH2(TIM_ENCODER);
 
-volatile int32_t absPosition = 0; // step
-volatile uint32_t absLastWidth = 0;
-volatile int32_t absRotations = 0; // ABSOLUTE_ENCODER_RESOLUTION * step
-// Should be called often enough to not miss rollover. Updates the position
-// returned by Encoder_GetPosition
-void Encoder_UpdatePosition(void) {
   if (encoderPeriod) {
     // `if (encoderPeriod)` ensures we don't divide by 0.
-    if (absLastWidth) {
+    uint32_t dutyCycle =
+        ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod;
+
+    if (absLastDutyCycle) {
       // Don't rollover on startup.
-      if (absLastWidth > encoderPeriod * 0.8 &&
-          encoderWidth < encoderPeriod * 0.2) {
+      if (absLastDutyCycle > ABSOLUTE_ENCODER_RESOLUTION * 0.8 &&
+          dutyCycle < ABSOLUTE_ENCODER_RESOLUTION * 0.2) {
         // High to low rollover:
         absRotations++;
-      } else if (absLastWidth < encoderPeriod * 0.2 &&
-                 encoderWidth > encoderPeriod * 0.8) {
+      } else if (absLastDutyCycle < ABSOLUTE_ENCODER_RESOLUTION * 0.2 &&
+                 dutyCycle > ABSOLUTE_ENCODER_RESOLUTION * 0.8) {
         // Low to high rollover:
         absRotations--;
       }
@@ -57,15 +54,14 @@ void Encoder_UpdatePosition(void) {
       // On startup, if the encoder position is past
       // ABSOLUTE_ENCODER_STARTUP_THRESHOLD, move the position back one
       // revolution.
-      if (ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod >
-          ABSOLUTE_ENCODER_STARTUP_THRESHOLD)
+      if (dutyCycle > ABSOLUTE_ENCODER_STARTUP_THRESHOLD)
         absRotations = -1;
     }
 #endif
-    absLastWidth = encoderWidth;
-    absPosition = ABSOLUTE_ENCODER_RESOLUTION * absRotations +
-                  ABSOLUTE_ENCODER_RESOLUTION * encoderWidth / encoderPeriod +
-                  encoderOffset;
+
+    absLastDutyCycle = dutyCycle;
+    absPosition =
+        ABSOLUTE_ENCODER_RESOLUTION * absRotations + dutyCycle + encoderOffset;
   }
 }
 

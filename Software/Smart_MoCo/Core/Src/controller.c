@@ -67,11 +67,7 @@ void TIM17_PeriodElapsedCallback(void) {
     LL_GPIO_ResetOutputPin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
   }
 
-// Update controller
-#ifndef QUADRATURE_ENCODER
-  Encoder_UpdatePosition();
-#endif
-
+  // Update controller
   int32_t position = Encoder_GetPosition();
   // TODO: update
   float velocity = 0;

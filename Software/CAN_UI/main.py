@@ -7,6 +7,7 @@ from matplotlib.figure import Figure
 from matplotlib.widgets import CheckButtons
 import tkinter.font as tkFont
 import multiprocessing
+import serial.tools.list_ports
 
 import numpy as np
 
@@ -113,6 +114,7 @@ def label(text, bg, r, c, rs=1, cs=1):
         row=r, column=c, rowspan=rs, columnspan=cs, sticky="nsew"
     )
 
+can_active = False
 
 class App(tk.Frame):
     def __init__(
@@ -144,8 +146,12 @@ class App(tk.Frame):
         )
         tk.Label(
             text="Developed by Brendan Westley\nfor testing and configuring the\nSmart Motor Controller.\nMars Rover Design Team 2026"
-        ).grid(row=0, column=2, rowspan=2, columnspan=2, sticky="nsew")
-
+        ).grid(row=0, column=2, rowspan=1, columnspan=2, sticky="nsew")
+        self.serial_port = tk.StringVar(value="Select Serial Port")
+        self.serial_dropdown = tk.OptionMenu(master, self.serial_port, "Select Serial Port", *serial.tools.list_ports.comports(), command=self.open_serial)
+        self.serial_dropdown.grid(
+            row=1, column=2, rowspan=1, columnspan=2, sticky="nw"
+        )
         label("ID 0x", color[0], 0, 4)
         self.id = tk.StringVar(value="0B")
         tk.Entry(textvariable=self.id, bg=color[0]).grid(row=0, column=5, sticky="nsew")
@@ -351,6 +357,50 @@ class App(tk.Frame):
 
         self.update_telemetry()
 
+        self.last_ports = set()
+        self.update_serial_dropdown()
+
+
+    def update_serial_dropdown(self):
+        global can_active
+        if not can_active:
+            self.serial_port.set("Select Serial Port")
+        current_ports = set(serial.tools.list_ports.comports())
+        if current_ports != self.last_ports:
+            print("Change in USB devices detected")
+            self.serial_dropdown["menu"].delete(0, "end")
+            for port in serial.tools.list_ports.comports():
+                self.serial_dropdown["menu"].add_command(label=port, command=tk._setit(self.serial_port, port, self.open_serial))
+        self.last_ports = current_ports
+        self.after(1000, self.update_serial_dropdown)
+
+    def open_serial(self, selection):
+        global can_active
+        self.close_serial()
+        ports = serial.tools.list_ports.comports()
+        if selection not in ports:
+            return
+        port = ports[ports.index(selection)].device
+        self.serial_port.set(port)
+        print(f"Opening port {self.serial_port.get()}")
+        can_active = True
+        # clear queues
+        while not self.can_send.empty():
+            self.can_send.get()
+        while not self.can_recv.empty():
+            self.can_recv.get()
+        self.can_send.empty()
+        self.can_process = multiprocessing.Process(target=can_main, args=(port, self.can_send, self.can_recv))
+        self.can_process.start()
+    
+    def close_serial(self):
+        global can_active
+        if hasattr(self, "can_process"):
+            print(f"Closing port {self.serial_port.get()}")
+            self.can_process.kill()
+            self.can_process.join()
+            can_active = False
+
     def get_id(self):
         return int(self.id.get(), 16)
 
@@ -465,6 +515,9 @@ class App(tk.Frame):
                 )
 
     def send_data(self, mid, *data):
+        global can_active
+        if not can_active:
+            return
         self.can_send.put(
             can.Message(
                 arbitration_id=self.get_shifted_id() | mid,
@@ -560,49 +613,53 @@ def app_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
     root.wm_title("Smart Motor Controller CAN UI")
     app = App(root, can_send, can_recv)
     app.mainloop()
+    app.close_serial()
 
 
-def can_main(can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
-    with can.Bus(channel=0, interface="gs_usb", bitrate=125 * 1000) as bus:
-        last_message = can.Message()
-        while True:
+def can_main(comport: str, can_send: multiprocessing.Queue, can_recv: multiprocessing.Queue):
+    global can_active
+    can_active = True
+    # bus = can.Bus(channel=0, interface="gs_usb", bitrate=125 * 1000)
+    try:
+        bus = can.interface.Bus(channel=comport, interface="serial", baudrate=115200, timeout=0.1, rtscts=False)
+        print("Success")
+    except Exception as e:
+        print(f"Port {comport} not found:", e)
+        can_active = False
+        return
+
+    while True:
+        try:
             message = bus.recv(1)
-            if message is not None and (
-                message.arbitration_id != last_message.arbitration_id
-                or message.dlc != last_message.dlc
-                or message.data != last_message.data
-            ):
-                last_message = message
+            if message is not None:
                 can_recv.put(message, False)
+                print(message)
+        except Exception as e:
+            print(f"Disconnected from port {comport}:", e, message)
+            can_active = False
+            return
 
+        try:
+            message = can_send.get(False)
+            print(
+                f"TX ID: 0x{message.arbitration_id:03X}, Data: 0x{' '.join((f'{byte:02X}' for byte in message.data))}, Success: ",
+                end="",
+            )
             try:
-                message = can_send.get(False)
-                print(
-                    f"TX ID: 0x{message.arbitration_id:03X}, Data: 0x{' '.join((f'{byte:02X}' for byte in message.data))}, Success: ",
-                    end="",
-                )
-                try:
-                    bus.send(message, 0.5)
-                    print("true")
-                except:
-                    print("false")
-            except:
-                pass
+                bus.send(message, 0.5)
+                print("true")
+            except Exception as e:
+                print(f"Disconnected from port {comport}:", e)
+                can_active = False
+                return
+        except:
+            pass
 
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
     can_send = multiprocessing.Queue()
     can_recv = multiprocessing.Queue()
-    can_process = multiprocessing.Process(target=can_main, args=(can_send, can_recv))
-    print("Starting can_process.")
-    can_process.start()
     app_process = multiprocessing.Process(target=app_main, args=(can_send, can_recv))
-    print("Starting app_process.")
     app_process.start()
-    print("Joining app_process.")
     app_process.join()
-    print("Killing can_process.")
-    can_process.kill()
-    print("Joining can_process.")
-    can_process.join()

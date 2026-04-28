@@ -65,11 +65,7 @@ void TIM17_PeriodElapsedCallback(void) {
   Controller_SetStatusLED(UINT64_MAX, 7,
                           (Color){.r = 0x0000, .g = 0xffff, .b = 0x0000});
 
-// Update controller
-#ifndef QUADRATURE_ENCODER
-  Encoder_UpdatePosition();
-#endif
-
+  // Update controller
   int32_t position = Encoder_GetPosition();
   // TODO: update
   float velocity = 0;

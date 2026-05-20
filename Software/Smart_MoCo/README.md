@@ -82,3 +82,14 @@ When debug telemetry is enabled it is sent periodically.
 | Target Position              |  11 | Feed-Forward (1/32758 i16) | ... | Position (step i32)              | ... | ...                   | ... |                       |     |   | x | x | x | x | x |
 | Target Velocity              |  12 | Feed-Forward (1/32758 i16) | ... | Velocity (step/s f32)            | ... | ...                   | ... |                       |     |   | x | x | x | x | x |
 | Target Current               |  13 | Feed-Forward (1/32758 i16) | ... | Current (ADC i16)                | ... |                       |     |                       |     |   | x | x | x | x | x |
+
+
+### LED Error Code Colors
+
+|  Color  | Meaning                               |
+|---------|---------------------------------------|
+| Green  `#228B22` | Normal                       |
+| Yellow `#FFFF00` | Echo request (ping)          |
+| Cyan   `#00FFF0` | Other CAN message (not ping) |
+| Purple `#E0B0FF` | CAN Initialization error     |
+| Red    `#FF2C2C` | Malformed request            |

@@ -86,10 +86,10 @@ When debug telemetry is enabled it is sent periodically.
 
 ### LED Error Code Colors
 
-|  Color  | Meaning                               |
-|---------|---------------------------------------|
-| Green  `#228B22` | Normal                       |
-| Yellow `#FFFF00` | Echo request (ping)          |
-| Cyan   `#00FFF0` | Other CAN message (not ping) |
-| Purple `#E0B0FF` | CAN Initialization error     |
-| Red    `#FF2C2C` | Malformed request            |
+|  Color  | Meaning                      |
+|---------|------------------------------|
+| Green   | Normal                       |
+| Yellow  | Echo request (ping)          |
+| Cyan    | Other CAN message (not ping) |
+| Purple  | CAN Initialization error     |
+| Red     | Malformed request            |

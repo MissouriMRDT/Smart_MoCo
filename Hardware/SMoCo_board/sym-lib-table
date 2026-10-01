@@ -1,0 +1,5 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "STM32F072C8T6") (type "KiCad") (uri "C:/Users/aespi/Downloads/STM32F072C8T6/KiCADv6/2026-10-01_22-14-37.kicad_sym") (options "") (descr ""))
+	(lib (name "VNH7040AYTR") (type "KiCad") (uri "C:/Users/aespi/Downloads/VNH7040AYTR/KiCADv6/2026-10-01_22-14-52.kicad_sym") (options "") (descr ""))
+)

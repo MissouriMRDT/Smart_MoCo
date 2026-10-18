@@ -673,13 +673,17 @@
         "uuid": "ad6ab0ba-09d2-4577-bf28-b79b9df619ef"
       }
     ],
-    "used_designators": "U1-4,LED1,L1,D1-6,C1-6,C8,Q1,#PWR1-31,J1-8,R1-17",
+    "used_designators": "SW1,TP1,U1-4,LED1,L1,D1-6,C1-6,C8,Q1-6,#PWR1-39,J1-8,R1-24",
     "variants": []
   },
   "sheets": [
     [
       "ad6ab0ba-09d2-4577-bf28-b79b9df619ef",
       ""
+    ],
+    [
+      "a1179329-a1b9-4542-8420-a6479371064b",
+      "Untitled Sheet"
     ]
   ],
   "text_variables": {},

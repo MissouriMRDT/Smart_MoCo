@@ -1665,7 +1665,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "510"
 			(at 191.77 82.5499 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2165,7 +2165,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "200"
+		(property "Value" "820"
 			(at 105.41 82.5499 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2981,7 +2981,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "350"
+		(property "Value" "820"
 			(at 148.59 82.5499 0)
 			(show_name no)
 			(do_not_autoplace no)

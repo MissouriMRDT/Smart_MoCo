@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "can.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -68,8 +69,6 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 
-
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -96,11 +95,8 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM17_Init();
   MX_TIM3_Init();
+  MX_CAN_Init();
   /* USER CODE BEGIN 2 */
-  int32_t CH4_DC = 0;
-
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 
   /* USER CODE END 2 */
 
@@ -108,28 +104,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-
-	  	while(CH4_DC < 65535)
-	  	{
-	  	    TIM3->CCR4 = CH4_DC;
-	  	    TIM3-> CCR1 = CH4_DC/2.5;
-	  	    CH4_DC += 70;
-	  	    HAL_Delay(1);
-	  	}
-	  	while(CH4_DC > 0)
-	  	{
-	  	    TIM3->CCR4 = CH4_DC;
-	  	    TIM3->CCR1 = CH4_DC/2.5;
-	  	    CH4_DC -= 70;
-	  	    HAL_Delay(1);
-	  	}
-
-
-
-
-
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

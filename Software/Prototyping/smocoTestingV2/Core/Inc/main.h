@@ -69,6 +69,7 @@ void Error_Handler(void);
 #define ENC_B_GPIO_Port GPIOA
 #define LIM_A_Pin GPIO_PIN_2
 #define LIM_A_GPIO_Port GPIOA
+#define LIM_A_EXTI_IRQn EXTI2_3_IRQn
 #define LIM_B_Pin GPIO_PIN_3
 #define LIM_B_GPIO_Port GPIOA
 #define PWM_Pin GPIO_PIN_4

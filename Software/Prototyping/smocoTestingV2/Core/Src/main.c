@@ -46,6 +46,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+CAN_TxHeaderTypeDef   TxHeader;
+uint8_t  TxData[8];
+uint32_t TxMailbox;
+
+
+
 
 /* USER CODE END PV */
 
@@ -77,7 +83,10 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  TxHeader.IDE = CAN_ID_STD;
+  TxHeader.StdId = 0x446;
+  TxHeader.RTR = CAN_RTR_DATA;
+  TxHeader.DLC = 2;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -98,6 +107,9 @@ int main(void)
   MX_CAN_Init();
   /* USER CODE BEGIN 2 */
 
+  int32_t CH4_DC = 0;
+
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,6 +118,19 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
+
+	 while(CH4_DC < 65535)
+	 {
+	   TIM3->CCR1 = CH4_DC;
+	   CH4_DC += 70;
+	   HAL_Delay(1);
+	}
+	while(CH4_DC > 0)
+	{
+	     TIM3->CCR1 = CH4_DC;
+	     CH4_DC -= 70;
+	     HAL_Delay(1);
+	}
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -149,7 +174,15 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin_IN) {
+	if (GPIO_Pin_IN == GPIO_PIN_2) {
+		TxData[0] = 50;
+		TxData[1] = 0xAA;
+		if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {
+			Error_Handler();
+		}
+	}
+}
 /* USER CODE END 4 */
 
 /**

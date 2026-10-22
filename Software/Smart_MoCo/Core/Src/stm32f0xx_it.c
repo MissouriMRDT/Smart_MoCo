@@ -1,33 +1,27 @@
 /* USER CODE BEGIN Header */
 /**
- ******************************************************************************
- * @file    stm32f0xx_it.c
- * @brief   Interrupt Service Routines.
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2025 STMicroelectronics.
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file    stm32f0xx_it.c
+  * @brief   Interrupt Service Routines.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f0xx_it.h"
 #include "main.h"
-
+#include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "can_rx.h"
-#include "can_tx.h"
-#include "controller.h"
-#include "encoder.h"
-#include "stm32f0xx_ll_tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -70,35 +64,40 @@
 /*           Cortex-M0 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
- * @brief This function handles Non maskable interrupt.
- */
-void NMI_Handler(void) {
+  * @brief This function handles Non maskable interrupt.
+  */
+void NMI_Handler(void)
+{
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-  while (1) {
+   while (1)
+  {
   }
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
 /**
- * @brief This function handles Hard fault interrupt.
- */
-void HardFault_Handler(void) {
+  * @brief This function handles Hard fault interrupt.
+  */
+void HardFault_Handler(void)
+{
   /* USER CODE BEGIN HardFault_IRQn 0 */
 
   /* USER CODE END HardFault_IRQn 0 */
-  while (1) {
+  while (1)
+  {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
 }
 
 /**
- * @brief This function handles System service call via SWI instruction.
- */
-void SVC_Handler(void) {
+  * @brief This function handles System service call via SWI instruction.
+  */
+void SVC_Handler(void)
+{
   /* USER CODE BEGIN SVC_IRQn 0 */
 
   /* USER CODE END SVC_IRQn 0 */
@@ -108,9 +107,10 @@ void SVC_Handler(void) {
 }
 
 /**
- * @brief This function handles Pendable request for system service.
- */
-void PendSV_Handler(void) {
+  * @brief This function handles Pendable request for system service.
+  */
+void PendSV_Handler(void)
+{
   /* USER CODE BEGIN PendSV_IRQn 0 */
 
   /* USER CODE END PendSV_IRQn 0 */
@@ -120,13 +120,14 @@ void PendSV_Handler(void) {
 }
 
 /**
- * @brief This function handles System tick timer.
- */
-void SysTick_Handler(void) {
+  * @brief This function handles System tick timer.
+  */
+void SysTick_Handler(void)
+{
   /* USER CODE BEGIN SysTick_IRQn 0 */
-  sysTickOffset += TICKS_PER_MS;
-  /* USER CODE END SysTick_IRQn 0 */
 
+  /* USER CODE END SysTick_IRQn 0 */
+  HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -139,60 +140,6 @@ void SysTick_Handler(void) {
 /* please refer to the startup file (startup_stm32f0xx.s).                    */
 /******************************************************************************/
 
-/**
- * @brief This function handles TIM1 capture compare interrupt.
- */
-void TIM1_CC_IRQHandler(void) {
-  /* USER CODE BEGIN TIM1_CC_IRQn 0 */
-  if (LL_TIM_IsActiveFlag_CC1(TIM1)) {
-    LL_TIM_ClearFlag_CC1(TIM1);
-    CAN_TX_SendTelemetry();
-  }
-  if (LL_TIM_IsActiveFlag_CC3(TIM1)) {
-    LL_TIM_ClearFlag_CC3(TIM1);
-    CAN_TX_RequestMissingParameter();
-  }
-  if (LL_TIM_IsActiveFlag_CC2(TIM1) | LL_TIM_IsActiveFlag_CC4(TIM1)) {
-    LL_TIM_ClearFlag_CC2(TIM1);
-    LL_TIM_ClearFlag_CC4(TIM1);
-    CAN_TX_SendDebugTelemetry();
-  }
-  /* USER CODE END TIM1_CC_IRQn 0 */
-  /* USER CODE BEGIN TIM1_CC_IRQn 1 */
-
-  /* USER CODE END TIM1_CC_IRQn 1 */
-}
-
-/**
- * @brief This function handles TIM17 global interrupt.
- */
-void TIM17_IRQHandler(void) {
-  /* USER CODE BEGIN TIM17_IRQn 0 */
-  if (LL_TIM_IsActiveFlag_UPDATE(TIM17)) {
-    LL_TIM_ClearFlag_UPDATE(TIM17);
-    TIM17_PeriodElapsedCallback();
-  }
-  /* USER CODE END TIM17_IRQn 0 */
-  /* USER CODE BEGIN TIM17_IRQn 1 */
-
-  /* USER CODE END TIM17_IRQn 1 */
-}
-
 /* USER CODE BEGIN 1 */
-#ifndef QUADRATURE_ENCODER
-/**
- * @brief This function handles TIM2 global interrupt.
- */
-void TIM2_IRQHandler(void) {
-  if (LL_TIM_IsActiveFlag_CC1(TIM2)) {
-    LL_TIM_ClearFlag_CC1(TIM2);
-    TIM2_IC_CaptureCallback();
-  }
-}
-#endif
 
-void CEC_CAN_IRQHandler(void) {
-  if ((CAN->RF0R & CAN_RF0R_FMP0) != 0)
-    CAN_FMP0_IRQHandler();
-}
 /* USER CODE END 1 */

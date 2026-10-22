@@ -60,8 +60,8 @@ all: main-build
 main-build: smocoTestingV2.elf secondary-outputs
 
 # Tool invocations
-smocoTestingV2.elf smocoTestingV2.map: $(OBJS) $(USER_OBJS) C:\Users\aiden\OneDrive\Documents\Github\Smart_MoCo\Software\Prototyping\smocoTestingV2\STM32F042F6PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "smocoTestingV2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\aiden\OneDrive\Documents\Github\Smart_MoCo\Software\Prototyping\smocoTestingV2\STM32F042F6PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="smocoTestingV2.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+smocoTestingV2.elf smocoTestingV2.map: $(OBJS) $(USER_OBJS) C:\Users\aespi\Documents\GitHub\Smart_MoCo\Software\Prototyping\smocoTestingV2\STM32F042F6PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "smocoTestingV2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\aespi\Documents\GitHub\Smart_MoCo\Software\Prototyping\smocoTestingV2\STM32F042F6PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="smocoTestingV2.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

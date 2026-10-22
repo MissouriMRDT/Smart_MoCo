@@ -46,11 +46,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-CAN_TxHeaderTypeDef   TxHeader;
-uint8_t  TxData[8];
-uint32_t TxMailbox;
-
-
 
 
 /* USER CODE END PV */
@@ -83,10 +78,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  TxHeader.IDE = CAN_ID_STD;
-  TxHeader.StdId = 0x446;
-  TxHeader.RTR = CAN_RTR_DATA;
-  TxHeader.DLC = 2;
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -110,6 +102,104 @@ int main(void)
   int32_t CH4_DC = 0;
 
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+
+
+
+
+
+  CAN_TxHeaderTypeDef TxHeader;
+  CAN_RxHeaderTypeDef RxHeader;
+  uint8_t RxData[8];
+  uint8_t TxData[8];
+
+
+
+
+
+  TxHeader.IDE = CAN_ID_STD;
+  TxHeader.StdId = 0x001;
+  TxHeader.RTR = CAN_RTR_DATA;
+  TxHeader.DLC = 8;
+
+  TxData[0]= 0b01010101;
+  TxData[1]= 0b01010101;
+  TxData[2]= 0b01010101;
+  TxData[3]= 0b01010101;
+  TxData[7] = 0b01010101;
+  uint32_t TxMailbox;
+
+
+
+
+
+
+
+  CAN_FilterTypeDef sFilterConfig;
+
+
+
+
+
+  /* The CAN filter configuration */
+   sFilterConfig.FilterBank = 0;
+   sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+   sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+   sFilterConfig.FilterIdHigh = 0x0000;
+   sFilterConfig.FilterIdLow = 0x0000;
+   sFilterConfig.FilterMaskIdHigh = 0x0000;
+   sFilterConfig.FilterMaskIdLow = 0x0000;
+   sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0; /* The data will be received in FIFO0 */
+   sFilterConfig.FilterActivation = ENABLE;
+   sFilterConfig.SlaveStartFilterBank = 14;
+   if (HAL_CAN_ConfigFilter(&hcan, &sFilterConfig) != HAL_OK)
+   {
+   /* Filter configuration Error */
+   Error_Handler();
+   }
+   /* Starting the CAN peripheral */
+   if (HAL_CAN_Start(&hcan) != HAL_OK)
+   {
+   /* Start Error */
+   Error_Handler();
+   }
+   /* Activate CAN RX notification on FIFO0 */
+   if (HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+   {
+   /* Notification Error */
+   Error_Handler();
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+   void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *CanHandle)
+   {
+    /* Get RX message */
+    if (HAL_CAN_GetRxMessage(CanHandle, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+    {
+    /* Reception Error */
+    Error_Handler();
+    }
+   }
+
+
+
+
+
+
+
+
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,20 +208,50 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-
-	 while(CH4_DC < 65535)
-	 {
-	   TIM3->CCR1 = CH4_DC;
-	   CH4_DC += 70;
-	   HAL_Delay(1);
-	}
-	while(CH4_DC > 0)
-	{
-	     TIM3->CCR1 = CH4_DC;
-	     CH4_DC -= 70;
-	     HAL_Delay(1);
-	}
     /* USER CODE BEGIN 3 */
+
+
+	  /*
+	  	 while(CH4_DC < 65535)
+	  	 {
+	  	   TIM3->CCR1 = CH4_DC;
+	  	   CH4_DC += 70;
+	  	   HAL_Delay(1);
+	  	}
+	  	while(CH4_DC > 0)
+	  	{
+	  	     TIM3->CCR1 = CH4_DC;
+	  	     CH4_DC -= 70;
+	  	     HAL_Delay(1);
+	  	}
+
+
+	  	*/
+
+
+
+	  /*
+	  	  HAL_Delay(1000);
+	  	  if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) == HAL_OK)
+	  	  {
+	  		  while(HAL_CAN_IsTxMessagePending(&hcan,TxMailbox));
+
+*/
+
+
+
+	 /* It's mandatory to look for a free Tx mail box */
+		 while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0); /* Wait till a Tx mailbox is free. Using while loop instead of HAL_Delay() */
+	 if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+	 {
+	 /* Transmission request Error */
+	 Error_Handler();
+	 }
+
+
+
+
+
   }
   /* USER CODE END 3 */
 }
@@ -175,13 +295,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin_IN) {
-	if (GPIO_Pin_IN == GPIO_PIN_2) {
-		TxData[0] = 50;
-		TxData[1] = 0xAA;
-		if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {
-			Error_Handler();
-		}
-	}
+
 }
 /* USER CODE END 4 */
 

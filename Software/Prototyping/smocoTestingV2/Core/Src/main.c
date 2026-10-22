@@ -46,7 +46,14 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+uint32_t TxMailbox;
 
+CAN_FilterTypeDef sFilterConfig;
+CAN_TxHeaderTypeDef TxHeader;
+CAN_RxHeaderTypeDef RxHeader;
+uint8_t RxData[8];
+uint8_t TxData[8];
+uint32_t lastTime = 0;
 
 /* USER CODE END PV */
 
@@ -107,12 +114,6 @@ int main(void)
 
 
 
-  CAN_TxHeaderTypeDef TxHeader;
-  CAN_RxHeaderTypeDef RxHeader;
-  uint8_t RxData[8];
-  uint8_t TxData[8];
-
-
 
 
 
@@ -126,15 +127,7 @@ int main(void)
   TxData[2]= 0b01010101;
   TxData[3]= 0b01010101;
   TxData[7] = 0b01010101;
-  uint32_t TxMailbox;
 
-
-
-
-
-
-
-  CAN_FilterTypeDef sFilterConfig;
 
 
 
@@ -240,18 +233,6 @@ int main(void)
 
 
 
-	 /* It's mandatory to look for a free Tx mail box */
-		 while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0); /* Wait till a Tx mailbox is free. Using while loop instead of HAL_Delay() */
-	 if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
-	 {
-	 /* Transmission request Error */
-	 Error_Handler();
-	 }
-
-
-
-
-
   }
   /* USER CODE END 3 */
 }
@@ -295,6 +276,19 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin_IN) {
+	if (GPIO_Pin_IN == LIM_A_Pin) {
+		uint32_t currTime = HAL_GetTick();
+		if ((currTime - lastTime) > 3) {
+			lastTime = currTime;
+			HAL_GPIO_TogglePin(GPIOF, IN_B_Pin);
+			while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 1); /* Wait till a Tx mailbox is free. Using while loop instead of HAL_Delay() */
+			if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+			{
+				/* Transmission request Error */
+				Error_Handler();
+			}
+		}
+	}
 
 }
 /* USER CODE END 4 */

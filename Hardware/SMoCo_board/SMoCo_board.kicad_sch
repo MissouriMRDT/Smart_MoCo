@@ -12380,7 +12380,7 @@
 		(dnp no)
 		(uuid "30d82bf8-62de-4a42-a72d-7481b842c4fe")
 		(property "Reference" "R9"
-			(at 217.678 146.558 0)
+			(at 223.52 146.05 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12390,8 +12390,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Rsense"
-			(at 215.646 150.876 0)
+		(property "Value" "1k"
+			(at 223.52 149.86 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects

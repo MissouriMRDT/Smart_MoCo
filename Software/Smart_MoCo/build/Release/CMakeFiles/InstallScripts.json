@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/dfund/Documents/GitHub/Smart_MoCo/Software/Smart_MoCo/build/Release/cmake_install.cmake",
+		"C:/Users/dfund/Documents/GitHub/Smart_MoCo/Software/Smart_MoCo/build/Release/cmake/stm32cubemx/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

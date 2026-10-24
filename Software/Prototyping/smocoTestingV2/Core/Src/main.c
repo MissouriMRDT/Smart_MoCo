@@ -49,10 +49,15 @@
 uint32_t TxMailbox;
 
 CAN_FilterTypeDef sFilterConfig;
-CAN_TxHeaderTypeDef TxHeader;
-CAN_RxHeaderTypeDef RxHeader;
+//CAN_TxHeaderTypeDef TxHeader;
+//CAN_RxHeaderTypeDef RxHeader;
 uint8_t RxData[8];
-uint8_t TxData[8];
+//uint8_t TxData[8];
+CAN_TxHeaderTypeDef TxSpeedControlFrameHeader;
+CAN_RxHeaderTypeDef RxFeedbackFrameHeader;
+
+uint8_t TxSpeedControlData[4];
+
 uint32_t lastTime = 0;
 
 /* USER CODE END PV */
@@ -117,16 +122,19 @@ int main(void)
 
 
 
-  TxHeader.IDE = CAN_ID_STD;
-  TxHeader.StdId = 0x001;
-  TxHeader.RTR = CAN_RTR_DATA;
-  TxHeader.DLC = 8;
+  uint8_t nodeID = 0;
 
-  TxData[0]= 0b01010101;
-  TxData[1]= 0b01010101;
-  TxData[2]= 0b01010101;
-  TxData[3]= 0b01010101;
-  TxData[7] = 0b01010101;
+   TxSpeedControlFrameHeader.IDE = CAN_ID_STD;
+   TxSpeedControlFrameHeader.StdId = 0x200 + nodeID;
+   TxSpeedControlFrameHeader.RTR = CAN_RTR_DATA;
+   TxSpeedControlFrameHeader.DLC = 4;
+   uint8_t TxSpeedControlData[4];
+
+   uint32_t speed = 4095; //0xFFFFFFFF
+   TxSpeedControlData[0] = speed & 0x000000FF;
+   TxSpeedControlData[1] = speed & (0x000000FF << 8);
+   TxSpeedControlData[2] = speed & (0x000000FF << 16);
+   TxSpeedControlData[3] = speed & (0x000000FF << 24);
 
 
 
@@ -176,7 +184,7 @@ int main(void)
    void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *CanHandle)
    {
     /* Get RX message */
-    if (HAL_CAN_GetRxMessage(CanHandle, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+    if (HAL_CAN_GetRxMessage(CanHandle, CAN_RX_FIFO0, &RxFeedbackFrameHeader, RxData) != HAL_OK)
     {
     /* Reception Error */
     Error_Handler();
@@ -204,32 +212,34 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 
-	  /*
+
 	  	 while(CH4_DC < 65535)
 	  	 {
-	  	   TIM3->CCR1 = CH4_DC;
+	  	   TIM3->CCR4 = CH4_DC;
 	  	   CH4_DC += 70;
 	  	   HAL_Delay(1);
 	  	}
 	  	while(CH4_DC > 0)
 	  	{
-	  	     TIM3->CCR1 = CH4_DC;
+	  	     TIM3->CCR4 = CH4_DC;
 	  	     CH4_DC -= 70;
 	  	     HAL_Delay(1);
 	  	}
 
 
-	  	*/
 
 
 
-	  /*
-	  	  HAL_Delay(1000);
-	  	  if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) == HAL_OK)
+
+	  	  if (HAL_CAN_AddTxMessage(&hcan, &TxSpeedControlFrameHeader, TxSpeedControlData, &TxMailbox) == HAL_OK)
 	  	  {
+	  		  HAL_GPIO_WritePin(GPIOF, IN_B_Pin,GPIO_PIN_SET);
 	  		  while(HAL_CAN_IsTxMessagePending(&hcan,TxMailbox));
+//	  		  HAL_GPIO_WritePin(GPIOF, IN_B_Pin,GPIO_PIN_RESET);
 
-*/
+	  	  }
+
+
 
 
 
@@ -276,19 +286,19 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin_IN) {
-	if (GPIO_Pin_IN == LIM_A_Pin) {
-		uint32_t currTime = HAL_GetTick();
-		if ((currTime - lastTime) > 3) {
-			lastTime = currTime;
-			HAL_GPIO_TogglePin(GPIOF, IN_B_Pin);
-			while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 1); /* Wait till a Tx mailbox is free. Using while loop instead of HAL_Delay() */
-			if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
-			{
-				/* Transmission request Error */
-				Error_Handler();
-			}
-		}
-	}
+//	if (GPIO_Pin_IN == LIM_A_Pin) {
+//		uint32_t currTime = HAL_GetTick();
+//		if ((currTime - lastTime) > 3) {
+//			lastTime = currTime;
+//			HAL_GPIO_TogglePin(GPIOF, IN_B_Pin);
+//			while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 1); /* Wait till a Tx mailbox is free. Using while loop instead of HAL_Delay() */
+//			if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+//			{
+//				/* Transmission request Error */
+//				Error_Handler();
+//			}
+//		}
+//	}
 
 }
 /* USER CODE END 4 */

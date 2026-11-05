@@ -7091,12 +7091,6 @@
 		(uuid "70999674-0b76-4868-8a5a-55290029d94e")
 	)
 	(junction
-		(at 132.08 27.94)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "75438e99-cacc-4652-aa89-e35e7a82e6c3")
-	)
-	(junction
 		(at 222.25 101.6)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7251,6 +7245,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c5376dfe-fd4c-4b7c-a47e-b9a679e0e978")
+	)
+	(junction
+		(at 132.08 21.59)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "cdb3ba08-5ab6-4dab-9837-a781e73dea5d")
 	)
 	(junction
 		(at 110.49 99.06)
@@ -7735,6 +7735,16 @@
 			(type default)
 		)
 		(uuid "201f3529-0c66-4aa9-ba15-e202085be9ce")
+	)
+	(wire
+		(pts
+			(xy 125.73 29.21) (xy 132.08 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20617ac2-a488-4900-84ca-a1bfc7a59d15")
 	)
 	(wire
 		(pts
@@ -8398,6 +8408,16 @@
 	)
 	(wire
 		(pts
+			(xy 125.73 29.21) (xy 125.73 27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "583c96be-8b2d-4278-840d-456953e44721")
+	)
+	(wire
+		(pts
 			(xy 275.59 48.26) (xy 275.59 46.99)
 		)
 		(stroke
@@ -8625,16 +8645,6 @@
 			(type default)
 		)
 		(uuid "7092e16f-2bcc-4cec-9409-4776af825168")
-	)
-	(wire
-		(pts
-			(xy 125.73 25.4) (xy 125.73 20.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "70d6250e-69d3-4e22-a6d5-8e4f26222e87")
 	)
 	(wire
 		(pts
@@ -9328,6 +9338,16 @@
 	)
 	(wire
 		(pts
+			(xy 125.73 21.59) (xy 132.08 21.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "af13da38-ed3b-4b8f-8f57-e6cf46c5566b")
+	)
+	(wire
+		(pts
 			(xy 115.57 35.56) (xy 115.57 41.91)
 		)
 		(stroke
@@ -9488,7 +9508,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 27.94) (xy 137.16 27.94)
+			(xy 132.08 21.59) (xy 137.16 21.59)
 		)
 		(stroke
 			(width 0)
@@ -9618,16 +9638,6 @@
 	)
 	(wire
 		(pts
-			(xy 125.73 20.32) (xy 132.08 20.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c5b390ef-ee11-4809-9a16-3eda95d5a1cc")
-	)
-	(wire
-		(pts
 			(xy 71.12 74.93) (xy 64.77 74.93)
 		)
 		(stroke
@@ -9705,16 +9715,6 @@
 			(type default)
 		)
 		(uuid "cf406c00-4030-40ab-a1db-1f079417a97c")
-	)
-	(wire
-		(pts
-			(xy 125.73 27.94) (xy 132.08 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cf4e603b-75a4-42f2-9a57-cfc0b601dbe9")
 	)
 	(wire
 		(pts
@@ -9805,6 +9805,16 @@
 			(type default)
 		)
 		(uuid "d3c03d65-b048-4b31-b535-8d201ec11734")
+	)
+	(wire
+		(pts
+			(xy 137.16 21.59) (xy 137.16 27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d4749f45-a5fb-46f8-b4a6-8db564ef6fef")
 	)
 	(wire
 		(pts
@@ -10105,6 +10115,16 @@
 			(type default)
 		)
 		(uuid "ed423487-54dc-4622-b31f-82f9d2fd752a")
+	)
+	(wire
+		(pts
+			(xy 125.73 25.4) (xy 125.73 21.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ee8b2442-fdb9-4eb7-ba20-ef3e6be2b882")
 	)
 	(wire
 		(pts
@@ -17203,7 +17223,8 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 132.08 24.13 0)
+		(at 132.08 25.4 0)
+		(mirror x)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -17213,7 +17234,7 @@
 		(dnp no)
 		(uuid "ca72fe76-1e78-48b3-b98c-c421b805bc91")
 		(property "Reference" "C4"
-			(at 127.254 23.876 0)
+			(at 127.254 25.654 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17224,7 +17245,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 134.366 24.13 0)
+			(at 134.366 25.4 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17235,7 +17256,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
-			(at 133.0452 27.94 0)
+			(at 133.0452 21.59 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17246,7 +17267,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 24.13 0)
+			(at 132.08 25.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17257,7 +17278,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 132.08 24.13 0)
+			(at 132.08 25.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

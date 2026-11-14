@@ -662,7 +662,7 @@
         "uuid": "ad6ab0ba-09d2-4577-bf28-b79b9df619ef"
       }
     ],
-    "used_designators": "LED1,#PWR9",
+    "used_designators": "R13-14,R16-17,R19-20,R25,LED1,#PWR9,#PWR23-24,#PWR28",
     "variants": []
   },
   "sheets": [

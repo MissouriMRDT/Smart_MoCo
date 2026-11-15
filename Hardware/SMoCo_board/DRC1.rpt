@@ -1,0 +1,690 @@
+** Drc report for SMoCo_board.kicad_pcb **
+** Created on 2026-11-14T18:22:03 **
+** Report includes: Errors, Warnings **
+
+** Found 175 DRC violations **
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 5.18 mils)
+    Local override; error
+    @(4179.62 mils, 3613.57 mils): Via [+3.3V] on F.Cu - B.Cu
+    @(4199.61 mils, 3577.66 mils): Pad 2 [GND] of C22 on B.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.03 mils)
+    Local override; error
+    @(4179.24 mils, 3456.02 mils): Track [+3.3V] on F.Cu, length 29.91 mils
+    @(4207.87 mils, 3436.71 mils): Pad 1 [/NRST] of R19 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2602.40 mils): Pad 1 [unconnected-(U2-NC-Pad1)] of U2 on F.Cu
+    @(4242.61 mils, 2622.08 mils): Pad 2 [/MOTOR PWR A] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2622.08 mils): Pad 2 [/MOTOR PWR A] of U2 on F.Cu
+    @(4242.61 mils, 2641.77 mils): Pad 3 [GND] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2720.51 mils): Pad 7 [GND] of U2 on F.Cu
+    @(4242.61 mils, 2740.19 mils): Pad 8 [/MOTOR PWR A] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4242.61 mils, 2759.88 mils): Pad 9 [/MOTOR PWR A] of U2 on F.Cu
+    @(4242.61 mils, 2779.56 mils): Pad 10 [+24V] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2779.56 mils): Pad 10 [+24V] of U2 on F.Cu
+    @(4242.61 mils, 2799.25 mils): Pad 11 [/MOTOR PWR A] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2877.99 mils): Pad 15 [/SEL0] of U2 on F.Cu
+    @(4242.61 mils, 2858.30 mils): Pad 14 [/MOTOR PWR A] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2897.67 mils): Pad 16 [/IN_A] of U2 on F.Cu
+    @(4242.61 mils, 2877.99 mils): Pad 15 [/SEL0] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4242.61 mils, 2917.36 mils): Pad 17 [/PWM] of U2 on F.Cu
+    @(4242.61 mils, 2897.67 mils): Pad 16 [/IN_A] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4242.61 mils, 2937.04 mils): Pad 18 [unconnected-(U2-NC-Pad18)] of U2 on F.Cu
+    @(4242.61 mils, 2917.36 mils): Pad 17 [/PWM] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4616.61 mils, 2917.36 mils): Pad 20 [/MS_EN] of U2 on F.Cu
+    @(4616.61 mils, 2937.04 mils): Pad 19 [Net-(U2-MultiSense)] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4616.61 mils, 2897.67 mils): Pad 21 [/IN_B] of U2 on F.Cu
+    @(4616.61 mils, 2917.36 mils): Pad 20 [/MS_EN] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4616.61 mils, 2877.99 mils): Pad 22 [/SEL1] of U2 on F.Cu
+    @(4616.61 mils, 2897.67 mils): Pad 21 [/IN_B] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4616.61 mils, 2877.99 mils): Pad 22 [/SEL1] of U2 on F.Cu
+    @(4616.61 mils, 2858.30 mils): Pad 23 [/MOTOR PWR B] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4616.61 mils, 2779.56 mils): Pad 27 [+24V] of U2 on F.Cu
+    @(4616.61 mils, 2799.25 mils): Pad 26 [/MOTOR PWR B] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4616.61 mils, 2779.56 mils): Pad 27 [+24V] of U2 on F.Cu
+    @(4616.61 mils, 2759.88 mils): Pad 28 [/MOTOR PWR B] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4616.61 mils, 2720.51 mils): Pad 30 [GND] of U2 on F.Cu
+    @(4616.61 mils, 2740.19 mils): Pad 29 [/MOTOR PWR B] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.69 mils)
+    Local override; error
+    @(4616.61 mils, 2641.77 mils): Pad 34 [GND] of U2 on F.Cu
+    @(4616.61 mils, 2622.08 mils): Pad 35 [/MOTOR PWR B] of U2 on F.Cu
+[clearance]: Clearance violation ( clearance 7.87 mils; actual 7.68 mils)
+    Local override; error
+    @(4616.61 mils, 2602.40 mils): Pad 36 [unconnected-(U2-NC-Pad36)] of U2 on F.Cu
+    @(4616.61 mils, 2622.08 mils): Pad 35 [/MOTOR PWR B] of U2 on F.Cu
+[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 19.69 mils; actual 11.81 mils)
+    Rule: board setup constraints edge; error
+    @(3543.31 mils, 2487.01 mils): Segment on Edge.Cuts
+    @(3681.10 mils, 4120.08 mils): PTH pad 1 [GND] of H2
+[copper_edge_clearance]: Board edge clearance violation (board setup constraints edge clearance 19.69 mils; actual 11.81 mils)
+    Rule: board setup constraints edge; error
+    @(3681.10 mils, 4257.87 mils): Segment on Edge.Cuts
+    @(4652.76 mils, 4120.08 mils): PTH pad 1 [GND] of H1
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(3752.26 mils, 2931.89 mils): Via [Net-(U5-PA1)] on F.Cu - B.Cu
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(3503.94 mils, 2322.83 mils): Zone 'gnd_1' [GND] on F.Cu, B.Cu and In1.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(4846.06 mils, 4295.28 mils): Zone '3.3V_1' [+3.3V] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(4846.06 mils, 4295.28 mils): Zone '3.3V_1' [+3.3V] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(4846.06 mils, 4295.28 mils): Zone '3.3V_1' [+3.3V] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(4846.06 mils, 4295.28 mils): Zone '3.3V_1' [+3.3V] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(4150.00 mils, 3238.19 mils): Zone 'Net-(U4-BST)' [Net-(U4-BST)] on F.Cu and B.Cu, priority 9
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(3543.31 mils, 2487.01 mils): Segment on Edge.Cuts
+    @(3551.57 mils, 3442.13 mils): Reference field of J5
+[lib_footprint_issues]: The footprint library 'Inductor' is not enabled in the current configuration
+    Local override; warning
+    @(4150.00 mils, 3331.00 mils): Footprint L1
+[lib_footprint_issues]: The footprint library 'RGBLED' is not enabled in the current configuration
+    Local override; warning
+    @(4424.61 mils, 4132.05 mils): Footprint LED
+[lib_footprint_issues]: The footprint library 'VNH7040AYTR' is not enabled in the current configuration
+    Local override; warning
+    @(4429.61 mils, 2769.72 mils): Footprint U2
+[text_height]: Text height out of range (board setup constraints silk text height min height 31.50 mils; actual 20.00 mils)
+    Rule: board setup constraints silk text height; warning
+    @(3796.46 mils, 2441.73 mils): PCB text 'Kelly Dimovitz, Ethan Palmer, 
+Drew Fundaburg
+SMoCo 2027 rev_1 ' on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4037.20 mils, 3130.42 mils): Segment of D1 on F.Silkscreen
+    @(4034.49 mils, 3071.75 mils): Reference field of D4
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3772.44 mils, 3080.95 mils): Segment of C9 on F.Silkscreen
+    @(3771.65 mils, 3086.32 mils): Reference field of R9
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3757.09 mils, 3933.86 mils): Segment of J7 on F.Silkscreen
+    @(4148.82 mils, 3948.43 mils): Reference field of Q3
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3733.07 mils, 3772.05 mils): Rectangle of J7 on F.Silkscreen
+    @(4188.98 mils, 3754.72 mils): Reference field of JP2
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3733.07 mils, 3772.05 mils): Rectangle of J7 on F.Silkscreen
+    @(4148.82 mils, 3948.43 mils): Reference field of Q3
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4141.73 mils, 3629.64 mils): Polygon of U5 on F.Silkscreen
+    @(4133.86 mils, 3640.94 mils): Segment of JP2 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4141.73 mils, 3629.64 mils): Polygon of U5 on F.Silkscreen
+    @(4133.86 mils, 3719.69 mils): Segment of JP2 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4279.21 mils, 3686.17 mils): Reference field of C10
+    @(4244.09 mils, 3640.94 mils): Segment of JP2 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4367.03 mils, 4008.39 mils): Segment of C1 on F.Silkscreen
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4368.61 mils, 4008.74 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4370.18 mils, 4009.02 mils): Segment of C1 on F.Silkscreen
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4371.76 mils, 4009.33 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4373.33 mils, 4009.57 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4374.91 mils, 4009.84 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4376.48 mils, 4010.08 mils): Segment of C1 on F.Silkscreen
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4378.06 mils, 4010.31 mils): Segment of C1 on F.Silkscreen
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4379.63 mils, 4010.51 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4381.21 mils, 4010.71 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4382.78 mils, 4010.87 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4384.36 mils, 4011.06 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4385.93 mils, 4011.18 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4387.51 mils, 4011.34 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4389.08 mils, 4011.42 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4390.66 mils, 4011.54 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4392.23 mils, 4011.61 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4393.81 mils, 4011.69 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4395.38 mils, 4011.73 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4396.95 mils, 4011.77 mils): Segment of C1 on F.Silkscreen
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4398.53 mils, 4011.81 mils): Segment of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4400.10 mils, 4011.81 mils): Segment of C1 on F.Silkscreen
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4199.21 mils, 4041.44 mils): Reference field of R24
+    @(4178.74 mils, 3981.50 mils): Segment of Q3 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4006.30 mils, 4007.09 mils): Reference field of R23
+    @(4016.33 mils, 3983.37 mils): Segment of R22 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3832.28 mils, 3647.35 mils): Segment of U5 on F.Silkscreen
+    @(3847.56 mils, 3632.28 mils): Reference field of TP1
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3847.56 mils, 3632.28 mils): Reference field of TP1
+    @(3850.00 mils, 3647.35 mils): Segment of U5 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4203.54 mils, 3268.90 mils): Reference field of R17
+    @(4187.80 mils, 3324.02 mils): Segment of JP1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4266.54 mils, 3324.02 mils): Segment of JP1 on F.Silkscreen
+    @(4385.12 mils, 3326.52 mils): Reference field of MOSFET1
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4266.54 mils, 3213.78 mils): Segment of JP1 on F.Silkscreen
+    @(4385.12 mils, 3326.52 mils): Reference field of MOSFET1
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4300.39 mils, 3268.90 mils): Reference field of JP1
+    @(4385.12 mils, 3326.52 mils): Reference field of MOSFET1
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4199.21 mils, 4041.44 mils): Reference field of R24
+    @(4178.74 mils, 4064.96 mils): Segment of Q3 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4178.74 mils, 4104.33 mils): Segment of Q3 on F.Silkscreen
+    @(4098.03 mils, 4091.80 mils): Reference field of J3
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4118.90 mils, 4104.33 mils): Segment of Q3 on F.Silkscreen
+    @(4098.03 mils, 4091.80 mils): Reference field of J3
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3996.27 mils, 4042.81 mils): Segment of R23 on F.Silkscreen
+    @(4006.30 mils, 4060.24 mils): Reference field of R22
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4006.30 mils, 4007.09 mils): Reference field of R23
+    @(4016.33 mils, 4024.51 mils): Segment of R22 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4400.10 mils, 3851.18 mils): Circle of C1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4393.31 mils, 3979.30 mils): Reference field of LED
+    @(4402.47 mils, 4046.46 mils): Reference field of C1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3687.40 mils, 2991.73 mils): Reference field of R8
+    @(3641.34 mils, 2989.37 mils): PTH pad 6 [+3.3V] of J5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3690.94 mils, 2931.89 mils): Reference field of R1
+    @(3641.34 mils, 2989.37 mils): PTH pad 6 [+3.3V] of J5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4034.49 mils, 3071.75 mils): Reference field of D4
+    @(4008.27 mils, 3102.95 mils): Pad 1 [GND] of D1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4034.49 mils, 3071.75 mils): Reference field of D4
+    @(4008.27 mils, 3040.95 mils): Pad 2 [Net-(D1-A)] of D1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3750.36 mils, 2988.71 mils): Reference field of C9
+    @(3752.26 mils, 2991.34 mils): Pad 2 [Net-(U5-PA4)] of R8 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3771.65 mils, 3086.32 mils): Reference field of R9
+    @(3752.36 mils, 3052.76 mils): Pad 1 [/MS] of C9 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3771.65 mils, 3086.32 mils): Reference field of R9
+    @(3752.36 mils, 3120.67 mils): Pad 2 [GND] of C9 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4279.21 mils, 3686.17 mils): Reference field of C10
+    @(4214.57 mils, 3680.31 mils): Pad 2 [GND] of JP2 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4006.30 mils, 4007.09 mils): Reference field of R23
+    @(4042.22 mils, 4003.94 mils): Pad 1 [/LED_G] of R22 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3847.56 mils, 3632.28 mils): Reference field of TP1
+    @(3866.14 mils, 3669.11 mils): Pad 37 [/SWDCLK] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3847.56 mils, 3632.28 mils): Reference field of TP1
+    @(3885.83 mils, 3669.11 mils): Pad 38 [unconnected-(U5-PA15-Pad38)] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4203.54 mils, 3268.90 mils): Reference field of R17
+    @(4227.17 mils, 3294.49 mils): Pad 1 [Net-(JP1-A)] of JP1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4203.54 mils, 3268.90 mils): Reference field of R17
+    @(4227.17 mils, 3243.31 mils): Pad 2 [GND] of JP1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4203.54 mils, 3268.90 mils): Reference field of R17
+    @(4197.64 mils, 3274.80 mils): Rectangle of JP1 on F.Mask
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3847.56 mils, 3632.28 mils): Reference field of TP1
+    @(3810.53 mils, 3613.50 mils): Pad 36 [+3.3V] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4151.57 mils, 3400.79 mils): Reference field of R19
+    @(4138.29 mils, 3436.33 mils): Pad 10 [Net-(U5-PA0)] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4151.57 mils, 3400.79 mils): Reference field of R19
+    @(4138.29 mils, 3456.02 mils): Pad 9 [+3.3V] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4151.57 mils, 3400.79 mils): Reference field of R19
+    @(4138.29 mils, 3396.96 mils): Pad 12 [Net-(U5-PA2)] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4151.57 mils, 3400.79 mils): Reference field of R19
+    @(4138.29 mils, 3416.65 mils): Pad 11 [Net-(U5-PA1)] of U5 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4300.39 mils, 3268.90 mils): Reference field of JP1
+    @(4309.57 mils, 3242.70 mils): Pad 5 [V_AUX] of MOSFET1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4199.21 mils, 4041.44 mils): Reference field of R24
+    @(4185.73 mils, 4042.91 mils): Pad 3 [Net-(Q3-D)] of Q3 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4006.30 mils, 4060.24 mils): Reference field of R22
+    @(4042.22 mils, 4063.39 mils): Pad 2 [Net-(Q3-G)] of R23 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4098.03 mils, 4091.80 mils): Reference field of J3
+    @(4111.91 mils, 4080.31 mils): Pad 2 [GND] of Q3 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4006.30 mils, 4060.24 mils): Reference field of R22
+    @(3970.37 mils, 4063.39 mils): Pad 1 [/LED_G] of R23 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4006.30 mils, 4007.09 mils): Reference field of R23
+    @(3970.37 mils, 4003.94 mils): Pad 2 [GND] of R22 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4402.47 mils, 4046.46 mils): Reference field of C1
+    @(4396.06 mils, 4073.55 mils): Pad 4 [GND] of LED on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4402.47 mils, 4046.46 mils): Reference field of C1
+    @(4453.15 mils, 4073.55 mils): Pad 1 [/Led_R_Out] of LED on F.Cu
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4015.75 mils, 3586.22 mils): Reference field of C25
+    @(4051.57 mils, 3562.45 mils): Segment of C21 on B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4060.24 mils, 3384.79 mils): Segment of C8 on B.Silkscreen
+    @(4041.02 mils, 3437.74 mils): Reference field of C20
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4020.08 mils, 3384.79 mils): Segment of C8 on B.Silkscreen
+    @(4041.02 mils, 3437.74 mils): Reference field of C20
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4088.19 mils, 3496.88 mils): Reference field of C8
+    @(4087.83 mils, 3436.56 mils): Reference field of C21
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4009.74 mils, 4022.75 mils): Segment of R14 on B.Silkscreen
+    @(4026.38 mils, 4032.78 mils): Reference field of R13
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4050.89 mils, 4022.75 mils): Segment of R14 on B.Silkscreen
+    @(4033.86 mils, 4029.63 mils): Reference field of Q1
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4026.38 mils, 4032.78 mils): Reference field of R13
+    @(4033.86 mils, 4029.63 mils): Reference field of Q1
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3949.51 mils, 4042.80 mils): Segment of R13 on B.Silkscreen
+    @(3974.02 mils, 4032.78 mils): Reference field of R14
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3990.65 mils, 4042.80 mils): Segment of R13 on B.Silkscreen
+    @(3974.02 mils, 4032.78 mils): Reference field of R14
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4169.69 mils, 4029.72 mils): Reference field of R15
+    @(4150.39 mils, 4059.55 mils): Segment of Q1 on B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4169.69 mils, 4029.72 mils): Reference field of R15
+    @(4189.76 mils, 4059.55 mils): Segment of Q1 on B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4143.70 mils, 3999.70 mils): Segment of Q1 on B.Silkscreen
+    @(4169.69 mils, 4029.72 mils): Reference field of R15
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4189.76 mils, 3999.70 mils): Segment of Q1 on B.Silkscreen
+    @(4169.69 mils, 4029.72 mils): Reference field of R15
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(3983.86 mils, 3150.76 mils): Reference field of C5
+    @(3959.84 mils, 3076.87 mils): Reference field of R11
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4183.30 mils, 3097.85 mils): Reference field of C6
+    @(4195.13 mils, 3072.44 mils): Segment of C6 on B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4043.70 mils, 3238.17 mils): Reference field of C4
+    @(4060.24 mils, 3264.03 mils): Segment of C5 on B.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4020.08 mils, 3264.03 mils): Segment of C5 on B.Silkscreen
+    @(4043.70 mils, 3238.17 mils): Reference field of C4
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(4372.81 mils, 2937.60 mils): Reference field of C13
+    @(4297.46 mils, 2934.14 mils): Reference field of C14
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4015.75 mils, 3586.22 mils): Reference field of C25
+    @(4071.65 mils, 3590.65 mils): Pad 1 [+3.3V] of C21 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4125.20 mils, 3594.09 mils): Reference field of R25
+    @(4071.65 mils, 3590.65 mils): Pad 1 [+3.3V] of C21 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4015.75 mils, 3586.22 mils): Reference field of C25
+    @(4012.60 mils, 3590.65 mils): Pad 1 [+3.3V] of C20 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4088.19 mils, 3496.88 mils): Reference field of C8
+    @(4071.65 mils, 3522.74 mils): Pad 2 [GND] of C21 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4041.02 mils, 3437.74 mils): Reference field of C20
+    @(4040.16 mils, 3424.51 mils): Pad 2 [GND] of C8 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4026.38 mils, 4032.78 mils): Reference field of R13
+    @(4030.31 mils, 4068.70 mils): Pad 2 [Net-(Q1-G)] of R14 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3974.02 mils, 4032.78 mils): Reference field of R14
+    @(3970.08 mils, 4068.70 mils): Pad 1 [/LED_B] of R13 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4033.86 mils, 4029.63 mils): Reference field of Q1
+    @(4030.31 mils, 3996.85 mils): Pad 1 [/LED_B] of R14 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4033.86 mils, 4029.63 mils): Reference field of Q1
+    @(4030.31 mils, 4068.70 mils): Pad 2 [Net-(Q1-G)] of R14 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4026.38 mils, 4032.78 mils): Reference field of R13
+    @(4030.31 mils, 3996.85 mils): Pad 1 [/LED_B] of R14 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3974.02 mils, 4032.78 mils): Reference field of R14
+    @(3970.08 mils, 3996.85 mils): Pad 2 [GND] of R13 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4169.69 mils, 4029.72 mils): Reference field of R15
+    @(4165.75 mils, 3992.72 mils): Pad 2 [GND] of Q1 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4309.45 mils, 3838.98 mils): Reference field of R18
+    @(4331.21 mils, 3851.18 mils): PTH pad 2 [GND] of C1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4470.47 mils, 3885.83 mils): Reference field of Q2
+    @(4469.00 mils, 3851.18 mils): PTH pad 1 [V_AUX] of C1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4199.06 mils, 3666.93 mils): Reference field of C22
+    @(4161.12 mils, 3650.39 mils): Pad 1 [Net-(JP2-A)] of R25 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4199.06 mils, 3666.93 mils): Reference field of C22
+    @(4161.12 mils, 3709.84 mils): Pad 2 [Net-(JP2-A)] of R20 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4040.55 mils, 2976.47 mils): Reference field of R10
+    @(4008.27 mils, 3040.95 mils): Pad 2 [Net-(D1-A)] of R11 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4105.12 mils, 3166.83 mils): Reference field of U4
+    @(4100.00 mils, 3174.21 mils): Pad 1 [Net-(U4-BST)] of C4 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3983.86 mils, 3150.76 mils): Reference field of C5
+    @(4008.27 mils, 3112.80 mils): Pad 1 [+3.3V] of R11 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3702.76 mils, 3000.39 mils): Reference field of R7
+    @(3641.34 mils, 2989.37 mils): PTH pad 6 [+3.3V] of J5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4183.30 mils, 3097.85 mils): Reference field of C6
+    @(4162.20 mils, 3122.05 mils): Pad 1 [+3.3V] of U4 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4183.30 mils, 3097.85 mils): Reference field of C6
+    @(4199.61 mils, 3122.05 mils): Pad 2 [+24V] of U4 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4043.70 mils, 3238.17 mils): Reference field of C4
+    @(4040.16 mils, 3224.31 mils): Pad 2 [GND] of C5 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4043.70 mils, 3238.17 mils): Reference field of C4
+    @(4040.16 mils, 3292.22 mils): Pad 1 [+3.3V] of C5 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4297.46 mils, 2934.14 mils): Reference field of C14
+    @(4314.57 mils, 2904.72 mils): Pad 2 [+24V] of C13 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4297.46 mils, 2934.14 mils): Reference field of C14
+    @(4246.65 mils, 2904.72 mils): Pad 1 [GND] of C13 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(4150.00 mils, 3248.56 mils): Reference field of L1
+    @(4162.20 mils, 3211.61 mils): Pad 6 [Net-(U4-BST)] of U4 on B.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3654.67 mils, 3331.02 mils): Reference field of C26
+    @(3641.34 mils, 3351.57 mils): PTH pad 4 [/ENC I] of J5
+
+** Found 1 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(4664.96 mils, 3100.79 mils): Pad 1 [Net-(MOSFET1-G)] of R3 on B.Cu
+    @(4664.65 mils, 3100.89 mils): Pad 2 [Net-(MOSFET1-G)] of D3 on F.Cu
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

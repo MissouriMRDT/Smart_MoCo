@@ -662,17 +662,13 @@
         "uuid": "ad6ab0ba-09d2-4577-bf28-b79b9df619ef"
       }
     ],
-    "used_designators": "R13-14,R16-17,R19-20,R25,LED1,#PWR9,#PWR23-24,#PWR28",
+    "used_designators": "Q1-3,R13-27,LED1,#PWR8-9,#PWR23-24,#PWR28,#PWR33-34,#PWR37,#PWR39,#PWR50",
     "variants": []
   },
   "sheets": [
     [
       "ad6ab0ba-09d2-4577-bf28-b79b9df619ef",
       "SMoCo_board"
-    ],
-    [
-      "a1179329-a1b9-4542-8420-a6479371064b",
-      "Untitled Sheet"
     ]
   ],
   "text_variables": {},

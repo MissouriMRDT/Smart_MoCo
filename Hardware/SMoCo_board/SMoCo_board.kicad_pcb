@@ -19058,7 +19058,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor handsolder")
 		(property "Reference" "C24"
-			(at -0.56 1.436 0)
+			(at -3.06 0.006 0)
 			(layer "B.SilkS")
 			(uuid "7283efd8-0756-4865-a2eb-b50a5082f603")
 			(effects
@@ -21411,6 +21411,42 @@
 				(thickness 0.1)
 			)
 			(justify left bottom mirror)
+		)
+	)
+	(gr_text "3.3v\n"
+		(at 96.93 95 90)
+		(layer "B.SilkS")
+		(uuid "1ef16a1e-6222-4926-b782-c63d214e3002")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SK\n"
+		(at 98.92 95.75 90)
+		(layer "B.SilkS")
+		(uuid "c5e73744-fe1d-4bf0-91e1-29fd8afd7bc4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify mirror)
+		)
+	)
+	(gr_text "SO\n"
+		(at 100.97 95.75 90)
+		(layer "B.SilkS")
+		(uuid "5fa58501-22e0-4afa-86fa-247fa02f1671")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify mirror)
 		)
 	)
 	(segment

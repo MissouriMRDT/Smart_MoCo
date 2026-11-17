@@ -22123,7 +22123,7 @@
 			)
 		)
 	)
-	(gr_text "Brushless Joint \nController, Rev 1\nMRDT, 2027\nMissouri S&T\nKelly Dimovitz, Angel Espinoza"
+	(gr_text "Smart Motor \nController, Rev 1\nMRDT, 2027\nMissouri S&T\nKelly Dimovitz, Angel Espinoza"
 		(at 120.904 70.104 0)
 		(layer "B.SilkS")
 		(uuid "a9ccdeed-fb72-493b-8f23-f09c9b8af73b")

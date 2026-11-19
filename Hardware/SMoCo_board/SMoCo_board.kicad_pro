@@ -680,7 +680,7 @@
         "uuid": "ad6ab0ba-09d2-4577-bf28-b79b9df619ef"
       }
     ],
-    "used_designators": "MOSFET1,#PWR3,#PWR9,#PWR23-24,#PWR26,#PWR28,LED1,R13-17,R19-20,R22,R25,Q1",
+    "used_designators": "MOSFET1,R13-17,R19-20,R22,R25,#PWR3,#PWR9,#PWR23-24,#PWR26,#PWR28,LED1,Q1",
     "variants": []
   },
   "sheets": [

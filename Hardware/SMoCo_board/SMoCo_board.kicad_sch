@@ -15697,7 +15697,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "MMSZ5240BT1G"
+		(property "Value" "SZMMSZ5240BT1G"
 			(at 163.322 90.424 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15720,7 +15720,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.digikey.com/en/products/detail/panjit-international-inc/BZT52-C10-R1-00001/14660715"
+		(property "Datasheet" "https://www.digikey.com/en/products/detail/onsemi/SZMMSZ5240BT1G/3063362?s=N4IgTCBcDaILJwMoC0CsYAsAGAQgFQEYBxEAXQF8g"
 			(at 160.02 87.63 0)
 			(hide yes)
 			(show_name no)

@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := SMoCo Software
+BUILD_ARTIFACT_NAME := SMOCO
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-SMoCo\ Software.elf \
+SMOCO.elf \
 
 MAP_FILES += \
-SMoCo\ Software.map \
+SMOCO.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-SMoCo\ Software.list \
+SMOCO.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: SMoCo\ Software.elf secondary-outputs
+main-build: SMOCO.elf secondary-outputs
 
 # Tool invocations
-SMoCo\ Software.elf SMoCo\ Software.map: $(OBJS) $(USER_OBJS) C:\Users\aespi\Documents\SMoCo\ Software\STM32F072C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "SMoCo Software.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\aespi\Documents\SMoCo Software\STM32F072C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SMoCo Software.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+SMOCO.elf SMOCO.map: $(OBJS) $(USER_OBJS) C:\Users\gavin\Desktop\MRDT\Smart_MoCo\Software\Smart_MoCo\STM32F072C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "SMOCO.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\gavin\Desktop\MRDT\Smart_MoCo\Software\Smart_MoCo\STM32F072C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SMOCO.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-SMoCo\ Software.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "SMoCo Software.list"
+SMOCO.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "SMOCO.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) SMoCo\ Software.elf SMoCo\ Software.list SMoCo\ Software.map SMoCo\\ Software.elf default.size.stdout
+	-$(RM) SMOCO.elf SMOCO.list SMOCO.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

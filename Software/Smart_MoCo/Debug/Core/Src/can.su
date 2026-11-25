@@ -1,2 +1,4 @@
-../Core/Inc/can.h:10:6:INIT_PACKET_ORG	8	static
-../Core/Src/can.c:3:6:HAL_CAN_RxFifo0MsgPendingCallback	64	static
+../Core/Inc/can.h:25:6:INIT_PACKET_ORG	8	static
+../Core/Src/can.c:3:6:InitSmocoCan	56	static
+../Core/Src/can.c:24:6:HAL_CAN_RxFifo0MsgPendingCallback	64	static
+../Core/Src/can.c:38:6:SmocoPushTXBuffer	64	static
